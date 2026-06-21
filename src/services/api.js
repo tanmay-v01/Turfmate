@@ -1,33 +1,33 @@
 import env from '../config/env';
+import { apiFetch } from './apiClient';
 
 const API_URL = env.apiUrl;
 
 export const bookingApi = {
-  lockSlot: async (turfId, slotId, userId) => {
-    const res = await fetch(`${API_URL}/bookings/lock`, {
+  lockSlot: (turfId, slotId, date = 'Today') =>
+    apiFetch('/bookings/lock', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ turfId, slotId, userId })
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
-  },
-  
-  checkout: async (turfId, slotId, userId, amount) => {
-    const res = await fetch(`${API_URL}/bookings/checkout`, {
+      body: JSON.stringify({ turfId, slotId, date }),
+    }),
+
+  checkout: ({ turfId, slotId, date = 'Today', slotTime, amount }) =>
+    apiFetch('/bookings/checkout', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ turfId, slotId, userId, amount })
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
+      body: JSON.stringify({ turfId, slotId, date, slotTime, amount }),
+    }),
+
+  getAvailability: (turfId, date = 'Today') => {
+    const params = new URLSearchParams({ turfId, date });
+    return apiFetch(`/bookings/availability?${params}`);
   },
+
+  listMine: () => apiFetch('/bookings/me'),
 
   initiateSplit: async (turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic) => {
     const res = await fetch(`${API_URL}/splits/initiate`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic })
+      body: JSON.stringify({ turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic }),
     });
     if (!res.ok) throw new Error((await res.json()).error);
     return res.json();
@@ -37,11 +37,11 @@ export const bookingApi = {
     const res = await fetch(`${API_URL}/splits/join`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bookingId, userId, amount })
+      body: JSON.stringify({ bookingId, userId, amount }),
     });
     if (!res.ok) throw new Error((await res.json()).error);
     return res.json();
-  }
+  },
 };
 
 export const socialApi = {
@@ -50,12 +50,12 @@ export const socialApi = {
     if (!res.ok) throw new Error((await res.json()).error);
     return res.json();
   },
-  
+
   createPost: async (authorId, contentType, contentText, lat, lng) => {
     const res = await fetch(`${API_URL}/feed/post`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ authorId, contentType, contentText, lat, lng })
+      body: JSON.stringify({ authorId, contentType, contentText, lat, lng }),
     });
     if (!res.ok) throw new Error((await res.json()).error);
     return res.json();
@@ -71,21 +71,16 @@ export const socialApi = {
     const res = await fetch(`${API_URL}/squads/create`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ownerId, squadName, members })
+      body: JSON.stringify({ ownerId, squadName, members }),
     });
     if (!res.ok) throw new Error((await res.json()).error);
     return res.json();
-  }
+  },
 };
 
 export const chatApi = {
-  getInbox: async (userId) => {
-    // For now we'll mock this on the frontend using local state, 
-    // but in a real app this would call `/api/chat/inbox?userId=${userId}`
-    return [];
-  },
-  getRoomHistory: async (roomId) => {
-    // Mocking for now, but would be `/api/chat/room/${roomId}`
-    return [];
-  }
+  getInbox: async () => [],
+  getRoomHistory: async () => [],
 };
+
+export default bookingApi;

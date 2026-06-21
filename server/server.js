@@ -10,6 +10,8 @@ const dbStore = require('./db/index');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const turfRoutes = require('./routes/turfs');
+const bookingRoutes = require('./routes/bookings');
+const bookingsRepo = require('./repositories/bookings');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 const { seedTurfs } = require('./scripts/seedTurfs');
 
@@ -34,6 +36,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/turfs', turfRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 async function bootstrapPhase1() {
   try {
@@ -50,6 +53,10 @@ async function bootstrapPhase1() {
 }
 bootstrapPhase1();
 
+setInterval(() => {
+  bookingsRepo.cleanupExpiredLocks().catch(() => {});
+}, 60 * 1000);
+
 app.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'turfmate-api', ts: Date.now() });
 });
@@ -58,75 +65,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, service: 'turfmate-api', ts: Date.now() });
 });
 
-// 1. Lock a Slot
-app.post('/api/bookings/lock', (req, res) => {
-  const { turfId, slotId, userId } = req.body;
-  const lockExpiration = Date.now() + 5 * 60 * 1000; // 5 minutes
-
-  db.get(`SELECT status, locked_at, locked_by FROM turf_slots WHERE slot_id = ? AND turf_id = ?`, [slotId, turfId], (err, row) => {
-    if (err) return res.status(500).json({ error: err.message });
-
-    if (row && row.status === 'BOOKED') {
-      return res.status(409).json({ error: 'Slot already booked' });
-    }
-
-    if (row && row.status === 'TEMPORARY_LOCK') {
-      // Check if lock expired
-      if (Date.now() < row.locked_at && row.locked_by !== userId) {
-        return res.status(409).json({ error: 'Slot temporarily locked by another user' });
-      }
-    }
-
-    // Insert or Replace lock
-    db.run(
-      `INSERT INTO turf_slots (id, turf_id, status, locked_by, locked_at) VALUES (?, ?, ?, ?, ?)
-       ON CONFLICT(id) DO UPDATE SET status=excluded.status, locked_by=excluded.locked_by, locked_at=excluded.locked_at`,
-      [`${turfId}_${slotId}`, turfId, 'TEMPORARY_LOCK', userId, lockExpiration],
-      function (err) {
-        if (err) return res.status(500).json({ error: err.message });
-        res.json({ message: 'Slot locked for 5 minutes', lockedUntil: lockExpiration });
-      }
-    );
-  });
-});
-
-// 2. Standard Checkout
-app.post('/api/bookings/checkout', (req, res) => {
-  const { turfId, slotId, userId, amount } = req.body;
-  const bookingId = crypto.randomUUID();
-
-  // Mark slot as booked
-  db.run(`UPDATE turf_slots SET status = 'BOOKED' WHERE id = ?`, [`${turfId}_${slotId}`], (err) => {
-    if (err) return res.status(500).json({ error: err.message });
-
-    // Create booking
-    db.run(
-      `INSERT INTO bookings (id, turf_id, slot_id, status, total_amount, amount_collected, is_public, host_id) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-      [bookingId, turfId, slotId, 'CONFIRMED', amount, amount, false, userId],
-      (err) => {
-        if (err) return res.status(500).json({ error: err.message });
-        
-        // --- MODULE 6: CREATE AUTO-GAME CHATROOM ---
-        const roomId = `room-${bookingId}`;
-        db.run(
-          `INSERT INTO chat_rooms (room_id, room_type, associated_booking_id, room_name) VALUES (?, ?, ?, ?)`,
-          [roomId, 'GAME', bookingId, `Game Hub`],
-          (err) => {
-            if (!err) {
-              // Add host to chat members
-              db.run(`INSERT INTO chat_members (room_id, user_id, joined_at) VALUES (?, ?, ?)`, [roomId, userId, Date.now()]);
-            }
-          }
-        );
-
-        res.json({ message: 'Booking confirmed', bookingId });
-      }
-    );
-  });
-});
-
-// 3. Initiate Split (Host)
+// Legacy split/social routes (Phase 1d will migrate to Postgres)
 app.post('/api/splits/initiate', (req, res) => {
   const { turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic, gameTime } = req.body;
   const bookingId = crypto.randomUUID();

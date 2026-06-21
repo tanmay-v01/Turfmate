@@ -38,6 +38,11 @@ function run(sql, params = []) {
   });
 }
 
+async function tableHasColumn(table, column) {
+  const cols = await getAll(`PRAGMA table_info(${table})`);
+  return cols.some((c) => c.name === column);
+}
+
 async function migrate() {
   const statements = [
     `CREATE TABLE IF NOT EXISTS users (
@@ -94,9 +99,89 @@ async function migrate() {
       meta TEXT DEFAULT '{}',
       status TEXT DEFAULT 'ACTIVE'
     )`,
+    `CREATE TABLE IF NOT EXISTS slot_locks (
+      id TEXT PRIMARY KEY,
+      turf_id TEXT NOT NULL,
+      slot_key TEXT NOT NULL UNIQUE,
+      locked_by TEXT NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(turf_id) REFERENCES turfs(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS bookings (
+      id TEXT PRIMARY KEY,
+      turf_id TEXT NOT NULL,
+      host_id TEXT NOT NULL,
+      booking_type TEXT NOT NULL,
+      status TEXT NOT NULL,
+      slot_key TEXT NOT NULL,
+      total_cost INTEGER DEFAULT 0,
+      platform_fee INTEGER DEFAULT 0,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(turf_id) REFERENCES turfs(id),
+      FOREIGN KEY(host_id) REFERENCES users(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS booking_roster (
+      id TEXT PRIMARY KEY,
+      booking_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      amount_paid INTEGER DEFAULT 0,
+      payment_status TEXT DEFAULT 'SETTLED',
+      is_host INTEGER DEFAULT 0,
+      joined_at INTEGER NOT NULL,
+      UNIQUE(booking_id, user_id),
+      FOREIGN KEY(booking_id) REFERENCES bookings(id),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);
+  }
+
+  // Legacy db.js bookings schema lacks slot_key — recreate Phase 1c tables
+  const bookingsOk = await tableHasColumn('bookings', 'slot_key');
+  if (!bookingsOk) {
+    await run('DROP TABLE IF EXISTS booking_roster');
+    await run('DROP TABLE IF EXISTS bookings');
+    await run(`CREATE TABLE IF NOT EXISTS bookings (
+      id TEXT PRIMARY KEY,
+      turf_id TEXT NOT NULL,
+      host_id TEXT NOT NULL,
+      booking_type TEXT NOT NULL,
+      status TEXT NOT NULL,
+      slot_key TEXT NOT NULL,
+      total_cost INTEGER DEFAULT 0,
+      platform_fee INTEGER DEFAULT 0,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(turf_id) REFERENCES turfs(id),
+      FOREIGN KEY(host_id) REFERENCES users(id)
+    )`);
+    await run(`CREATE TABLE IF NOT EXISTS booking_roster (
+      id TEXT PRIMARY KEY,
+      booking_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      amount_paid INTEGER DEFAULT 0,
+      payment_status TEXT DEFAULT 'SETTLED',
+      is_host INTEGER DEFAULT 0,
+      joined_at INTEGER NOT NULL,
+      UNIQUE(booking_id, user_id),
+      FOREIGN KEY(booking_id) REFERENCES bookings(id),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`);
+  }
+
+  const locksOk = await tableHasColumn('slot_locks', 'slot_key');
+  if (!locksOk) {
+    await run('DROP TABLE IF EXISTS slot_locks');
+    await run(`CREATE TABLE IF NOT EXISTS slot_locks (
+      id TEXT PRIMARY KEY,
+      turf_id TEXT NOT NULL,
+      slot_key TEXT NOT NULL UNIQUE,
+      locked_by TEXT NOT NULL,
+      expires_at INTEGER NOT NULL,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(turf_id) REFERENCES turfs(id)
+    )`);
   }
 }
 

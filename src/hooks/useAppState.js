@@ -317,6 +317,35 @@ export function useAppState() {
   const [impersonatingOwner, setImpersonatingOwner] = useState(null);
   const [checkoutInviteGroupId, setCheckoutInviteGroupId] = useState('');
 
+  // Phase 1c: sync slot availability from API for active turf
+  useEffect(() => {
+    if (!userProfile?.isLoggedIn || !activeTurfId) return undefined;
+    let cancelled = false;
+
+    bookingApi.getAvailability(activeTurfId, bookingDate)
+      .then(({ booked = [], locked = [] }) => {
+        if (cancelled) return;
+        setTurfs((prev) => prev.map((t) => {
+          if (t.id !== activeTurfId) return t;
+          return {
+            ...t,
+            slots: t.slots.map((s) => {
+              const key = `${activeTurfId}:${s.id}:${bookingDate}`;
+              const isBooked = booked.includes(key);
+              const lock = locked.find((l) => l.slotKey === key);
+              if (isBooked) return { ...s, status: 'booked' };
+              if (lock && lock.lockedBy !== userProfile.userId) return { ...s, status: 'locked' };
+              if (s.status === 'booked' || s.status === 'locked') return { ...s, status: 'available' };
+              return s;
+            }),
+          };
+        }));
+      })
+      .catch((err) => console.warn('[bookings] availability sync skipped:', err.message));
+
+    return () => { cancelled = true; };
+  }, [userProfile?.isLoggedIn, userProfile?.userId, activeTurfId, bookingDate]);
+
   // Chat Screen state
   const [activeChatId, setActiveChatId] = useState(null);
   const [chatInput, setChatInput] = useState('');
@@ -1102,9 +1131,13 @@ export function useAppState() {
 
   // Open Checkout (Triggers Lock)
   const openCheckoutModal = async () => {
+    if (!userProfile.userId) {
+      showToast('Please log in again to book', 'error', 'Session required');
+      return;
+    }
     try {
-      await bookingApi.lockSlot(activeTurf.id, selectedSlotId, userProfile.name);
-      setCheckoutSlotLockExpiresAt(Date.now() + 5 * 60 * 1000);
+      const res = await bookingApi.lockSlot(activeTurf.id, selectedSlotId, bookingDate);
+      setCheckoutSlotLockExpiresAt(res.lockedUntil || Date.now() + 5 * 60 * 1000);
       setShowCheckoutModal(true);
     } catch (error) {
       console.error('Lock Error:', error);
@@ -1130,9 +1163,13 @@ export function useAppState() {
         );
         bId = res.bookingId;
       } else {
-        const res = await bookingApi.checkout(
-          activeTurf.id, selectedSlotId, userProfile.name, price
-        );
+        const res = await bookingApi.checkout({
+          turfId: activeTurf.id,
+          slotId: selectedSlotId,
+          date: bookingDate,
+          slotTime: slot.time,
+          amount: price,
+        });
         bId = res.bookingId;
       }
 
@@ -1155,6 +1192,17 @@ export function useAppState() {
       }, activeTurf, checkoutOption === 'split' ? perHeadShare : price, price);
 
       setBookings(prev => [newBooking, ...prev]);
+
+      if (checkoutOption !== 'split') {
+        setTurfs((prev) => prev.map((t) => (
+          t.id !== activeTurf.id ? t : {
+            ...t,
+            slots: t.slots.map((s) => (
+              s.id === selectedSlotId ? { ...s, status: 'booked' } : s
+            )),
+          }
+        )));
+      }
 
       // If split option selected, auto-create game announcement in Locker Room
       if (checkoutOption === 'split') {
