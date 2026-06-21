@@ -11,7 +11,9 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const turfRoutes = require('./routes/turfs');
 const bookingRoutes = require('./routes/bookings');
+const splitRoutes = require('./routes/splits');
 const bookingsRepo = require('./repositories/bookings');
+const splitsRepo = require('./repositories/splits');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 const { seedTurfs } = require('./scripts/seedTurfs');
 
@@ -30,6 +32,8 @@ const io = new Server(server, {
   },
 });
 
+app.set('io', io);
+
 app.use(cors({ origin: CORS_ORIGINS, credentials: true }));
 app.use(express.json());
 
@@ -37,6 +41,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/turfs', turfRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/splits', splitRoutes);
 
 async function bootstrapPhase1() {
   try {
@@ -55,6 +60,7 @@ bootstrapPhase1();
 
 setInterval(() => {
   bookingsRepo.cleanupExpiredLocks().catch(() => {});
+  splitsRepo.cleanupExpiredSplits().catch(() => {});
 }, 60 * 1000);
 
 app.get('/health', (_req, res) => {
@@ -65,112 +71,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ ok: true, service: 'turfmate-api', ts: Date.now() });
 });
 
-// Legacy split/social routes (Phase 1d will migrate to Postgres)
-app.post('/api/splits/initiate', (req, res) => {
-  const { turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic, gameTime } = req.body;
-  const bookingId = crypto.randomUUID();
-  const paymentId = crypto.randomUUID();
-  // Expires 2 hours before game (simulated for now, let's just use Date.now() + 2 hours for demo)
-  const expiresAt = Date.now() + 2 * 60 * 60 * 1000; 
-
-  db.serialize(() => {
-    db.run("BEGIN TRANSACTION");
-
-    // Lock Slot as SPLIT_ACTIVE
-    db.run(`UPDATE turf_slots SET status = 'SPLIT_ACTIVE' WHERE id = ?`, [`${turfId}_${slotId}`]);
-
-    // Create Booking
-    db.run(
-      `INSERT INTO bookings (id, turf_id, slot_id, status, total_amount, amount_collected, is_public, host_id, players_needed, expires_at) 
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [bookingId, turfId, slotId, 'PENDING_SPLIT', totalAmount, hostAdvance, isPublic, hostId, playersNeeded, expiresAt]
-    );
-
-    // Record Escrow Payment
-    db.run(
-      `INSERT INTO split_payments (id, booking_id, user_id, amount_paid, payment_status, created_at)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [paymentId, bookingId, hostId, hostAdvance, 'HELD_IN_ESCROW', Date.now()]
-    );
-
-    // Create Chat Room
-    db.run(`INSERT INTO chat_rooms (room_id, room_type, associated_booking_id, room_name) VALUES (?, ?, ?, ?)`, [`room-${bookingId}`, 'SPLIT', bookingId, `Split Match`]);
-    db.run(`INSERT INTO chat_members (room_id, user_id, joined_at) VALUES (?, ?, ?)`, [`room-${bookingId}`, hostId, Date.now()]);
-
-    db.run("COMMIT", (err) => {
-      if (err) {
-        db.run("ROLLBACK");
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ message: 'Split initialized', bookingId });
-    });
-  });
-});
-
-// 4. Join Split
-app.post('/api/splits/join', (req, res) => {
-  const { bookingId, userId, amount } = req.body;
-  const paymentId = crypto.randomUUID();
-
-  db.get(`SELECT status, total_amount, amount_collected, players_needed FROM bookings WHERE id = ?`, [bookingId], (err, booking) => {
-    if (err || !booking) return res.status(404).json({ error: 'Booking not found' });
-    if (booking.status !== 'PENDING_SPLIT') return res.status(400).json({ error: 'Split is no longer active' });
-
-    // Race condition check: is it already full?
-    if (booking.amount_collected + amount > booking.total_amount) {
-       return res.status(409).json({ error: 'Sorry, this game just filled up!' });
-    }
-
-    db.serialize(() => {
-      db.run("BEGIN TRANSACTION");
-      
-      const newCollected = booking.amount_collected + amount;
-      let newStatus = 'PENDING_SPLIT';
-
-      // Check if fully funded
-      if (newCollected >= booking.total_amount) {
-        newStatus = 'CONFIRMED';
-        // When confirmed, ideally we update all HELD_IN_ESCROW to SETTLED
-      }
-
-      db.run(`UPDATE bookings SET amount_collected = ?, status = ? WHERE id = ?`, [newCollected, newStatus, bookingId]);
-      
-      db.run(
-        `INSERT INTO split_payments (id, booking_id, user_id, amount_paid, payment_status, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
-        [paymentId, bookingId, userId, amount, newStatus === 'CONFIRMED' ? 'SETTLED' : 'HELD_IN_ESCROW', Date.now()]
-      );
-
-      if (newStatus === 'CONFIRMED') {
-         db.run(`UPDATE split_payments SET payment_status = 'SETTLED' WHERE booking_id = ?`, [bookingId]);
-      }
-
-      db.run("COMMIT", (err) => {
-        if (err) {
-           db.run("ROLLBACK");
-           return res.status(500).json({ error: err.message });
-        }
-        // --- MODULE 6: SYSTEM BOT NOTIFICATION ---
-        const roomId = `room-${bookingId}`;
-        const sysMsgId = crypto.randomUUID();
-        db.run(
-          `INSERT INTO messages (message_id, room_id, sender_id, sender_name, content_type, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-          [sysMsgId, roomId, 'SYSTEM_BOT', 'TurfMate Bot', 'SYSTEM_ALERT', `🟢 ${userId} has paid and joined the split!`, Date.now()]
-        );
-        // Add member to chat
-        db.run(`INSERT INTO chat_members (room_id, user_id, joined_at) VALUES (?, ?, ?)`, [roomId, userId, Date.now()]);
-        
-        // Broadcast via socket if room exists
-        io.to(roomId).emit('receive_message', {
-          id: sysMsgId, roomId, sender: 'TurfMate Bot', text: `🟢 ${userId} has paid and joined the split!`, type: 'SYSTEM_ALERT', time: new Date().toLocaleTimeString()
-        });
-
-        res.json({ message: 'Successfully joined split', status: newStatus });
-      });
-    });
-  });
-});
-
-// --- MODULE 9: SUPER ADMIN APIs ---
+// Legacy social routes (feed, radar, squads)
 
 app.get('/api/superadmin/metrics', (req, res) => {
   // Mock calculation of global metrics

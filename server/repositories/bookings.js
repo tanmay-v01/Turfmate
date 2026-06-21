@@ -40,8 +40,8 @@ async function cleanupExpiredLocks() {
 async function getConfirmedBooking(key) {
   return db.getOne(
     isPg
-      ? `SELECT id FROM bookings WHERE slot_key = $1 AND status = 'CONFIRMED' LIMIT 1`
-      : `SELECT id FROM bookings WHERE slot_key = ? AND status = 'CONFIRMED' LIMIT 1`,
+      ? `SELECT id FROM bookings WHERE slot_key = $1 AND status IN ('CONFIRMED', 'PENDING_FUNDING') LIMIT 1`
+      : `SELECT id FROM bookings WHERE slot_key = ? AND status IN ('CONFIRMED', 'PENDING_FUNDING') LIMIT 1`,
     [key]
   );
 }
@@ -193,8 +193,8 @@ async function getSlotAvailability(turfLegacyId, dateLabel = 'Today') {
 
   const booked = await db.getAll(
     isPg
-      ? `SELECT slot_key FROM bookings WHERE turf_id = $1 AND status = 'CONFIRMED' AND slot_key LIKE $2`
-      : `SELECT slot_key FROM bookings WHERE turf_id = ? AND status = 'CONFIRMED' AND slot_key LIKE ?`,
+      ? `SELECT slot_key FROM bookings WHERE turf_id = $1 AND status IN ('CONFIRMED', 'PENDING_FUNDING') AND slot_key LIKE $2`
+      : `SELECT slot_key FROM bookings WHERE turf_id = ? AND status IN ('CONFIRMED', 'PENDING_FUNDING') AND slot_key LIKE ?`,
     [turf.id, pattern]
   );
 
@@ -237,6 +237,7 @@ async function listUserBookings(userId) {
 
 module.exports = {
   slotKey,
+  resolveTurf,
   lockSlot,
   checkoutPrivate,
   getSlotAvailability,

@@ -23,25 +23,26 @@ export const bookingApi = {
 
   listMine: () => apiFetch('/bookings/me'),
 
-  initiateSplit: async (turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic) => {
-    const res = await fetch(`${API_URL}/splits/initiate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ turfId, slotId, hostId, totalAmount, hostAdvance, playersNeeded, isPublic }),
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
-  },
+  listOpenSplits: () => apiFetch('/splits/open'),
 
-  joinSplit: async (bookingId, userId, amount) => {
-    const res = await fetch(`${API_URL}/splits/join`, {
+  initiateSplit: (payload) =>
+    apiFetch('/splits/initiate', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ bookingId, userId, amount }),
-    });
-    if (!res.ok) throw new Error((await res.json()).error);
-    return res.json();
-  },
+      body: JSON.stringify(payload),
+    }),
+
+  joinSplit: (bookingId, amount) =>
+    apiFetch(`/splits/${encodeURIComponent(bookingId)}/join`, {
+      method: 'POST',
+      body: JSON.stringify({ amount }),
+    }),
+
+  cancelSplit: (bookingId) =>
+    apiFetch(`/splits/${encodeURIComponent(bookingId)}/cancel`, {
+      method: 'POST',
+      body: JSON.stringify({}),
+    }),
+
 };
 
 export const socialApi = {

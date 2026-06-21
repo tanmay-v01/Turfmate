@@ -68,5 +68,5 @@ curl -X POST http://localhost:3001/api/auth/verify-otp -H "Content-Type: applica
 
 - [x] OTP verify → JWT + profile in DB  
 - [x] Two browsers cannot double-book same slot  
-- [ ] Split state in DB, not localStorage  
+- [x] Split state in DB, not localStorage  
 - [x] Turfs loaded from API (fallback to mock if API down)  

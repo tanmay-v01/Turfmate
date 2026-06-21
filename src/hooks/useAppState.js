@@ -278,6 +278,26 @@ export function useAppState() {
     return () => { cancelled = true; };
   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadiusState, selectedSportFilter]);
 
+  // Phase 1d: load open splits from API into announcements
+  useEffect(() => {
+    if (!userProfile?.isLoggedIn) return undefined;
+    let cancelled = false;
+
+    bookingApi.listOpenSplits()
+      .then(({ splits = [] }) => {
+        if (cancelled) return;
+        setAnnouncements((prev) => {
+          const mockOnly = prev.filter((a) => !a.bookingId || String(a.bookingId).startsWith('B-'));
+          const apiIds = new Set(splits.map((s) => s.id));
+          const hostSplits = prev.filter((a) => a.bookingId && !String(a.bookingId).startsWith('B-') && !apiIds.has(a.id) && a.status === 'open');
+          return [...hostSplits, ...splits, ...mockOnly];
+        });
+      })
+      .catch((err) => console.warn('[splits] open list unavailable:', err.message));
+
+    return () => { cancelled = true; };
+  }, [userProfile?.isLoggedIn]);
+
   // Haversine formula for dynamic coordinates distance
   const getDistance = (lat1, lon1, lat2, lon2) => {
     if (!lat1 || !lon1 || !lat2 || !lon2) return 1.0;
@@ -1157,11 +1177,21 @@ export function useAppState() {
     
     try {
       let bId = '';
+      let apiSplit = null;
       if (checkoutOption === 'split') {
-        const res = await bookingApi.initiateSplit(
-          activeTurf.id, selectedSlotId, userProfile.name, price, perHeadShare, splitPlayersCount - 1, true
-        );
+        const res = await bookingApi.initiateSplit({
+          turfId: activeTurf.id,
+          slotId: selectedSlotId,
+          date: bookingDate,
+          slotTime: slot.time,
+          totalAmount: price,
+          hostAdvance: perHeadShare,
+          playersNeeded: splitPlayersCount - 1,
+          isPublic: true,
+          sport: selectedSportFilter !== 'all' ? selectedSportFilter : activeTurf.sports[0],
+        });
         bId = res.bookingId;
+        apiSplit = res.split;
       } else {
         const res = await bookingApi.checkout({
           turfId: activeTurf.id,
@@ -1206,10 +1236,10 @@ export function useAppState() {
 
       // If split option selected, auto-create game announcement in Locker Room
       if (checkoutOption === 'split') {
-        const newAnn = {
+        const newAnn = apiSplit || {
           id: `ann-${Date.now()}`,
           bookingId: bId,
-          hostId: 'user-id',
+          hostId: userProfile.userId || 'user-id',
           hostName: userProfile.name,
           hostAvatar: userProfile.avatar,
           hostLevel: userProfile.skillLevel,
@@ -1228,7 +1258,7 @@ export function useAppState() {
           slotId: selectedSlotId,
           fundingExpiresAt: Date.now() + 4 * 3600 * 1000,
         };
-        setAnnouncements(prev => [newAnn, ...prev]);
+        setAnnouncements(prev => [newAnn, ...prev.filter((a) => a.id !== newAnn.id)]);
 
         const newChat = {
           id: `chat-ann-${newAnn.id}`,
@@ -1311,13 +1341,24 @@ export function useAppState() {
     showToast('Split expired — all players refunded', 'info', 'Funding failed');
   };
 
-  const cancelSplitGame = (annId) => {
+  const cancelSplitGame = async (annId) => {
     const ann = announcements.find((a) => a.id === annId);
-    if (!ann || ann.hostName !== userProfile.name) return;
+    if (!ann || (ann.hostId !== userProfile.userId && ann.hostName !== userProfile.name)) return;
 
-    setAnnouncements((prev) =>
-      prev.map((a) => (a.id === annId ? { ...a, status: 'canceled', playersNeeded: 0 } : a))
-    );
+    if (ann.bookingId && !String(ann.bookingId).startsWith('B-')) {
+      try {
+        const { split } = await bookingApi.cancelSplit(ann.bookingId);
+        setAnnouncements((prev) => prev.map((a) => (a.id === annId ? split : a)));
+      } catch (err) {
+        showToast(err.message, 'error', 'Cancel failed');
+        return;
+      }
+    } else {
+      setAnnouncements((prev) =>
+        prev.map((a) => (a.id === annId ? { ...a, status: 'canceled', playersNeeded: 0 } : a))
+      );
+    }
+
     setBookings((prev) =>
       prev.map((b) =>
         b.id === ann.bookingId
@@ -1325,7 +1366,7 @@ export function useAppState() {
           : b
       )
     );
-    (ann.roster || []).forEach((player) => {
+    (ann.roster || []).forEach(() => {
       setNotifications((prev) => [
         {
           id: Date.now() + Math.random(),
@@ -1346,14 +1387,20 @@ export function useAppState() {
 
     setIsProcessingPayment(true);
     try {
-      if (ann.bookingId) {
-        await bookingApi.joinSplit(ann.bookingId, userProfile.name, ann.costPerHead);
+      let apiResult = null;
+      if (ann.bookingId && !String(ann.bookingId).startsWith('B-')) {
+        apiResult = await bookingApi.joinSplit(ann.bookingId, ann.costPerHead);
       }
 
       let filled = false;
+      const updatedAnn = apiResult?.split;
       setAnnouncements((prev) =>
         prev.map((a) => {
           if (a.id !== annId) return a;
+          if (updatedAnn) {
+            filled = updatedAnn.status === 'filled';
+            return updatedAnn;
+          }
           const updatedNeeded = Math.max(0, a.playersNeeded - 1);
           filled = updatedNeeded === 0;
           return {

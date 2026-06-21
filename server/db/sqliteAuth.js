@@ -133,6 +133,18 @@ async function migrate() {
       FOREIGN KEY(booking_id) REFERENCES bookings(id),
       FOREIGN KEY(user_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS split_escrow_details (
+      booking_id TEXT PRIMARY KEY,
+      players_needed INTEGER NOT NULL,
+      cost_per_head INTEGER NOT NULL,
+      amount_collected INTEGER NOT NULL DEFAULT 0,
+      is_public INTEGER NOT NULL DEFAULT 1,
+      expires_at INTEGER NOT NULL,
+      slot_time TEXT,
+      date_label TEXT,
+      sport TEXT,
+      FOREIGN KEY(booking_id) REFERENCES bookings(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);
