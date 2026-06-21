@@ -57,7 +57,7 @@ curl -X POST http://localhost:3001/api/auth/verify-otp -H "Content-Type: applica
 
 | Slice | Work |
 |-------|------|
-| **1b** | Turfs/slots API from DB; seed Virar turfs |
+| **1b** | Turfs/slots API from DB; seed Virar turfs | ✅ |
 | **1c** | Bookings + slot locks server-side (Redis optional) |
 | **1d** | Split escrow persisted in Postgres |
 | **1e** | Owner KYC + admin approval API |
@@ -69,4 +69,4 @@ curl -X POST http://localhost:3001/api/auth/verify-otp -H "Content-Type: applica
 - [x] OTP verify → JWT + profile in DB  
 - [ ] Two browsers cannot double-book same slot  
 - [ ] Split state in DB, not localStorage  
-- [ ] Turfs loaded from API  
+- [x] Turfs loaded from API (fallback to mock if API down)  

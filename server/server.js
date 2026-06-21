@@ -9,7 +9,9 @@ const config = require('./lib/config');
 const dbStore = require('./db/index');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
+const turfRoutes = require('./routes/turfs');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
+const { seedTurfs } = require('./scripts/seedTurfs');
 
 const app = express();
 const server = http.createServer(app);
@@ -31,13 +33,15 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/turfs', turfRoutes);
 
 async function bootstrapPhase1() {
   try {
     await dbStore.migrate();
-    if (config.seedOnStart || (config.demoMode && dbStore.driver === 'postgres')) {
+    if (config.seedOnStart || config.demoMode) {
       await seedDemoUsers();
-      console.log('[Phase 1] Demo users seeded');
+      await seedTurfs();
+      console.log('[Phase 1] Demo users + turfs seeded');
     }
     console.log(`[Phase 1] Database driver: ${dbStore.driver}`);
   } catch (err) {

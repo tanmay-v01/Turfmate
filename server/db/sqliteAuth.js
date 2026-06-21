@@ -78,6 +78,22 @@ async function migrate() {
       updated_at INTEGER NOT NULL,
       FOREIGN KEY(user_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS turfs (
+      id TEXT PRIMARY KEY,
+      owner_user_id TEXT,
+      legacy_id TEXT UNIQUE,
+      name TEXT NOT NULL,
+      address TEXT,
+      city TEXT,
+      location_lat REAL,
+      location_lng REAL,
+      rating REAL DEFAULT 0,
+      amenities TEXT DEFAULT '[]',
+      images TEXT DEFAULT '[]',
+      sports TEXT DEFAULT '[]',
+      meta TEXT DEFAULT '{}',
+      status TEXT DEFAULT 'ACTIVE'
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

@@ -6,6 +6,7 @@ import { INITIAL_OWNERS, SUPER_ADMIN_PHONE } from '../data/ownersData';
 import { enrichBookingPayment, calcCommission } from '../constants/commission';
 import { bookingApi } from '../services/api';
 import { authApi } from '../services/authApi';
+import { turfsApi } from '../services/turfsApi';
 import { socketService } from '../services/socket';
 import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
@@ -254,6 +255,28 @@ export function useAppState() {
     setUserProfile((prev) => ({ ...prev, radius: r }));
   };
   const setFilterRadius = setPlayRadius;
+
+  // Phase 1b: load turfs from API when logged in
+  useEffect(() => {
+    if (!userProfile?.isLoggedIn) return undefined;
+    let cancelled = false;
+    const lat = userProfile.lat ?? 19.456;
+    const lng = userProfile.lng ?? 72.812;
+    const radius = userProfile.radius ?? filterRadiusState ?? 10;
+
+    turfsApi.list({ lat, lng, radius_km: radius, sport: selectedSportFilter })
+      .then(({ turfs: apiTurfs }) => {
+        if (!cancelled && apiTurfs?.length) {
+          setTurfs(apiTurfs);
+          localStorage.setItem('tm_turfs', JSON.stringify(apiTurfs));
+        }
+      })
+      .catch((err) => {
+        console.warn('[turfs] API unavailable, using local data:', err.message);
+      });
+
+    return () => { cancelled = true; };
+  }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadiusState, selectedSportFilter]);
 
   // Haversine formula for dynamic coordinates distance
   const getDistance = (lat1, lon1, lat2, lon2) => {

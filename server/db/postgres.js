@@ -35,9 +35,12 @@ async function run(text, params = []) {
 }
 
 async function migrate() {
-  const migrationPath = path.join(__dirname, '../migrations/001_phase1_core.sql');
-  const sql = fs.readFileSync(migrationPath, 'utf8');
-  await query(sql);
+  const dir = path.join(__dirname, '../migrations');
+  const files = fs.readdirSync(dir).filter((f) => f.endsWith('.sql')).sort();
+  for (const file of files) {
+    const sql = fs.readFileSync(path.join(dir, file), 'utf8');
+    await query(sql);
+  }
 }
 
 async function close() {
