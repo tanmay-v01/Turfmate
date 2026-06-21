@@ -206,6 +206,53 @@ function initDb() {
         expected_date TEXT
       )
     `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        phone TEXT NOT NULL UNIQUE,
+        role TEXT NOT NULL DEFAULT 'PLAYER',
+        status TEXT NOT NULL DEFAULT 'ACTIVE',
+        onboarding_complete INTEGER NOT NULL DEFAULT 0,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL
+      )
+    `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS player_profiles (
+        user_id TEXT PRIMARY KEY,
+        full_name TEXT,
+        username TEXT UNIQUE,
+        avatar_url TEXT,
+        location_label TEXT,
+        location_lat REAL,
+        location_lng REAL,
+        filter_radius_km INTEGER DEFAULT 10,
+        reliability_score REAL DEFAULT 5.0,
+        sports_dna TEXT DEFAULT '[]',
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+      )
+    `);
+
+    db.run(`
+      CREATE TABLE IF NOT EXISTS turf_owners (
+        user_id TEXT PRIMARY KEY,
+        business_name TEXT,
+        business_email TEXT,
+        owner_name TEXT,
+        kyc_status TEXT DEFAULT 'PENDING',
+        pan_number TEXT,
+        bank_account_no TEXT,
+        ifsc_code TEXT,
+        gstin TEXT,
+        created_at INTEGER NOT NULL,
+        updated_at INTEGER NOT NULL,
+        FOREIGN KEY(user_id) REFERENCES users(id)
+      )
+    `);
   });
 }
 

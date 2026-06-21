@@ -1,14 +1,20 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const crypto = require('crypto');
 const http = require('http');
 const { Server } = require('socket.io');
 const db = require('./db');
+const config = require('./lib/config');
+const dbStore = require('./db/index');
+const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
+const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 
 const app = express();
 const server = http.createServer(app);
-const PORT = process.env.PORT || 3001;
-const CORS_ORIGINS = (process.env.CORS_ORIGIN || 'http://localhost:3000')
+const PORT = config.port;
+const CORS_ORIGINS = config.corsOrigin
   .split(',')
   .map((s) => s.trim())
   .filter(Boolean);
@@ -22,6 +28,23 @@ const io = new Server(server, {
 
 app.use(cors({ origin: CORS_ORIGINS, credentials: true }));
 app.use(express.json());
+
+app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
+
+async function bootstrapPhase1() {
+  try {
+    await dbStore.migrate();
+    if (config.seedOnStart || (config.demoMode && dbStore.driver === 'postgres')) {
+      await seedDemoUsers();
+      console.log('[Phase 1] Demo users seeded');
+    }
+    console.log(`[Phase 1] Database driver: ${dbStore.driver}`);
+  } catch (err) {
+    console.error('[Phase 1] Bootstrap failed:', err.message);
+  }
+}
+bootstrapPhase1();
 
 app.get('/health', (_req, res) => {
   res.json({ ok: true, service: 'turfmate-api', ts: Date.now() });

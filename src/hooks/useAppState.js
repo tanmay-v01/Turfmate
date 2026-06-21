@@ -5,6 +5,7 @@ import { extractPlayerDeltas, applyStatDelta } from '../utils/scoreEngine';
 import { INITIAL_OWNERS, SUPER_ADMIN_PHONE } from '../data/ownersData';
 import { enrichBookingPayment, calcCommission } from '../constants/commission';
 import { bookingApi } from '../services/api';
+import { authApi } from '../services/authApi';
 import { socketService } from '../services/socket';
 import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
@@ -741,12 +742,18 @@ export function useAppState() {
     });
   };
 
-  const handleSendOTP = (viaWhatsApp = false) => {
+  const handleSendOTP = async (viaWhatsApp = false) => {
     if (!phoneNumber || phoneNumber.length < 10) return;
     updateOnboardingData({ phoneNumber: phoneNumber });
     setOtpSent(true);
     setLoginTimer(30);
-    
+
+    try {
+      await authApi.sendOtp(phoneNumber);
+    } catch (err) {
+      console.warn('[auth] send-otp failed, demo fallback available:', err.message);
+    }
+
     if (viaWhatsApp) {
       setWhatsappNotification("TurfMate OTP: 1234 is your verification code.");
       setTimeout(() => setWhatsappNotification(null), 6000);
@@ -754,9 +761,38 @@ export function useAppState() {
     navigateTo('otp_verify');
   };
 
-  const handleVerifyOTP = () => {
-    if (otpCode === '1234' || otpCode.length === 4) {
-      if (env.demoMode && phoneNumber === '9876543210') {
+  const routeAfterAuth = (profile) => {
+    setUserProfile(profile);
+    localStorage.setItem('tm_profile', JSON.stringify(profile));
+    localStorage.removeItem('tm_onboarding_progress');
+    setIsAdminMode(false);
+    if (profile.role === 'OWNER') {
+      setOwnerActiveTurfId('turf-1');
+      setView('owner_dashboard');
+    } else if (profile.role === 'SUPER_ADMIN') {
+      setView('super_admin');
+    } else if (profile.onboardingComplete === false) {
+      navigateTo('role_selection');
+    } else {
+      setView('home');
+    }
+  };
+
+  const handleVerifyOTP = async () => {
+    if (!(otpCode === '1234' || otpCode.length === 4)) {
+      showToast('Enter the 4-digit OTP (demo: 1234)', 'error', 'Invalid OTP');
+      return;
+    }
+
+    try {
+      const { profile } = await authApi.verifyOtp(phoneNumber, otpCode);
+      routeAfterAuth(profile);
+      return;
+    } catch (err) {
+      console.warn('[auth] verify-otp failed, trying local demo fallback:', err.message);
+    }
+
+    if (env.demoMode && phoneNumber === '9876543210') {
         const profile = {
           isLoggedIn: true,
           role: 'PLAYER',
@@ -811,9 +847,6 @@ export function useAppState() {
       } else {
         navigateTo('role_selection');
       }
-    } else {
-      showToast('Enter the 4-digit OTP (demo: 1234)', 'error', 'Invalid OTP');
-    }
   };
 
   const handleUsernameChange = (val) => {
@@ -1646,6 +1679,7 @@ export function useAppState() {
   const platformCommission = bookings.reduce((sum, b) => sum + (b.commissionAmount || 0), 0);
 
   const resetApp = () => {
+    authApi.logout();
     localStorage.removeItem('tm_profile');
     localStorage.removeItem('tm_onboarding_progress');
     localStorage.removeItem('tm_turfs');
