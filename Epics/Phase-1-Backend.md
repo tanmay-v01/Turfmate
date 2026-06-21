@@ -59,7 +59,7 @@ curl -X POST http://localhost:3001/api/auth/verify-otp -H "Content-Type: applica
 |-------|------|
 | **1b** | Turfs/slots API from DB; seed Virar turfs | ✅ |
 | **1c** | Bookings + slot locks server-side (Redis optional) | ✅ |
-| **1d** | Split escrow persisted in Postgres |
+| **1d** | Split escrow persisted in Postgres | ✅ |
 | **1e** | Owner KYC + admin approval API |
 
 ---
