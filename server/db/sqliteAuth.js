@@ -145,6 +145,21 @@ async function migrate() {
       sport TEXT,
       FOREIGN KEY(booking_id) REFERENCES bookings(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS payment_orders (
+      id TEXT PRIMARY KEY,
+      razorpay_order_id TEXT UNIQUE,
+      razorpay_payment_id TEXT,
+      user_id TEXT NOT NULL,
+      purpose TEXT NOT NULL,
+      amount_paise INTEGER NOT NULL,
+      currency TEXT NOT NULL DEFAULT 'INR',
+      status TEXT NOT NULL DEFAULT 'CREATED',
+      payload TEXT NOT NULL DEFAULT '{}',
+      booking_id TEXT,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

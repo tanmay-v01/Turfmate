@@ -14,6 +14,9 @@ const bookingRoutes = require('./routes/bookings');
 const splitRoutes = require('./routes/splits');
 const ownerRoutes = require('./routes/owners');
 const adminRoutes = require('./routes/admin');
+const paymentRoutes = require('./routes/payments');
+const paymentsRepo = require('./repositories/payments');
+const razorpayService = require('./services/razorpayService');
 const bookingsRepo = require('./repositories/bookings');
 const splitsRepo = require('./repositories/splits');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
@@ -37,6 +40,22 @@ const io = new Server(server, {
 app.set('io', io);
 
 app.use(cors({ origin: CORS_ORIGINS, credentials: true }));
+
+app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  try {
+    const signature = req.headers['x-razorpay-signature'];
+    const rawBody = req.body;
+    if (razorpayService.isLive() && !razorpayService.verifyWebhookSignature(rawBody, signature)) {
+      return res.status(400).json({ error: 'Invalid webhook signature' });
+    }
+    const event = JSON.parse(rawBody.toString());
+    const result = await paymentsRepo.handleWebhookEvent(event);
+    res.json({ ok: true, ...result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
@@ -46,6 +65,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/splits', splitRoutes);
 app.use('/api/owners', ownerRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/payments', paymentRoutes);
 
 async function bootstrapPhase1() {
   try {

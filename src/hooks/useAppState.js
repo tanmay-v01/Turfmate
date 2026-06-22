@@ -9,6 +9,8 @@ import { authApi } from '../services/authApi';
 import { turfsApi } from '../services/turfsApi';
 import { ownersApi } from '../services/ownersApi';
 import { adminApi } from '../services/adminApi';
+import { paymentsApi } from '../services/paymentsApi';
+import { openRazorpayCheckout } from '../utils/razorpayCheckout';
 import { socketService } from '../services/socket';
 import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
@@ -1281,8 +1283,35 @@ export function useAppState() {
     try {
       let bId = '';
       let apiSplit = null;
+
+      const fulfillViaPayments = async (orderBody) => {
+        const order = await paymentsApi.createOrder(orderBody);
+        if (order.demo) {
+          return paymentsApi.verify({ orderId: order.orderId, demo: true });
+        }
+        if (order.keyId || env.razorpayKey) {
+          return new Promise((resolve, reject) => {
+            openRazorpayCheckout({
+              order,
+              userProfile,
+              onSuccess: async (payment) => {
+                try {
+                  resolve(await paymentsApi.verify(payment));
+                } catch (err) {
+                  reject(err);
+                }
+              },
+              onFailure: reject,
+            });
+          });
+        }
+        return null;
+      };
+
       if (checkoutOption === 'split') {
-        const res = await bookingApi.initiateSplit({
+        const splitPayload = {
+          purpose: 'SPLIT_HOST',
+          amount: perHeadShare,
           turfId: activeTurf.id,
           slotId: selectedSlotId,
           date: bookingDate,
@@ -1292,17 +1321,41 @@ export function useAppState() {
           playersNeeded: splitPlayersCount - 1,
           isPublic: true,
           sport: selectedSportFilter !== 'all' ? selectedSportFilter : activeTurf.sports[0],
-        });
+        };
+        let res = await fulfillViaPayments(splitPayload);
+        if (!res) {
+          res = await bookingApi.initiateSplit({
+            turfId: activeTurf.id,
+            slotId: selectedSlotId,
+            date: bookingDate,
+            slotTime: slot.time,
+            totalAmount: price,
+            hostAdvance: perHeadShare,
+            playersNeeded: splitPlayersCount - 1,
+            isPublic: true,
+            sport: splitPayload.sport,
+          });
+        }
         bId = res.bookingId;
         apiSplit = res.split;
       } else {
-        const res = await bookingApi.checkout({
+        let res = await fulfillViaPayments({
+          purpose: 'BOOKING_PRIVATE',
+          amount: price,
           turfId: activeTurf.id,
           slotId: selectedSlotId,
           date: bookingDate,
           slotTime: slot.time,
-          amount: price,
         });
+        if (!res) {
+          res = await bookingApi.checkout({
+            turfId: activeTurf.id,
+            slotId: selectedSlotId,
+            date: bookingDate,
+            slotTime: slot.time,
+            amount: price,
+          });
+        }
         bId = res.bookingId;
       }
 
