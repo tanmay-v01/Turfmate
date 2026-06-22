@@ -1,19 +1,18 @@
 # Phase 2 — Payments & trust
 
-**Goal:** Razorpay orders, payment verification, webhooks, and escrow-ready booking fulfillment.
+**Goal:** Razorpay orders, payment verification, webhooks, refunds, owner ledger, and live OTP.
 
 ---
 
-## Slice 2a (shipped)
+## Shipped slices
 
-| Area | Status |
-|------|--------|
-| Payment orders table | `server/migrations/005_payment_orders.sql` |
-| Razorpay service | `server/services/razorpayService.js` (demo orders when keys unset) |
-| Payments API | `POST /api/payments/orders`, `POST /api/payments/verify` |
-| Webhook | `POST /api/payments/webhook` (raw body, signature verify when live) |
-| Frontend | `paymentsApi` + checkout wired via `processBookingPayment` |
-| Demo mode | Auto-verify demo orders → completes booking/split in DB |
+| Slice | Status | Summary |
+|-------|--------|---------|
+| **2a** | ✅ | Payment orders, verify, webhook, checkout fulfillment |
+| **2b** | ✅ | Split join via `SPLIT_JOIN` payment purpose |
+| **2c** | ✅ | Refunds on split cancel / expiry (Razorpay + demo) |
+| **2d** | ✅ | `payout_ledger` + owner revenue + admin platform ledger APIs |
+| **2e** | ✅ | MSG91 OTP send (falls back to demo when keys unset) |
 
 ---
 
@@ -21,9 +20,11 @@
 
 | Endpoint | Auth | Description |
 |----------|------|-------------|
-| `POST /api/payments/orders` | JWT | Create Razorpay order for booking intent |
+| `POST /api/payments/orders` | JWT | Create Razorpay order |
 | `POST /api/payments/verify` | JWT | Verify payment + fulfill booking/split |
-| `POST /api/payments/webhook` | Razorpay signature | Async payment.captured / failed |
+| `POST /api/payments/webhook` | Razorpay signature | `payment.captured` / `payment.failed` |
+| `GET /api/owners/me/revenue` | OWNER | Owner payout ledger summary + entries |
+| `GET /api/admin/ledger/platform` | SUPER_ADMIN | Platform commission + payment volume |
 
 **Order purposes:** `BOOKING_PRIVATE`, `SPLIT_HOST`, `SPLIT_JOIN`
 
@@ -37,19 +38,17 @@
 | `RAZORPAY_KEY_SECRET` | Railway API | Never expose to client |
 | `RAZORPAY_WEBHOOK_SECRET` | Railway API | Webhook HMAC |
 | `VITE_RAZORPAY_KEY_ID` | Vercel | Same key id for Checkout.js |
+| `MSG91_AUTH_KEY` | Railway API | Live OTP |
+| `MSG91_TEMPLATE_ID` | Railway API | DLT-approved OTP template |
 
-With keys unset, `DEMO_MODE=true` uses `demo_order_*` ids and skips Razorpay UI.
+With Razorpay/MSG91 unset, `DEMO_MODE=true` uses demo orders and OTP `1234`.
 
 ---
 
-## Next slices
+## Migrations
 
-| Slice | Work |
-|-------|------|
-| **2b** | Split join payments via `SPLIT_JOIN` purpose |
-| **2c** | Refund on split fail/cancel (Razorpay refund API) |
-| **2d** | Owner payout ledger + commission reporting |
-| **2e** | MSG91 live OTP |
+- `005_payment_orders.sql`
+- `006_payout_ledger.sql`
 
 ---
 
@@ -58,3 +57,11 @@ With keys unset, `DEMO_MODE=true` uses `demo_order_*` ids and skips Razorpay UI.
 1. Razorpay Dashboard → Webhooks → `https://<api-host>/api/payments/webhook`
 2. Events: `payment.captured`, `payment.failed`
 3. Set `RAZORPAY_WEBHOOK_SECRET` on Railway
+
+---
+
+## Phase 3 preview
+
+- Razorpay Route linked accounts for owner T+2 payouts
+- Redis OTP store
+- PostGIS radius search

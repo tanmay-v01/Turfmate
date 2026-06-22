@@ -13,6 +13,8 @@ export const adminApi = {
     }),
 
   getStats: () => apiFetch('/admin/stats'),
+
+  getPlatformLedger: () => apiFetch('/admin/ledger/platform'),
 };
 
 export default adminApi;

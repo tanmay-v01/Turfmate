@@ -130,6 +130,9 @@ export function useAppState() {
     return saved ? JSON.parse(saved) : INITIAL_OWNERS;
   });
 
+  const [ownerRevenue, setOwnerRevenue] = useState(null);
+  const [platformLedger, setPlatformLedger] = useState(null);
+
   const [suspendedTurfIds, setSuspendedTurfIds] = useState(() => {
     const saved = localStorage.getItem('tm_suspended_turfs');
     return saved ? JSON.parse(saved) : [];
@@ -319,6 +322,26 @@ export function useAppState() {
       })
       .catch((err) => console.warn('[admin] pending KYC unavailable:', err.message));
 
+    return () => { cancelled = true; };
+  }, [userProfile?.role, userProfile?.isLoggedIn]);
+
+  // Phase 2d: owner revenue from API ledger
+  useEffect(() => {
+    if (userProfile?.role !== 'OWNER' || !userProfile?.isLoggedIn) return undefined;
+    let cancelled = false;
+    ownersApi.getRevenue()
+      .then((data) => { if (!cancelled) setOwnerRevenue(data); })
+      .catch((err) => console.warn('[owners] revenue unavailable:', err.message));
+    return () => { cancelled = true; };
+  }, [userProfile?.role, userProfile?.isLoggedIn]);
+
+  // Phase 2d: platform ledger for super admin
+  useEffect(() => {
+    if (userProfile?.role !== 'SUPER_ADMIN' || !userProfile?.isLoggedIn) return undefined;
+    let cancelled = false;
+    adminApi.getPlatformLedger()
+      .then((data) => { if (!cancelled) setPlatformLedger(data); })
+      .catch((err) => console.warn('[admin] ledger unavailable:', err.message));
     return () => { cancelled = true; };
   }, [userProfile?.role, userProfile?.isLoggedIn]);
 
@@ -647,6 +670,16 @@ export function useAppState() {
   };
 
   const getOwnerRevenueMetrics = (turfId = null, ownerId = getCurrentOwnerId()) => {
+    if (ownerRevenue?.summary && !turfId) {
+      return {
+        gross: ownerRevenue.summary.gross,
+        commission: ownerRevenue.summary.commission,
+        net: ownerRevenue.summary.net,
+        pendingSplits: 0,
+        bookingCount: ownerRevenue.summary.entryCount,
+        pendingSettlement: ownerRevenue.summary.pendingSettlement,
+      };
+    }
     const ownerBookings = getOwnerBookings(turfId, ownerId);
     const gross = ownerBookings.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
     const commission = ownerBookings.reduce((sum, b) => sum + (b.commissionAmount || 0), 0);
@@ -656,6 +689,17 @@ export function useAppState() {
   };
 
   const getPlatformMetrics = () => {
+    if (platformLedger) {
+      const pendingOwners = owners.filter(o => o.approvalStatus === 'Pending_Approval');
+      return {
+        globalGross: platformLedger.ledgerGross || platformLedger.paymentsVolumeInr,
+        totalCommission: platformLedger.ledgerCommission,
+        activeTurfs: turfs.filter(t => !suspendedTurfIds.includes(t.id)).length,
+        pendingOwners,
+        totalBookings: platformLedger.settledBookings,
+        refundsIssued: platformLedger.refundsIssued,
+      };
+    }
     const appBookings = bookings.filter(b => b.source === 'app');
     const globalGross = appBookings.reduce((sum, b) => sum + (b.paidAmount || 0), 0);
     const totalCommission = appBookings.reduce((sum, b) => sum + (b.commissionAmount || 0), 0);
@@ -1271,6 +1315,30 @@ export function useAppState() {
   };
 
   // Perform Booking Payment
+  const fulfillViaPayments = async (orderBody) => {
+    const order = await paymentsApi.createOrder(orderBody);
+    if (order.demo) {
+      return paymentsApi.verify({ orderId: order.orderId, demo: true });
+    }
+    if (order.keyId || env.razorpayKey) {
+      return new Promise((resolve, reject) => {
+        openRazorpayCheckout({
+          order,
+          userProfile,
+          onSuccess: async (payment) => {
+            try {
+              resolve(await paymentsApi.verify(payment));
+            } catch (err) {
+              reject(err);
+            }
+          },
+          onFailure: reject,
+        });
+      });
+    }
+    return null;
+  };
+
   const processBookingPayment = async () => {
     setIsProcessingPayment(true);
     
@@ -1283,30 +1351,6 @@ export function useAppState() {
     try {
       let bId = '';
       let apiSplit = null;
-
-      const fulfillViaPayments = async (orderBody) => {
-        const order = await paymentsApi.createOrder(orderBody);
-        if (order.demo) {
-          return paymentsApi.verify({ orderId: order.orderId, demo: true });
-        }
-        if (order.keyId || env.razorpayKey) {
-          return new Promise((resolve, reject) => {
-            openRazorpayCheckout({
-              order,
-              userProfile,
-              onSuccess: async (payment) => {
-                try {
-                  resolve(await paymentsApi.verify(payment));
-                } catch (err) {
-                  reject(err);
-                }
-              },
-              onFailure: reject,
-            });
-          });
-        }
-        return null;
-      };
 
       if (checkoutOption === 'split') {
         const splitPayload = {
@@ -1545,7 +1589,15 @@ export function useAppState() {
     try {
       let apiResult = null;
       if (ann.bookingId && !String(ann.bookingId).startsWith('B-')) {
-        apiResult = await bookingApi.joinSplit(ann.bookingId, ann.costPerHead);
+        let res = await fulfillViaPayments({
+          purpose: 'SPLIT_JOIN',
+          amount: ann.costPerHead,
+          bookingId: ann.bookingId,
+        });
+        if (!res) {
+          res = await bookingApi.joinSplit(ann.bookingId, ann.costPerHead);
+        }
+        apiResult = res;
       }
 
       let filled = false;

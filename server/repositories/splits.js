@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const db = require('../db/index');
 const bookingsRepo = require('./bookings');
+const ledgerRepo = require('./ledger');
 
 const isPg = db.driver === 'postgres';
 const SPLIT_FUNDING_MS = 4 * 60 * 60 * 1000;
@@ -244,7 +245,7 @@ async function joinSplit({ bookingId, userId, amount }) {
   }
 
   const payAmount = amount != null ? Number(amount) : Number(row.cost_per_head);
-  const newCollected = Number(row.amount_collected) + payAmount;
+  const newCollected = Number(row.amount_collected || 0) + payAmount;
   if (newCollected > Number(row.total_cost) + 1) {
     throw Object.assign(new Error('Payment exceeds split total'), { status: 409 });
   }
@@ -286,6 +287,7 @@ async function joinSplit({ bookingId, userId, amount }) {
         : `UPDATE booking_roster SET payment_status = 'SETTLED' WHERE booking_id = ?`,
       [bookingId]
     );
+    await ledgerRepo.recordSettlement(bookingId);
   }
 
   const updated = await getSplitBooking(bookingId);
@@ -302,6 +304,7 @@ async function joinSplit({ bookingId, userId, amount }) {
 }
 
 async function cancelSplit({ bookingId, userId }) {
+  const paymentsRepo = require('./payments');
   const row = await getSplitBooking(bookingId);
   if (!row) throw Object.assign(new Error('Split not found'), { status: 404 });
   if (row.host_id !== userId) {
@@ -322,6 +325,8 @@ async function cancelSplit({ bookingId, userId }) {
     [bookingId]
   );
 
+  const refundResult = await paymentsRepo.refundBookingPayments(bookingId);
+
   const hostDisplay = await getUserDisplay(row.host_id);
   const roster = await getRosterNames(bookingId);
   const split = await splitToAnnouncement(
@@ -332,7 +337,7 @@ async function cancelSplit({ bookingId, userId }) {
     roster
   );
 
-  return { message: 'Split canceled — refunds issued', split };
+  return { message: 'Split canceled — refunds issued', split, refunds: refundResult };
 }
 
 async function listOpenSplits() {
@@ -367,6 +372,7 @@ async function listOpenSplits() {
 }
 
 async function cleanupExpiredSplits() {
+  const paymentsRepo = require('./payments');
   const expired = await db.getAll(
     isPg
       ? `SELECT b.id FROM bookings b
@@ -389,6 +395,7 @@ async function cleanupExpiredSplits() {
         : `UPDATE booking_roster SET payment_status = 'REFUNDED' WHERE booking_id = ?`,
       [id]
     );
+    await paymentsRepo.refundBookingPayments(id);
   }
   return expired.length;
 }

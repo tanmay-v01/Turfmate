@@ -1,6 +1,7 @@
 const express = require('express');
 const { authRequired, loadUser, requireRole } = require('../middleware/auth');
 const ownersRepo = require('../repositories/owners');
+const ledgerRepo = require('../repositories/ledger');
 
 const router = express.Router();
 
@@ -19,6 +20,15 @@ router.get('/stats', async (_req, res) => {
   try {
     const stats = await ownersRepo.getPlatformStats();
     res.json(stats);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/ledger/platform', async (_req, res) => {
+  try {
+    const ledger = await ledgerRepo.getPlatformSummary();
+    res.json(ledger);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

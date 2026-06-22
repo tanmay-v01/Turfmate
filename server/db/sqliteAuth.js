@@ -160,6 +160,20 @@ async function migrate() {
       updated_at INTEGER NOT NULL,
       FOREIGN KEY(user_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS payout_ledger (
+      id TEXT PRIMARY KEY,
+      booking_id TEXT,
+      turf_id TEXT,
+      owner_user_id TEXT NOT NULL,
+      entry_type TEXT NOT NULL DEFAULT 'BOOKING_SETTLED',
+      gross_inr INTEGER NOT NULL DEFAULT 0,
+      commission_inr INTEGER NOT NULL DEFAULT 0,
+      net_inr INTEGER NOT NULL DEFAULT 0,
+      status TEXT NOT NULL DEFAULT 'PENDING_SETTLEMENT',
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      FOREIGN KEY(owner_user_id) REFERENCES users(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

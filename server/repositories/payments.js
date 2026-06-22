@@ -3,6 +3,7 @@ const db = require('../db/index');
 const razorpay = require('../services/razorpayService');
 const bookingsRepo = require('./bookings');
 const splitsRepo = require('./splits');
+const ledgerRepo = require('./ledger');
 const config = require('../lib/config');
 
 const isPg = db.driver === 'postgres';
@@ -90,10 +91,11 @@ async function fulfillOrder(order, userId) {
       sport: payload.sport,
     });
   } else if (order.purpose === 'SPLIT_JOIN') {
+    const payAmount = Number(payload.amount ?? order.amount_paise / 100);
     result = await splitsRepo.joinSplit({
       bookingId: payload.bookingId,
       userId,
-      amount: Number(payload.amount),
+      amount: payAmount,
     });
   } else {
     throw Object.assign(new Error('Unknown payment purpose'), { status: 400 });
@@ -107,6 +109,10 @@ async function fulfillOrder(order, userId) {
       : `UPDATE payment_orders SET status = 'PAID', booking_id = ?, updated_at = ? WHERE id = ?`,
     isPg ? [bookingId, ts, order.id] : [bookingId, Date.now(), order.id]
   );
+
+  if (order.purpose === 'BOOKING_PRIVATE' || (order.purpose === 'SPLIT_JOIN' && result.filled)) {
+    await ledgerRepo.recordSettlement(bookingId);
+  }
 
   return { ...result, bookingId, orderId: order.id };
 }
@@ -129,25 +135,34 @@ async function verifyAndFulfill({
   const rzOrderId = razorpayOrderId || order.razorpay_order_id;
   const isDemoPayment = demo || rzOrderId.startsWith('demo_order_') || (!razorpay.isLive() && config.demoMode);
 
-  if (!isDemoPayment) {
-    if (!razorpayPaymentId || !razorpaySignature) {
-      throw Object.assign(new Error('Payment verification fields required'), { status: 400 });
-    }
-    const valid = razorpay.verifyPaymentSignature({
-      razorpayOrderId: rzOrderId,
-      razorpayPaymentId,
-      razorpaySignature,
-    });
-    if (!valid) throw Object.assign(new Error('Invalid payment signature'), { status: 400 });
+    if (!isDemoPayment) {
+      if (!razorpayPaymentId || !razorpaySignature) {
+        throw Object.assign(new Error('Payment verification fields required'), { status: 400 });
+      }
+      const valid = razorpay.verifyPaymentSignature({
+        razorpayOrderId: rzOrderId,
+        razorpayPaymentId,
+        razorpaySignature,
+      });
+      if (!valid) throw Object.assign(new Error('Invalid payment signature'), { status: 400 });
 
-    const ts = now();
-    await db.run(
-      isPg
-        ? `UPDATE payment_orders SET razorpay_payment_id = $1, updated_at = $2 WHERE id = $3`
-        : `UPDATE payment_orders SET razorpay_payment_id = ?, updated_at = ? WHERE id = ?`,
-      isPg ? [razorpayPaymentId, ts, order.id] : [razorpayPaymentId, Date.now(), order.id]
-    );
-  }
+      const ts = now();
+      await db.run(
+        isPg
+          ? `UPDATE payment_orders SET razorpay_payment_id = $1, updated_at = $2 WHERE id = $3`
+          : `UPDATE payment_orders SET razorpay_payment_id = ?, updated_at = ? WHERE id = ?`,
+        isPg ? [razorpayPaymentId, ts, order.id] : [razorpayPaymentId, Date.now(), order.id]
+      );
+    } else {
+      const demoPayId = razorpayPaymentId || `demo_pay_${order.id}`;
+      const ts = now();
+      await db.run(
+        isPg
+          ? `UPDATE payment_orders SET razorpay_payment_id = $1, updated_at = $2 WHERE id = $3`
+          : `UPDATE payment_orders SET razorpay_payment_id = ?, updated_at = ? WHERE id = ?`,
+        isPg ? [demoPayId, ts, order.id] : [demoPayId, Date.now(), order.id]
+      );
+    }
 
   return fulfillOrder(order, userId);
 }
@@ -189,9 +204,43 @@ async function handleWebhookEvent(event) {
   return { handled: false };
 }
 
+async function refundBookingPayments(bookingId) {
+  const orders = await db.getAll(
+    isPg
+      ? `SELECT * FROM payment_orders WHERE booking_id = $1 AND status = 'PAID'`
+      : `SELECT * FROM payment_orders WHERE booking_id = ? AND status = 'PAID'`,
+    [bookingId]
+  );
+
+  const refunds = [];
+  for (const order of orders) {
+    try {
+      if (order.razorpay_payment_id && order.razorpay_payment_id.startsWith('pay_')) {
+        const refund = await razorpay.createRefund(order.razorpay_payment_id, order.amount_paise);
+        refunds.push({ orderId: order.id, refundId: refund.id, demo: refund.demo });
+      } else {
+        refunds.push({ orderId: order.id, refundId: `demo_refund_${order.id}`, demo: true });
+      }
+      const ts = now();
+      await db.run(
+        isPg
+          ? `UPDATE payment_orders SET status = 'REFUNDED', updated_at = $1 WHERE id = $2`
+          : `UPDATE payment_orders SET status = 'REFUNDED', updated_at = ? WHERE id = ?`,
+        isPg ? [ts, order.id] : [Date.now(), order.id]
+      );
+    } catch (err) {
+      refunds.push({ orderId: order.id, error: err.message });
+    }
+  }
+
+  await ledgerRepo.reverseSettlement(bookingId);
+  return { bookingId, refunds, count: refunds.length };
+}
+
 module.exports = {
   createOrder,
   verifyAndFulfill,
   handleWebhookEvent,
   getOrderById,
+  refundBookingPayments,
 };

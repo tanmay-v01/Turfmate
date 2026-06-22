@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const db = require('../db/index');
 const config = require('../lib/config');
+const ledgerRepo = require('./ledger');
 
 const isPg = db.driver === 'postgres';
 const LOCK_TTL_MS = 5 * 60 * 1000;
@@ -173,6 +174,8 @@ async function checkoutPrivate({
     isPg ? 'DELETE FROM slot_locks WHERE slot_key = $1' : 'DELETE FROM slot_locks WHERE slot_key = ?',
     [key]
   );
+
+  await ledgerRepo.recordSettlement(bookingId);
 
   return {
     bookingId,

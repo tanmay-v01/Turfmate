@@ -56,9 +56,32 @@ function verifyWebhookSignature(rawBody, signature) {
   return expected === signature;
 }
 
+async function createRefund(paymentId, amountPaise) {
+  if (!isLive()) {
+    return { id: `demo_refund_${Date.now()}`, payment_id: paymentId, demo: true };
+  }
+
+  const auth = Buffer.from(`${config.razorpayKeyId}:${config.razorpayKeySecret}`).toString('base64');
+  const body = amountPaise ? { amount: amountPaise } : {};
+  const res = await fetch(`https://api.razorpay.com/v1/payments/${paymentId}/refund`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Basic ${auth}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    throw Object.assign(new Error(data.error?.description || 'Razorpay refund failed'), { status: 502 });
+  }
+  return data;
+}
+
 module.exports = {
   isLive,
   createRazorpayOrder,
   verifyPaymentSignature,
   verifyWebhookSignature,
+  createRefund,
 };

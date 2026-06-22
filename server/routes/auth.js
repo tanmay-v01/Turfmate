@@ -68,7 +68,8 @@ router.post('/verify-otp', async (req, res) => {
     if (!isValidPhone(phone)) {
       return res.status(400).json({ error: 'Invalid phone number' });
     }
-    if (!otpService.verifyOtp(phone, otp)) {
+    const ok = await otpService.verifyOtpAsync(phone, otp);
+    if (!ok) {
       return res.status(401).json({ error: 'Invalid or expired OTP' });
     }
 

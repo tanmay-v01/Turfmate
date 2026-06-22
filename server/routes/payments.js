@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/orders', authRequired, loadUser, async (req, res) => {
   try {
     const body = req.body || {};
-    const { purpose, amountPaise, amount } = body;
+    const { purpose, amountPaise, amount, ...payload } = body;
     if (!purpose || (amountPaise == null && amount == null)) {
       return res.status(400).json({ error: 'purpose and amount are required' });
     }
@@ -15,8 +15,10 @@ router.post('/orders', authRequired, loadUser, async (req, res) => {
     if (!Number.isFinite(paise) || paise < 100) {
       return res.status(400).json({ error: 'amount must be at least ₹1' });
     }
+    if (amount != null && payload.amount == null) {
+      payload.amount = Number(amount);
+    }
 
-    const { purpose: _p, amountPaise: _a, amount: _amt, ...payload } = body;
     const order = await paymentsRepo.createOrder({
       userId: req.user.id,
       purpose,

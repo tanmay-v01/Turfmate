@@ -1,6 +1,7 @@
 const express = require('express');
-const { authRequired, loadUser } = require('../middleware/auth');
+const { authRequired, loadUser, requireRole } = require('../middleware/auth');
 const ownersRepo = require('../repositories/owners');
+const ledgerRepo = require('../repositories/ledger');
 
 const router = express.Router();
 
@@ -24,6 +25,24 @@ router.post('/apply', authRequired, loadUser, async (req, res) => {
     res.json(result);
   } catch (err) {
     res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+router.get('/me/revenue', authRequired, loadUser, requireRole('OWNER'), async (req, res) => {
+  try {
+    const revenue = await ledgerRepo.getOwnerRevenue(req.user.id);
+    res.json(revenue);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.get('/me/revenue', authRequired, loadUser, requireRole('OWNER'), async (req, res) => {
+  try {
+    const revenue = await ledgerRepo.getOwnerRevenue(req.user.id);
+    res.json(revenue);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
