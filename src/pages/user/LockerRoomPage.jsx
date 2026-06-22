@@ -40,6 +40,7 @@ export default function LockerRoomPage() {
     if (hasBannedMatch) return false;
 
     if (ann.expiresAt && Date.now() > ann.expiresAt) return false;
+    if (ann.fundingExpiresAt && Date.now() > ann.fundingExpiresAt) return false;
 
     const turf = app.turfs.find((t) => t.id === ann.turfId);
     const dist = turf

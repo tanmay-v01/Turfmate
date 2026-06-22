@@ -17,6 +17,8 @@ import env from '../config/env';
 import { readJson } from '../utils/safeStorage';
 import { getToken } from '../services/apiClient';
 import { mapApiBooking } from '../utils/bookingMapper';
+import { lockerApi } from '../services/lockerApi';
+import { mapLockerPost, mergeLockerAnnouncements } from '../utils/lockerMapper';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -266,25 +268,33 @@ export function useAppState() {
     return undefined;
   }, [userProfile?.isLoggedIn, refreshMyBookings]);
 
-  // Phase 1d: load open splits from API into announcements
+  const refreshLockerFeed = useCallback(async () => {
+    if (!userProfile?.isLoggedIn) return;
+    try {
+      const [splitsRes, feedRes] = await Promise.all([
+        bookingApi.listOpenSplits().catch(() => ({ splits: [] })),
+        lockerApi.getFeed().catch(() => ({ posts: [] })),
+      ]);
+      const splits = splitsRes.splits || [];
+      const posts = (feedRes.posts || []).map(mapLockerPost);
+      setAnnouncements((prev) => mergeLockerAnnouncements(splits, posts, prev));
+    } catch (err) {
+      console.warn('[locker] refresh failed:', err.message);
+    }
+  }, [userProfile?.isLoggedIn]);
+
   useEffect(() => {
     if (!userProfile?.isLoggedIn) return undefined;
-    let cancelled = false;
+    refreshLockerFeed();
+    return undefined;
+  }, [userProfile?.isLoggedIn, refreshLockerFeed]);
 
-    bookingApi.listOpenSplits()
-      .then(({ splits = [] }) => {
-        if (cancelled) return;
-        setAnnouncements((prev) => {
-          const mockOnly = prev.filter((a) => !a.bookingId || String(a.bookingId).startsWith('B-'));
-          const apiIds = new Set(splits.map((s) => s.id));
-          const hostSplits = prev.filter((a) => a.bookingId && !String(a.bookingId).startsWith('B-') && !apiIds.has(a.id) && a.status === 'open');
-          return [...hostSplits, ...splits, ...mockOnly];
-        });
-      })
-      .catch((err) => console.warn('[splits] open list unavailable:', err.message));
-
-    return () => { cancelled = true; };
-  }, [userProfile?.isLoggedIn]);
+  useEffect(() => {
+    if (view !== 'locker_room' || !userProfile?.isLoggedIn) return undefined;
+    refreshLockerFeed();
+    const timer = setInterval(refreshLockerFeed, 30000);
+    return () => clearInterval(timer);
+  }, [view, userProfile?.isLoggedIn, refreshLockerFeed]);
 
   // Phase 1e: load pending KYC queue for super admin
   useEffect(() => {
@@ -1240,8 +1250,37 @@ export function useAppState() {
     });
   };
 
-  const createLockerPost = (category, text, extra = {}) => {
+  const createLockerPost = async (category, text, extra = {}) => {
     const isHighlight = category === 'HIGHLIGHT' || extra.isHighlight;
+    const payloadExtra = {
+      ...extra,
+      isHighlight,
+      sport: extra.sport || 'general',
+      turfId: extra.turfId || 'turf-1',
+      turfName: extra.turfName || userProfile.location || 'Nearby',
+    };
+
+    if (getToken() && userProfile.userId) {
+      try {
+        const { post } = await lockerApi.createPost({
+          contentType: category,
+          contentText: text,
+          extra: payloadExtra,
+          lat: userProfile.lat,
+          lng: userProfile.lng,
+        });
+        setAnnouncements((prev) => [mapLockerPost(post), ...prev]);
+        showToast('Posted to Locker Room', 'success');
+        return;
+      } catch (err) {
+        console.warn('[locker] create post failed:', err.message);
+        if (err.status === 429) {
+          showToast(err.message, 'error', 'Rate limit');
+          return;
+        }
+      }
+    }
+
     const newPost = {
       id: `ann-post-${Date.now()}`,
       hostId: 'me',
@@ -1482,6 +1521,7 @@ export function useAppState() {
       setSelectedSlotId(null);
       showToast('Payment done — your slot is booked!', 'success', 'Booking confirmed');
       refreshMyBookings();
+      refreshLockerFeed();
     } catch (error) {
       console.error('Payment Error:', error);
       showToast(error.message, 'error', 'Booking failed');
@@ -1552,6 +1592,7 @@ export function useAppState() {
       ]);
     });
     showToast('Split canceled — refunds issued to all players', 'success');
+    refreshLockerFeed();
   };
 
   const executeJoinSplit = async (annId) => {
@@ -1639,6 +1680,7 @@ export function useAppState() {
 
       showToast(`UPI payment of ₹${ann.costPerHead} completed`, 'success', 'Joined the squad!');
       setIsProcessingPayment(false);
+      refreshLockerFeed();
       return { filled, chatId };
     } catch (error) {
       console.error('Join Split Error:', error);
@@ -2051,7 +2093,7 @@ export function useAppState() {
   return {
     isAdminMode, setIsAdminMode, view, setView,
     onboardingData, setOnboardingData, userProfile, setUserProfile,
-    bookings, setBookings, refreshMyBookings, announcements, setAnnouncements,
+    bookings, setBookings, refreshMyBookings, announcements, setAnnouncements, refreshLockerFeed,
     chats, setChats, friendRequests, acceptFriendRequest, declineFriendRequest, notifications, setNotifications,
     toast, showToast, dismissToast,
     friendStats, setFriendStats, liveGame, setLiveGame, gameHistory, finalizeLiveGame,

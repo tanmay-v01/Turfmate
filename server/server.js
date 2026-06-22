@@ -15,6 +15,7 @@ const splitRoutes = require('./routes/splits');
 const ownerRoutes = require('./routes/owners');
 const adminRoutes = require('./routes/admin');
 const paymentRoutes = require('./routes/payments');
+const lockerRoutes = require('./routes/locker');
 const paymentsRepo = require('./repositories/payments');
 const razorpayService = require('./services/razorpayService');
 const bookingsRepo = require('./repositories/bookings');
@@ -66,6 +67,7 @@ app.use('/api/splits', splitRoutes);
 app.use('/api/owners', ownerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/locker', lockerRoutes);
 
 async function bootstrapPhase1() {
   try {

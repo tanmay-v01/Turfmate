@@ -174,6 +174,18 @@ async function migrate() {
       updated_at INTEGER NOT NULL,
       FOREIGN KEY(owner_user_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS locker_posts (
+      id TEXT PRIMARY KEY,
+      author_id TEXT NOT NULL,
+      content_type TEXT NOT NULL,
+      content_text TEXT NOT NULL,
+      extra_json TEXT NOT NULL DEFAULT '{}',
+      location_lat REAL,
+      location_lng REAL,
+      expires_at INTEGER,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(author_id) REFERENCES users(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);
