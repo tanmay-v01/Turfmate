@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Calendar, MapPin, QrCode, ChevronRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
@@ -70,6 +70,15 @@ function BookingCard({ booking, turfs, onOpenTurf }) {
 export default function MyBookingsPage() {
   const app = useApp();
   const [tab, setTab] = useState('current');
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    Promise.resolve(app.refreshMyBookings?.())
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [app.refreshMyBookings]);
 
   const { current, previous } = useMemo(() => {
     const mine = app.bookings;
@@ -90,7 +99,7 @@ export default function MyBookingsPage() {
     <div className="tm-page animate-fade-up pb-28 lg:pb-10">
       <PageHeader
         title="My bookings"
-        subtitle={`${current.length} upcoming · ${previous.length} past`}
+        subtitle={loading ? 'Syncing…' : `${current.length} upcoming · ${previous.length} past`}
       />
 
       <div className="flex gap-2 p-1 bg-white/80 border border-slate-100 rounded-2xl mb-5">

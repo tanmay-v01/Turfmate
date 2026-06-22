@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { SPORTS, MOCK_TURFS, INITIAL_ANNOUNCEMENTS, INITIAL_CHATS } from '../data/mockData';
 import { INITIAL_FRIEND_STATS } from '../data/leaderboardData';
 import { extractPlayerDeltas, applyStatDelta } from '../utils/scoreEngine';
@@ -15,6 +15,8 @@ import { socketService } from '../services/socket';
 import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
 import { readJson } from '../utils/safeStorage';
+import { getToken } from '../services/apiClient';
+import { mapApiBooking } from '../utils/bookingMapper';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -102,17 +104,35 @@ export function useAppState() {
         ownerPayout: 360,
         source: 'app',
         bookedAt: '2026-06-19T18:00:00.000Z',
-      }
+      },
     ]);
-    return raw.map(b => {
+    return raw.map((b) => {
       if (b.commissionAmount != null) return b;
-      const turf = MOCK_TURFS.find(t => t.id === b.turfId);
+      const turf = MOCK_TURFS.find((t) => t.id === b.turfId);
       const collected = b.paidAmount || 0;
       return enrichBookingPayment(b, turf, collected, b.totalAmount || collected);
     });
   });
 
   const [turfs, setTurfs] = useState(loadTurfs);
+  const turfsRef = useRef(turfs);
+  useEffect(() => { turfsRef.current = turfs; }, [turfs]);
+
+  const refreshMyBookings = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      const { bookings: rows } = await bookingApi.listMine();
+      setBookings((prev) => {
+        const apiBookings = (rows || []).map((row) => mapApiBooking(row, turfsRef.current));
+        if (!apiBookings.length) return prev;
+        const apiIds = new Set(apiBookings.map((b) => b.id));
+        const localOnly = prev.filter((b) => !apiIds.has(b.id));
+        return [...apiBookings, ...localOnly];
+      });
+    } catch (err) {
+      console.warn('[bookings] refresh failed:', err.message);
+    }
+  }, []);
 
   const [owners, setOwners] = useState(() => readJson('tm_owners', INITIAL_OWNERS));
 
@@ -239,6 +259,12 @@ export function useAppState() {
 
     return () => { cancelled = true; };
   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
+
+  useEffect(() => {
+    if (!userProfile?.isLoggedIn || !getToken()) return undefined;
+    refreshMyBookings();
+    return undefined;
+  }, [userProfile?.isLoggedIn, refreshMyBookings]);
 
   // Phase 1d: load open splits from API into announcements
   useEffect(() => {
@@ -1455,6 +1481,7 @@ export function useAppState() {
       setBookingSuccessData(newBooking);
       setSelectedSlotId(null);
       showToast('Payment done — your slot is booked!', 'success', 'Booking confirmed');
+      refreshMyBookings();
     } catch (error) {
       console.error('Payment Error:', error);
       showToast(error.message, 'error', 'Booking failed');
@@ -2024,7 +2051,7 @@ export function useAppState() {
   return {
     isAdminMode, setIsAdminMode, view, setView,
     onboardingData, setOnboardingData, userProfile, setUserProfile,
-    bookings, setBookings, announcements, setAnnouncements,
+    bookings, setBookings, refreshMyBookings, announcements, setAnnouncements,
     chats, setChats, friendRequests, acceptFriendRequest, declineFriendRequest, notifications, setNotifications,
     toast, showToast, dismissToast,
     friendStats, setFriendStats, liveGame, setLiveGame, gameHistory, finalizeLiveGame,
