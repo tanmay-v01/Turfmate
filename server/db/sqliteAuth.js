@@ -195,6 +195,22 @@ async function migrate() {
       FOREIGN KEY(turf_id) REFERENCES turfs(id)
     )`);
   }
+
+  const ownerKycCols = [
+    ['location_lat', 'REAL'],
+    ['location_lng', 'REAL'],
+    ['location_label', 'TEXT'],
+    ['kyc_doc_name', 'TEXT'],
+    ['account_holder', 'TEXT'],
+    ['turf_name', 'TEXT'],
+    ['reject_note', 'TEXT'],
+    ['applied_at', 'INTEGER'],
+  ];
+  for (const [col, type] of ownerKycCols) {
+    if (!(await tableHasColumn('turf_owners', col))) {
+      await run(`ALTER TABLE turf_owners ADD COLUMN ${col} ${type}`);
+    }
+  }
 }
 
 async function close() {

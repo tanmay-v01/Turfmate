@@ -10,7 +10,7 @@ function parseSportsDna(raw) {
   }
 }
 
-function toClientProfile(user, playerProfile, ownerProfile) {
+function toClientProfile(user, playerProfile, ownerProfile, ownerMeta = {}) {
   const base = {
     isLoggedIn: true,
     userId: user.id,
@@ -28,15 +28,26 @@ function toClientProfile(user, playerProfile, ownerProfile) {
   }
 
   if (user.role === 'OWNER' && ownerProfile) {
+    const kyc = ownerProfile.kyc_status || 'PENDING';
+    const approvalStatus = kyc === 'APPROVED' ? 'Approved' : kyc === 'REJECTED' ? 'Rejected' : 'Pending_Approval';
     return {
       ...base,
       name: ownerProfile.owner_name || ownerProfile.business_name || 'Owner',
       businessName: ownerProfile.business_name,
       ownerName: ownerProfile.owner_name,
-      approvalStatus: ownerProfile.kyc_status === 'APPROVED' ? 'Approved' : 'Pending_Approval',
-      avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=Admin',
-      turfIds: ['turf-1', 'turf-2'],
-      ownerId: 'owner-1',
+      businessEmail: ownerProfile.business_email,
+      approvalStatus,
+      kycStatus: kyc,
+      rejectNote: ownerProfile.reject_note || '',
+      pan: ownerProfile.pan_number,
+      gstin: ownerProfile.gstin,
+      bankAccount: ownerProfile.bank_account_no,
+      ifsc: ownerProfile.ifsc_code,
+      accountHolder: ownerProfile.account_holder,
+      location: ownerProfile.location_label,
+      avatar: `https://api.dicebear.com/7.x/identicon/svg?seed=${user.id}`,
+      turfIds: ownerMeta.turfIds || [],
+      ownerId: ownerMeta.ownerId || user.id,
     };
   }
 

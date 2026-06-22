@@ -1,6 +1,7 @@
 const express = require('express');
 const { authRequired, loadUser } = require('../middleware/auth');
 const usersRepo = require('../repositories/users');
+const ownersRepo = require('../repositories/owners');
 const { toClientProfile } = require('../utils/profileMapper');
 
 const router = express.Router();
@@ -9,6 +10,7 @@ router.get('/me', authRequired, loadUser, async (req, res) => {
   try {
     const playerProfile = await usersRepo.getPlayerProfile(req.user.id);
     const ownerProfile = await usersRepo.getOwnerProfile(req.user.id);
+    const ownerMeta = req.user.role === 'OWNER' ? await ownersRepo.getOwnerMetaForProfile(req.user.id) : {};
     res.json({
       user: {
         id: req.user.id,
@@ -16,7 +18,7 @@ router.get('/me', authRequired, loadUser, async (req, res) => {
         role: req.user.role,
         onboardingComplete: Boolean(req.user.onboarding_complete),
       },
-      profile: toClientProfile(req.user, playerProfile, ownerProfile),
+      profile: toClientProfile(req.user, playerProfile, ownerProfile, ownerMeta),
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -45,6 +47,7 @@ router.patch('/me', authRequired, loadUser, async (req, res) => {
     const user = await usersRepo.findById(req.user.id);
     const playerProfile = await usersRepo.getPlayerProfile(user.id);
     const ownerProfile = await usersRepo.getOwnerProfile(user.id);
+    const ownerMeta = user.role === 'OWNER' ? await ownersRepo.getOwnerMetaForProfile(user.id) : {};
 
     res.json({
       user: {
@@ -53,7 +56,7 @@ router.patch('/me', authRequired, loadUser, async (req, res) => {
         role: user.role,
         onboardingComplete: Boolean(user.onboarding_complete),
       },
-      profile: toClientProfile(user, playerProfile, ownerProfile),
+      profile: toClientProfile(user, playerProfile, ownerProfile, ownerMeta),
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

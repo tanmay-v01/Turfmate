@@ -3,6 +3,7 @@ const config = require('../lib/config');
 const otpService = require('../services/otpService');
 const jwtService = require('../services/jwtService');
 const usersRepo = require('../repositories/users');
+const ownersRepo = require('../repositories/owners');
 const { normalizePhone, isValidPhone } = require('../utils/phone');
 const { toClientProfile } = require('../utils/profileMapper');
 const { seedDemoUsers } = require('../scripts/seedDemoUsers');
@@ -82,8 +83,9 @@ router.post('/verify-otp', async (req, res) => {
 
     const playerProfile = await usersRepo.getPlayerProfile(user.id);
     const ownerProfile = await usersRepo.getOwnerProfile(user.id);
+    const ownerMeta = user.role === 'OWNER' ? await ownersRepo.getOwnerMetaForProfile(user.id) : {};
     const token = jwtService.sign(user);
-    const profile = toClientProfile(user, playerProfile, ownerProfile);
+    const profile = toClientProfile(user, playerProfile, ownerProfile, ownerMeta);
 
     res.json({
       token,

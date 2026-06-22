@@ -7,6 +7,8 @@ import { enrichBookingPayment, calcCommission } from '../constants/commission';
 import { bookingApi } from '../services/api';
 import { authApi } from '../services/authApi';
 import { turfsApi } from '../services/turfsApi';
+import { ownersApi } from '../services/ownersApi';
+import { adminApi } from '../services/adminApi';
 import { socketService } from '../services/socket';
 import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
@@ -297,6 +299,26 @@ export function useAppState() {
 
     return () => { cancelled = true; };
   }, [userProfile?.isLoggedIn]);
+
+  // Phase 1e: load pending KYC queue for super admin
+  useEffect(() => {
+    if (userProfile?.role !== 'SUPER_ADMIN' || !userProfile?.isLoggedIn) return undefined;
+    let cancelled = false;
+
+    adminApi.listPendingKyc()
+      .then(({ owners: pending = [] }) => {
+        if (cancelled || !pending.length) return;
+        setOwners((prev) => {
+          const approved = prev.filter((o) => o.approvalStatus === 'Approved');
+          const pendingIds = new Set(pending.map((o) => o.id));
+          const kept = approved.filter((o) => !pendingIds.has(o.id));
+          return [...kept, ...pending];
+        });
+      })
+      .catch((err) => console.warn('[admin] pending KYC unavailable:', err.message));
+
+    return () => { cancelled = true; };
+  }, [userProfile?.role, userProfile?.isLoggedIn]);
 
   // Haversine formula for dynamic coordinates distance
   const getDistance = (lat1, lon1, lat2, lon2) => {
@@ -647,27 +669,56 @@ export function useAppState() {
     return owner?.name || owner?.businessName || 'Unknown';
   };
 
-  const approveOwnerApplication = (ownerId) => {
-    const owner = owners.find(o => o.id === ownerId);
-    setOwners(prev => prev.map(o =>
-      o.id === ownerId ? { ...o, approvalStatus: 'Approved' } : o
-    ));
-    if (owner?.turfIds?.length) {
-      setTurfs(prev => prev.map(t =>
-        owner.turfIds.includes(t.id) ? { ...t, status: 'active' } : t
+  const approveOwnerApplication = async (ownerId) => {
+    try {
+      const { owner } = await adminApi.approveKyc(ownerId);
+      setOwners((prev) => prev.map((o) => (o.id === ownerId ? { ...o, ...owner } : o)));
+      const approved = owner || owners.find((o) => o.id === ownerId);
+      if (approved?.turfIds?.length) {
+        setTurfs((prev) => prev.map((t) =>
+          approved.turfIds.includes(t.id) ? { ...t, status: 'active' } : t
+        ));
+        turfsApi.list().then(({ turfs: apiTurfs }) => {
+          if (apiTurfs?.length) setTurfs(apiTurfs);
+        }).catch(() => {});
+      }
+      if (userProfile.ownerId === ownerId || userProfile.userId === ownerId || userProfile.phone === approved?.phone) {
+        const nextProfile = {
+          ...userProfile,
+          approvalStatus: 'Approved',
+          ownerId: ownerId,
+          turfIds: approved?.turfIds || userProfile.turfIds,
+        };
+        setUserProfile(nextProfile);
+        setOwnerActiveTurfId(approved?.turfIds?.[0] || ownerActiveTurfId);
+        setView('owner_dashboard');
+      }
+      triggerConfetti();
+      showToast('Owner application approved', 'success');
+    } catch (err) {
+      console.warn('[admin] approve failed, applying locally:', err.message);
+      const owner = owners.find((o) => o.id === ownerId);
+      setOwners((prev) => prev.map((o) =>
+        o.id === ownerId ? { ...o, approvalStatus: 'Approved' } : o
       ));
+      if (owner?.turfIds?.length) {
+        setTurfs((prev) => prev.map((t) =>
+          owner.turfIds.includes(t.id) ? { ...t, status: 'active' } : t
+        ));
+      }
+      triggerConfetti();
     }
-    if (userProfile.ownerId === ownerId || userProfile.phone === owner?.phone) {
-      const approved = { ...userProfile, approvalStatus: 'Approved', ownerId };
-      setUserProfile(approved);
-      setOwnerActiveTurfId(owner?.turfIds?.[0] || ownerActiveTurfId);
-      setView('owner_dashboard');
-    }
-    triggerConfetti();
   };
 
-  const rejectOwnerApplication = (ownerId) => {
-    setOwners(prev => prev.filter(o => o.id !== ownerId));
+  const rejectOwnerApplication = async (ownerId) => {
+    try {
+      await adminApi.rejectKyc(ownerId);
+      setOwners((prev) => prev.filter((o) => o.id !== ownerId));
+      showToast('Owner application rejected', 'info');
+    } catch (err) {
+      console.warn('[admin] reject failed, applying locally:', err.message);
+      setOwners((prev) => prev.filter((o) => o.id !== ownerId));
+    }
   };
 
   const suspendTurf = (turfId) => {
@@ -719,8 +770,54 @@ export function useAppState() {
     return `${base.replace(/\/$/, '')}#join/${annId}`;
   };
 
-  const submitOwnerApplication = () => {
-    const ownerId = `owner-${Date.now()}`;
+  const submitOwnerApplication = async () => {
+    const payload = {
+      businessName: onboardingData.businessName,
+      ownerName: onboardingData.ownerName || onboardingData.accountHolder,
+      businessEmail: onboardingData.businessEmail,
+      phoneNumber: onboardingData.phoneNumber || userProfile.phone,
+      pan: onboardingData.pan,
+      gstin: onboardingData.gstin,
+      bankAccount: onboardingData.bankAccount,
+      ifsc: onboardingData.ifsc,
+      accountHolder: onboardingData.accountHolder,
+      kycDoc: onboardingData.kycDoc,
+      pinnedLocation: onboardingData.pinnedLocation,
+    };
+
+    try {
+      const { owner, turf, profile } = await ownersApi.submitApplication(payload);
+      const template = MOCK_TURFS[0];
+      const newTurf = {
+        ...template,
+        id: turf.id,
+        ownerId: owner.id,
+        name: turf.name || onboardingData.businessName || 'New Partner Turf',
+        location: onboardingData.pinnedLocation?.address || 'Virar West, Mumbai',
+        lat: turf.lat || onboardingData.pinnedLocation?.lat || 19.456,
+        lng: turf.lng || onboardingData.pinnedLocation?.lng || 72.812,
+        status: 'pending_review',
+        slots: template.slots.map((s) => ({ ...s, status: 'available' })),
+      };
+      setOwners((prev) => {
+        const without = prev.filter((o) => o.id !== owner.id);
+        return [...without, owner];
+      });
+      setTurfs((prev) => {
+        const without = prev.filter((t) => t.id !== newTurf.id);
+        return [...without, newTurf];
+      });
+      setUserProfile(profile);
+      localStorage.setItem('tm_profile', JSON.stringify(profile));
+      localStorage.removeItem('tm_onboarding_progress');
+      triggerConfetti();
+      navigateTo('owner_pending');
+      return;
+    } catch (err) {
+      console.warn('[owners] submit application failed, using local fallback:', err.message);
+    }
+
+    const ownerId = userProfile.userId || `owner-${Date.now()}`;
     const turfId = `turf-${Date.now()}`;
     const template = MOCK_TURFS[0];
     const newTurf = {
@@ -733,7 +830,7 @@ export function useAppState() {
       lng: onboardingData.pinnedLocation?.lng || 72.812,
       status: 'pending_review',
       image: template.image,
-      slots: template.slots.map(s => ({ ...s, status: 'available' })),
+      slots: template.slots.map((s) => ({ ...s, status: 'available' })),
     };
     const newOwner = {
       id: ownerId,
@@ -750,12 +847,13 @@ export function useAppState() {
       gstin: onboardingData.gstin,
       pan: onboardingData.pan,
     };
-    setOwners(prev => [...prev, newOwner]);
-    setTurfs(prev => [...prev, newTurf]);
+    setOwners((prev) => [...prev, newOwner]);
+    setTurfs((prev) => [...prev, newTurf]);
     const finalProfile = {
       isLoggedIn: true,
       role: 'OWNER',
-      phone: onboardingData.phoneNumber,
+      userId: userProfile.userId,
+      phone: onboardingData.phoneNumber || userProfile.phone,
       ownerId,
       businessName: onboardingData.businessName,
       ownerName: onboardingData.ownerName,
@@ -839,8 +937,13 @@ export function useAppState() {
     localStorage.removeItem('tm_onboarding_progress');
     setIsAdminMode(false);
     if (profile.role === 'OWNER') {
-      setOwnerActiveTurfId('turf-1');
-      setView('owner_dashboard');
+      const pending = profile.approvalStatus === 'Pending_Approval' || profile.approvalStatus === 'Rejected';
+      if (pending) {
+        setView('owner_pending');
+      } else {
+        setOwnerActiveTurfId(profile.turfIds?.[0] || 'turf-1');
+        setView('owner_dashboard');
+      }
     } else if (profile.role === 'SUPER_ADMIN') {
       setView('super_admin');
     } else if (profile.onboardingComplete === false) {

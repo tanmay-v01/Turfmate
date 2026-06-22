@@ -60,7 +60,22 @@ curl -X POST http://localhost:3001/api/auth/verify-otp -H "Content-Type: applica
 | **1b** | Turfs/slots API from DB; seed Virar turfs | ✅ |
 | **1c** | Bookings + slot locks server-side (Redis optional) | ✅ |
 | **1d** | Split escrow persisted in Postgres | ✅ |
-| **1e** | Owner KYC + admin approval API |
+| **1e** | Owner KYC + admin approval API | ✅ |
+| **1e API** | `POST /api/owners/apply`, `GET /api/owners/me`, `GET /api/admin/kyc/pending`, `POST /api/admin/kyc/:userId/approve`, `POST /api/admin/kyc/:userId/reject` |
+
+---
+
+## Slice 1e — Owner KYC
+
+| Endpoint | Auth | Description |
+|----------|------|-------------|
+| `POST /api/owners/apply` | JWT | Submit owner KYC + create pending turf |
+| `GET /api/owners/me` | JWT (OWNER) | Owner application status |
+| `GET /api/admin/kyc/pending` | SUPER_ADMIN | Pending KYC queue |
+| `POST /api/admin/kyc/:userId/approve` | SUPER_ADMIN | Approve owner + activate turf |
+| `POST /api/admin/kyc/:userId/reject` | SUPER_ADMIN | Reject with optional note |
+
+Migration: `server/migrations/004_owner_kyc.sql`
 
 ---
 
@@ -70,3 +85,4 @@ curl -X POST http://localhost:3001/api/auth/verify-otp -H "Content-Type: applica
 - [x] Two browsers cannot double-book same slot  
 - [x] Split state in DB, not localStorage  
 - [x] Turfs loaded from API (fallback to mock if API down)  
+- [x] Owner KYC persisted; super admin approves via API

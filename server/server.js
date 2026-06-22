@@ -12,6 +12,8 @@ const userRoutes = require('./routes/users');
 const turfRoutes = require('./routes/turfs');
 const bookingRoutes = require('./routes/bookings');
 const splitRoutes = require('./routes/splits');
+const ownerRoutes = require('./routes/owners');
+const adminRoutes = require('./routes/admin');
 const bookingsRepo = require('./repositories/bookings');
 const splitsRepo = require('./repositories/splits');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
@@ -42,6 +44,8 @@ app.use('/api/users', userRoutes);
 app.use('/api/turfs', turfRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/splits', splitRoutes);
+app.use('/api/owners', ownerRoutes);
+app.use('/api/admin', adminRoutes);
 
 async function bootstrapPhase1() {
   try {
