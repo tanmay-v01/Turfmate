@@ -1,10 +1,11 @@
-import { Compass, MapPin, Users, MessageSquare, Search, Trophy, Timer, Medal, UserPlus, Pencil } from 'lucide-react';
+import { Compass, MapPin, Users, MessageSquare, Search, Trophy, Timer, Medal, UserPlus, Pencil, CalendarCheck } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import TurfMateLogo from '../ui/TurfMateLogo';
 import { NAV_ICON_ACCENTS } from '../../utils/colorAccents';
 
 const NAV_ITEMS = [
   { id: 'home', label: 'Explore', icon: Compass, views: ['home', 'turf_details', 'search_engine', 'squad', 'leaderboard', 'score_calculator', 'split_hub', 'radar', 'tournaments'] },
+  { id: 'my_bookings', label: 'Bookings', icon: CalendarCheck, views: ['my_bookings'] },
   { id: 'play_radius', label: 'Map', icon: MapPin, views: ['play_radius', 'location_manual'] },
   { id: 'locker_room', label: 'Locker', icon: Users, views: ['locker_room'] },
   { id: 'chat', label: 'Chat', icon: MessageSquare, views: ['chat'] },

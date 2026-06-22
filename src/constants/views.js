@@ -15,4 +15,4 @@ export const ONBOARDING_VIEWS = [
   'owner_pending',
 ];
 
-export const MAIN_TAB_VIEWS = ['home', 'turf_details', 'search_engine', 'play_radius', 'locker_room', 'chat'];
+export const MAIN_TAB_VIEWS = ['home', 'turf_details', 'search_engine', 'my_bookings', 'play_radius', 'locker_room', 'chat'];

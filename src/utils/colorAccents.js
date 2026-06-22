@@ -10,6 +10,7 @@ export const SPORT_COLORS = {
 /** Nav icon tints when idle — active tab always uses primary green */
 export const NAV_ICON_ACCENTS = {
   home: 'tm-icon-accent-green',
+  my_bookings: 'tm-icon-accent-emerald',
   play_radius: 'tm-icon-accent-sky',
   locker_room: 'tm-icon-accent-amber',
   chat: 'tm-icon-accent-violet',

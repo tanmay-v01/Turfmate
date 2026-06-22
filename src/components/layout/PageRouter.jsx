@@ -14,6 +14,7 @@ import OwnerMapPage from '../../pages/onboarding/OwnerMapPage';
 import OwnerKycPage from '../../pages/onboarding/OwnerKycPage';
 import OwnerPayoutPage from '../../pages/onboarding/OwnerPayoutPage';
 import OwnerPendingPage from '../../pages/onboarding/OwnerPendingPage';
+import MyBookingsPage from '../../pages/user/MyBookingsPage';
 import HomePage from '../../pages/user/HomePage';
 import SearchEnginePage from '../../pages/user/SearchEnginePage';
 import TurfDetailsPage from '../../pages/user/TurfDetailsPage';
@@ -45,6 +46,7 @@ const VIEW_MAP = {
   owner_payout: OwnerPayoutPage,
   owner_pending: OwnerPendingPage,
   home: HomePage,
+  my_bookings: MyBookingsPage,
   search_engine: SearchEnginePage,
   turf_details: TurfDetailsPage,
   play_radius: PlayRadiusPage,
@@ -60,7 +62,7 @@ const VIEW_MAP = {
   super_admin: SuperAdminDashboardPage,
 };
 
-const FULL_WIDTH_VIEWS = new Set(['home', 'turf_details', 'search_engine', 'chat', 'owner_dashboard', 'super_admin', ...ONBOARDING_VIEWS]);
+const FULL_WIDTH_VIEWS = new Set(['home', 'my_bookings', 'turf_details', 'search_engine', 'chat', 'owner_dashboard', 'super_admin', ...ONBOARDING_VIEWS]);
 
 export default function PageRouter() {
   const { view } = useApp();

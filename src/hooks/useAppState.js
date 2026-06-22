@@ -14,32 +14,28 @@ import { openRazorpayCheckout } from '../utils/razorpayCheckout';
 import { socketService } from '../services/socket';
 import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
+import { readJson } from '../utils/safeStorage';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
-  const saved = localStorage.getItem('tm_turfs');
-  if (!saved) return MOCK_TURFS;
-  try {
-    const parsed = JSON.parse(saved);
-    const mockById = Object.fromEntries(MOCK_TURFS.map((t) => [t.id, t]));
-    const merged = parsed.map((t) => {
-      const mock = mockById[t.id];
-      if (!mock) return { ...t, image: t.image || t.gallery?.[0] };
-      return {
-        ...mock,
-        ...t,
-        image: t.image || mock.image,
-        gallery: t.gallery?.length ? t.gallery : mock.gallery,
-      };
-    });
-    const savedIds = new Set(parsed.map((t) => t.id));
-    MOCK_TURFS.forEach((t) => {
-      if (!savedIds.has(t.id)) merged.push(t);
-    });
-    return merged;
-  } catch {
-    return MOCK_TURFS;
-  }
+  const parsed = readJson('tm_turfs', null);
+  if (!parsed || !Array.isArray(parsed)) return MOCK_TURFS;
+  const mockById = Object.fromEntries(MOCK_TURFS.map((t) => [t.id, t]));
+  const merged = parsed.map((t) => {
+    const mock = mockById[t.id];
+    if (!mock) return { ...t, image: t.image || t.gallery?.[0] };
+    return {
+      ...mock,
+      ...t,
+      image: t.image || mock.image,
+      gallery: t.gallery?.length ? t.gallery : mock.gallery,
+    };
+  });
+  const savedIds = new Set(parsed.map((t) => t.id));
+  MOCK_TURFS.forEach((t) => {
+    if (!savedIds.has(t.id)) merged.push(t);
+  });
+  return merged;
 }
 
 export function useAppState() {
@@ -48,9 +44,7 @@ export function useAppState() {
   const [view, setView] = useState('splash'); // splash, welcome_carousel, login, otp_verify, role_selection, profile_setup, sports_dna, location_permission, location_manual, owner_business, owner_map, owner_kyc, owner_payout, owner_pending, home, turf_details, play_radius, locker_room, chat, admin
   
   // Track onboarding data locally
-  const [onboardingData, setOnboardingData] = useState(() => {
-    const saved = localStorage.getItem('tm_onboarding_progress');
-    return saved ? JSON.parse(saved) : {
+  const [onboardingData, setOnboardingData] = useState(() => readJson('tm_onboarding_progress', {
       view: 'welcome_carousel',
       phoneNumber: '',
       role: '', // PLAYER or OWNER
@@ -70,12 +64,9 @@ export function useAppState() {
       bankAccount: '',
       ifsc: '',
       accountHolder: ''
-    };
-  });
+    }));
 
-  const [userProfile, setUserProfile] = useState(() => {
-    const saved = localStorage.getItem('tm_profile');
-    return saved ? JSON.parse(saved) : {
+  const [userProfile, setUserProfile] = useState(() => readJson('tm_profile', {
       isLoggedIn: false,
       name: 'Rahul Mehta',
       avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Rahul',
@@ -88,12 +79,10 @@ export function useAppState() {
       lng: 72.812,
       phone: '9876543210',
       username: '@rahul_cricket'
-    };
-  });
+    }));
 
   const [bookings, setBookings] = useState(() => {
-    const saved = localStorage.getItem('tm_bookings');
-    const raw = saved ? JSON.parse(saved) : [
+    const raw = readJson('tm_bookings', [
       {
         id: 'B-7891',
         turfId: 'turf-1',
@@ -114,7 +103,7 @@ export function useAppState() {
         source: 'app',
         bookedAt: '2026-06-19T18:00:00.000Z',
       }
-    ];
+    ]);
     return raw.map(b => {
       if (b.commissionAmount != null) return b;
       const turf = MOCK_TURFS.find(t => t.id === b.turfId);
@@ -125,23 +114,13 @@ export function useAppState() {
 
   const [turfs, setTurfs] = useState(loadTurfs);
 
-  const [owners, setOwners] = useState(() => {
-    const saved = localStorage.getItem('tm_owners');
-    return saved ? JSON.parse(saved) : INITIAL_OWNERS;
-  });
+  const [owners, setOwners] = useState(() => readJson('tm_owners', INITIAL_OWNERS));
 
   const [ownerRevenue, setOwnerRevenue] = useState(null);
   const [platformLedger, setPlatformLedger] = useState(null);
 
-  const [suspendedTurfIds, setSuspendedTurfIds] = useState(() => {
-    const saved = localStorage.getItem('tm_suspended_turfs');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [bannedUsers, setBannedUsers] = useState(() => {
-    const saved = localStorage.getItem('tm_banned_users');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [suspendedTurfIds, setSuspendedTurfIds] = useState(() => readJson('tm_suspended_turfs', []));
+  const [bannedUsers, setBannedUsers] = useState(() => readJson('tm_banned_users', []));
 
   const banUser = (username) => {
     setBannedUsers(prev => {
@@ -163,35 +142,17 @@ export function useAppState() {
 
   const [ownerActiveTurfId, setOwnerActiveTurfId] = useState('turf-1');
 
-  const [announcements, setAnnouncements] = useState(() => {
-    const saved = localStorage.getItem('tm_announcements');
-    return saved ? JSON.parse(saved) : INITIAL_ANNOUNCEMENTS;
-  });
+  const [announcements, setAnnouncements] = useState(() => readJson('tm_announcements', INITIAL_ANNOUNCEMENTS));
 
-  const [chats, setChats] = useState(() => {
-    const saved = localStorage.getItem('tm_chats');
-    return saved ? JSON.parse(saved) : INITIAL_CHATS;
-  });
+  const [chats, setChats] = useState(() => readJson('tm_chats', INITIAL_CHATS));
 
-  const [friendRequests, setFriendRequests] = useState(() => {
-    const saved = localStorage.getItem('tm_friend_requests');
-    return saved ? JSON.parse(saved) : INITIAL_FRIEND_REQUESTS;
-  });
+  const [friendRequests, setFriendRequests] = useState(() => readJson('tm_friend_requests', INITIAL_FRIEND_REQUESTS));
 
-  const [friendStats, setFriendStats] = useState(() => {
-    const saved = localStorage.getItem('tm_friend_stats');
-    return saved ? JSON.parse(saved) : INITIAL_FRIEND_STATS;
-  });
+  const [friendStats, setFriendStats] = useState(() => readJson('tm_friend_stats', INITIAL_FRIEND_STATS));
 
-  const [liveGame, setLiveGame] = useState(() => {
-    const saved = localStorage.getItem('tm_live_game');
-    return saved ? JSON.parse(saved) : null;
-  });
+  const [liveGame, setLiveGame] = useState(() => readJson('tm_live_game', null));
 
-  const [gameHistory, setGameHistory] = useState(() => {
-    const saved = localStorage.getItem('tm_game_history');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [gameHistory, setGameHistory] = useState(() => readJson('tm_game_history', []));
 
   const [notifications, setNotifications] = useState([
     { id: 1, text: "Sneha Rao requested to join your game tonight!", time: "5 mins ago", read: false },
@@ -248,13 +209,7 @@ export function useAppState() {
   const [filterDate, setFilterDate] = useState('Today');
   const [filterTimeRange, setFilterTimeRange] = useState([6, 23]); // 6 AM to 11 PM
   const [filterPitchSize, setFilterPitchSize] = useState('all'); // all, 5v5, 7v7, Box Cricket
-  const [filterRadius, setFilterRadiusState] = useState(() => {
-    try {
-      const saved = localStorage.getItem('tm_profile');
-      if (saved) return JSON.parse(saved).radius || 10;
-    } catch { /* ignore */ }
-    return 10;
-  });
+  const [filterRadius, setFilterRadiusState] = useState(() => readJson('tm_profile', {})?.radius || 10);
 
   const setPlayRadius = (km) => {
     const r = Math.max(2, Math.min(20, Number(km) || 10));
@@ -269,7 +224,7 @@ export function useAppState() {
     let cancelled = false;
     const lat = userProfile.lat ?? 19.456;
     const lng = userProfile.lng ?? 72.812;
-    const radius = userProfile.radius ?? filterRadiusState ?? 10;
+    const radius = userProfile.radius ?? filterRadius ?? 10;
 
     turfsApi.list({ lat, lng, radius_km: radius, sport: selectedSportFilter })
       .then(({ turfs: apiTurfs }) => {
@@ -283,7 +238,7 @@ export function useAppState() {
       });
 
     return () => { cancelled = true; };
-  }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadiusState, selectedSportFilter]);
+  }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
 
   // Phase 1d: load open splits from API into announcements
   useEffect(() => {
@@ -372,14 +327,7 @@ export function useAppState() {
   const [showSplitSuccessModal, setShowSplitSuccessModal] = useState(false);
   const [splitSuccessAnnId, setSplitSuccessAnnId] = useState(null);
   const [checkoutSlotLockExpiresAt, setCheckoutSlotLockExpiresAt] = useState(null);
-  const [squadGroups, setSquadGroups] = useState(() => {
-    try {
-      const saved = localStorage.getItem('tm_squad_groups');
-      return saved ? JSON.parse(saved) : [];
-    } catch {
-      return [];
-    }
-  });
+  const [squadGroups, setSquadGroups] = useState(() => readJson('tm_squad_groups', []));
   const [sentFriendRequests, setSentFriendRequests] = useState([]);
   const [impersonatingOwner, setImpersonatingOwner] = useState(null);
   const [checkoutInviteGroupId, setCheckoutInviteGroupId] = useState('');
@@ -427,15 +375,12 @@ export function useAppState() {
 
   // Admin states
   const [adminSelectedDate, setAdminSelectedDate] = useState('Today');
-  const [adminBlockedSlots, setAdminBlockedSlots] = useState(() => {
-    const saved = localStorage.getItem('tm_admin_blocked');
-    return saved ? JSON.parse(saved) : {
+  const [adminBlockedSlots, setAdminBlockedSlots] = useState(() => readJson('tm_admin_blocked', {
       'turf-1': ['s3', 's6'],
       'turf-2': ['k1', 'k4', 'k5'],
       'turf-3': ['d4'],
       'turf-4': ['p3']
-    };
-  });
+    }));
   const [adminSlotPrices, setAdminSlotPrices] = useState({}); // Custom pricing override e.g. { 's7': 1500 }
   const [newAnnouncementText, setNewAnnouncementText] = useState('');
   const [newAnnouncementSport, setNewAnnouncementSport] = useState('football');
@@ -445,9 +390,7 @@ export function useAppState() {
   useEffect(() => {
     if (view === 'splash') {
       const timer = setTimeout(() => {
-        const savedProgress = localStorage.getItem('tm_onboarding_progress');
-        const profile = localStorage.getItem('tm_profile');
-        const parsedProfile = profile ? JSON.parse(profile) : null;
+        const parsedProfile = readJson('tm_profile', null);
         
         if (parsedProfile && parsedProfile.isLoggedIn) {
           if (parsedProfile.role === 'SUPER_ADMIN') {
@@ -466,14 +409,16 @@ export function useAppState() {
             setIsAdminMode(false);
             setView('home');
           }
-        } else if (savedProgress) {
-          const progress = JSON.parse(savedProgress);
-          setView(progress.view || 'welcome_carousel');
-          if (progress.phoneNumber) {
-            setPhoneNumber(progress.phoneNumber);
-          }
         } else {
-          setView('welcome_carousel');
+          const progress = readJson('tm_onboarding_progress', null);
+          if (progress) {
+            setView(progress.view || 'welcome_carousel');
+            if (progress.phoneNumber) {
+              setPhoneNumber(progress.phoneNumber);
+            }
+          } else {
+            setView('welcome_carousel');
+          }
         }
       }, 2500);
       return () => clearTimeout(timer);
@@ -1419,6 +1364,7 @@ export function useAppState() {
         status: checkoutOption === 'split' ? 'Confirmed (Split Active)' : 'Confirmed',
         qrCode: `TMT-${checkoutOption.toUpperCase()}-${bId}-${activeTurf.name.slice(0,3).toUpperCase()}`,
         roster: [userProfile.name],
+        source: 'app',
       }, activeTurf, checkoutOption === 'split' ? perHeadShare : price, price);
 
       setBookings(prev => [newBooking, ...prev]);
@@ -1508,6 +1454,7 @@ export function useAppState() {
 
       setBookingSuccessData(newBooking);
       setSelectedSlotId(null);
+      showToast('Payment done — your slot is booked!', 'success', 'Booking confirmed');
     } catch (error) {
       console.error('Payment Error:', error);
       showToast(error.message, 'error', 'Booking failed');

@@ -4,6 +4,27 @@ import { useApp } from '../../context/AppContext';
 import TurfImage from '../../components/ui/TurfImage';
 import { IMAGES } from '../../data/images';
 
+function resolveSlotStatus(app, slot) {
+  let status = slot.status;
+
+  if (app.selectedPitchId === 'pitch-b') {
+    if (['s1', 's4', 'k1', 'k5', 'd2', 'p1'].includes(slot.id)) status = 'booked';
+    else if (['s7', 'k6', 'd5', 'p4'].includes(slot.id)) status = 'split';
+  } else if (['s8', 'k3', 'd3'].includes(slot.id)) {
+    status = 'split';
+  }
+
+  if ((app.adminBlockedSlots[app.activeTurf.id] || []).includes(slot.id)) {
+    status = 'booked';
+  }
+
+  if (app.bookingDate === 'Day After' || (app.selectedPitchId === 'pitch-b' && app.bookingDate === 'Tomorrow')) {
+    status = 'booked';
+  }
+
+  return status;
+}
+
 export default function TurfDetailsPage() {
   const app = useApp();
   const [showReviewModal, setShowReviewModal] = useState(false);
@@ -130,7 +151,7 @@ export default function TurfDetailsPage() {
                       </div>
     
                       {/* Details Page Body Scroll */}
-                      <div className="p-4 space-y-4 max-h-[460px] overflow-y-auto pr-1 no-scrollbar">
+                      <div className="p-4 space-y-4">
                         
                         {/* Amenities circular cards icon grid */}
                         <div className="space-y-2 p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm text-left">
@@ -261,39 +282,10 @@ export default function TurfDetailsPage() {
     
                         {/* Booking Slots Grid & Fully Booked Check */}
                         {(() => {
-                          const currentSlots = app.activeTurf.slots.map(s => {
-                            let status = s.status;
-                            
-                            // Seed occupancy based on pitchId and date
-                            if (app.selectedPitchId === 'pitch-b') {
-                              if (s.id === 's1' || s.id === 's4' || s.id === 'k1' || s.id === 'k5' || s.id === 'd2' || s.id === 'p1') {
-                                status = 'booked';
-                              } else if (s.id === 's7' || s.id === 'k6' || s.id === 'd5' || s.id === 'p4') {
-                                status = 'split'; 
-                              }
-                            } else {
-                              // Pitch A defaults
-                              if (s.id === 's8' || s.id === 'k3' || s.id === 'd3') {
-                                status = 'split'; 
-                              }
-                            }
-    
-                            // Check if blocked by admin
-                            const isBlocked = (app.adminBlockedSlots[app.activeTurf.id] || []).includes(s.id);
-                            if (isBlocked) {
-                              status = 'booked';
-                            }
-    
-                            // Dynamic Fully Booked state simulator: force sellout on "Day After" to test edge cases
-                            if (app.bookingDate === 'Day After' || (app.selectedPitchId === 'pitch-b' && app.bookingDate === 'Tomorrow')) {
-                              status = 'booked';
-                            }
-    
-                            return {
-                              ...s,
-                              status: status
-                            };
-                          });
+                          const currentSlots = app.activeTurf.slots.map((s) => ({
+                            ...s,
+                            status: resolveSlotStatus(app, s),
+                          }));
     
                           const isSoldOut = currentSlots.every(s => s.status === 'booked');
     
@@ -320,7 +312,7 @@ export default function TurfDetailsPage() {
                                 <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-slate-100"></span> Booked</span>
                               </div>
     
-                              <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1 no-scrollbar">
+                              <div className="grid grid-cols-2 gap-2">
                                 {currentSlots.map(s => {
                                   const isBlocked = s.status === 'booked';
                                   const isSplit = s.status === 'split';
@@ -374,6 +366,63 @@ export default function TurfDetailsPage() {
                                   );
                                 })}
                               </div>
+
+                              {(() => {
+                                if (!app.selectedSlotId) return null;
+                                const slot = currentSlots.find((s) => s.id === app.selectedSlotId);
+                                if (!slot || slot.status === 'booked') return null;
+
+                                const matchedSplit = slot.status === 'split'
+                                  && app.announcements.find(
+                                    (a) => a.turfId === app.activeTurf.id && a.slotId === slot.id && a.status === 'open',
+                                  );
+
+                                const barClass = 'mt-3 glass-grass border border-brand-border rounded-[24px] p-4 flex items-center justify-between shadow-premium animate-fade-in';
+
+                                if (matchedSplit) {
+                                  return (
+                                    <div className={barClass}>
+                                      <div className="text-left min-w-0 flex-1">
+                                        <span className="text-[9px] text-amber-600 block font-black uppercase tracking-wider">👥 Join Split Lobby</span>
+                                        <span className="font-extrabold text-[12px] text-slate-800 block truncate">
+                                          {app.bookingDate}, {slot.time.split(' - ')[0]}
+                                        </span>
+                                        <span className="text-[9.5px] text-slate-400 block font-semibold">
+                                          Host: {matchedSplit.hostName} ({matchedSplit.roster.length} joined)
+                                        </span>
+                                      </div>
+                                      <button
+                                        type="button"
+                                        onClick={() => app.joinSplitGame(matchedSplit.id)}
+                                        className="ml-3 shrink-0 px-5 py-3 tm-btn-grass font-extrabold rounded-2xl text-xs transition shadow-pill flex items-center gap-1.5 cursor-pointer"
+                                      >
+                                        <Users className="w-4 h-4" /> Join Split (₹{matchedSplit.costPerHead})
+                                      </button>
+                                    </div>
+                                  );
+                                }
+
+                                return (
+                                  <div className={barClass}>
+                                    <div className="text-left min-w-0 flex-1">
+                                      <span className="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">Selected timeline</span>
+                                      <span className="font-extrabold text-[12px] text-brand-forest block">
+                                        {app.bookingDate}, {slot.time.split(' - ')[0]}
+                                      </span>
+                                      <span className="text-[10px] text-slate-400 block font-medium">
+                                        Pitch: {app.selectedPitchId === 'pitch-a' ? 'Pitch A' : 'Pitch B'}
+                                      </span>
+                                    </div>
+                                    <button
+                                      type="button"
+                                      onClick={() => app.openCheckoutModal()}
+                                      className="ml-3 shrink-0 px-6 py-3 tm-btn-grass font-extrabold rounded-2xl text-sm shadow-pill cursor-pointer transition"
+                                    >
+                                      Book Now
+                                    </button>
+                                  </div>
+                                );
+                              })()}
                             </div>
                           );
                         })()}
@@ -424,165 +473,7 @@ export default function TurfDetailsPage() {
                             </div>
                           </div>
                         </div>
-    
-                        {/* Confirmation Ticket view after booking success */}
-                        {app.bookingSuccessData && (
-                          <div className="bg-green-50 p-4 border border-green-200 rounded-2xl animate-fade-in space-y-3 mt-3">
-                            <div className="flex justify-between items-start text-left">
-                              <div>
-                                <span className="text-[8px] bg-green-200 text-green-800 font-extrabold uppercase px-1.5 py-0.5 rounded">
-                                  Booking Confirmed
-                                </span>
-                                <h4 className="font-bold text-sm text-brand-forest mt-1.5">{app.bookingSuccessData.turfName}</h4>
-                                <p className="text-[11px] text-slate-500">{app.bookingSuccessData.date} | {app.bookingSuccessData.slotTime}</p>
-                              </div>
-                              <span className="font-mono text-xs font-bold text-slate-600">{app.bookingSuccessData.id}</span>
-                            </div>
-    
-                            {/* Interactive SVG QR Code */}
-                            <div className="flex flex-col items-center justify-center p-3 bg-white border border-green-100 rounded-xl">
-                              <svg className="w-28 h-28" viewBox="0 0 100 100">
-                                <rect width="100" height="100" fill="white" />
-                                {/* QR corners */}
-                                <rect x="5" y="5" width="20" height="20" fill="#1B4332" />
-                                <rect x="9" y="9" width="12" height="12" fill="white" />
-                                <rect x="75" y="5" width="20" height="20" fill="#1B4332" />
-                                <rect x="79" y="9" width="12" height="12" fill="white" />
-                                <rect x="5" y="75" width="20" height="20" fill="#1B4332" />
-                                <rect x="9" y="79" width="12" height="12" fill="white" />
-                                {/* QR Random codes */}
-                                <rect x="35" y="10" width="10" height="10" fill="#1B4332" />
-                                <rect x="55" y="5" width="15" height="15" fill="#1B4332" />
-                                <rect x="10" y="35" width="15" height="10" fill="#1B4332" />
-                                <rect x="30" y="30" width="20" height="20" fill="#1B4332" />
-                                <rect x="60" y="30" width="10" height="20" fill="#1B4332" />
-                                <rect x="30" y="60" width="15" height="15" fill="#1B4332" />
-                                <rect x="55" y="55" width="25" height="15" fill="#1B4332" />
-                                <rect x="50" y="75" width="15" height="20" fill="#1B4332" />
-                                <rect x="75" y="75" width="20" height="10" fill="#1B4332" />
-                              </svg>
-                              <span className="text-[9px] font-mono font-bold text-slate-400 mt-2">{app.bookingSuccessData.qrCode}</span>
-                            </div>
-    
-                            {app.bookingSuccessData.type === 'split' ? (
-                              <div className="bg-amber-50 p-2.5 rounded-lg border border-amber-100 text-[10px] text-amber-800 text-left">
-                                <span className="font-extrabold flex items-center gap-1"><AlertTriangle className="w-3.5 h-3.5" /> TurfMate Split Active</span>
-                                <span className="block mt-0.5">
-                                  Your squad announcement is live in the Locker Room feed. Remaining balance will be auto-collected when players join!
-                                </span>
-                              </div>
-                            ) : (
-                              <p className="text-[9px] text-slate-400 text-center">Scan QR code at venue desk for key & bib retrieval.</p>
-                            )}
-    
-                            <div className="flex gap-2">
-                              <button 
-                                onClick={() => {
-                                  if (app.bookingSuccessData.type === 'split') {
-                                    app.setView('split_hub');
-                                  } else if (app.bookingSuccessData.chatId) {
-                                    app.setActiveChatId(app.bookingSuccessData.chatId);
-                                    app.setView('chat');
-                                  } else {
-                                    app.setView('home');
-                                    app.showToast('Your booking is confirmed and managed in My Bookings.', 'success', 'Booking managed');
-                                  }
-                                }}
-                                className="flex-grow py-2 tm-btn-primary font-bold rounded-lg text-xs transition"
-                              >
-                                {app.bookingSuccessData.type === 'split' ? 'Manage Split Hub' : 'Open Game Chat'}
-                              </button>
-                              <button 
-                                onClick={() => {
-                                  app.setBookingSuccessData(null);
-                                  app.setView('home');
-                                }}
-                                className="py-2 px-4 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 font-bold rounded-lg text-xs transition"
-                              >
-                                Done
-                              </button>
-                            </div>
-                          </div>
-                        )}
                       </div>
-    
-                      {/* Bottom Sticky Action Footer */}
-                      {(() => {
-                        if (!app.selectedSlotId) return null;
-    
-                        const slot = app.activeTurf.slots.find(s => s.id === app.selectedSlotId);
-                        if (!slot) return null;
-    
-                        // Seed occupancy based on pitchId and date
-                        let currentStatus = slot.status;
-                        if (app.selectedPitchId === 'pitch-b') {
-                          if (slot.id === 's1' || slot.id === 's4' || slot.id === 'k1' || slot.id === 'k5' || slot.id === 'd2' || slot.id === 'p1') {
-                            currentStatus = 'booked';
-                          } else if (slot.id === 's7' || slot.id === 'k6' || slot.id === 'd5' || slot.id === 'p4') {
-                            currentStatus = 'split'; 
-                          }
-                        } else {
-                          if (slot.id === 's8' || slot.id === 'k3' || slot.id === 'd3') {
-                            currentStatus = 'split'; 
-                          }
-                        }
-                        const isBlocked = (app.adminBlockedSlots[app.activeTurf.id] || []).includes(slot.id);
-                        if (isBlocked) {
-                          currentStatus = 'booked';
-                        }
-                        if (app.bookingDate === 'Day After' || (app.selectedPitchId === 'pitch-b' && app.bookingDate === 'Tomorrow')) {
-                          currentStatus = 'booked';
-                        }
-    
-                        if (currentStatus === 'booked') return null;
-    
-                        const isSplitSlot = currentStatus === 'split';
-                        const matchedSplit = isSplitSlot && app.announcements.find(a => a.turfId === app.activeTurf.id && a.slotId === app.selectedSlotId && a.status === 'open');
-    
-                        if (isSplitSlot && matchedSplit) {
-                          return (
-                            <div className="absolute bottom-16 inset-x-4 lg:inset-x-auto lg:left-1/2 lg:-translate-x-1/2 lg:max-w-lg glass-grass border border-brand-border rounded-[24px] p-4 flex items-center justify-between z-30 shadow-premium animate-fade-in">
-                              <div className="text-left">
-                                <span className="text-[9px] text-amber-600 block font-black uppercase tracking-wider">👥 Join Split Lobby</span>
-                                <span className="font-extrabold text-[12px] text-slate-800 block truncate max-w-[160px]">
-                                  {app.bookingDate}, {slot.time.split(' - ')[0]}
-                                </span>
-                                <span className="text-[9.5px] text-slate-400 block font-semibold">
-                                  Host: {matchedSplit.hostName} ({matchedSplit.roster.length} joined)
-                                </span>
-                              </div>
-                              <button 
-                                onClick={() => {
-                                  app.joinSplitGame(matchedSplit.id);
-                                }}
-                                className="px-5 py-3 tm-btn-grass font-extrabold rounded-2xl text-xs transition shadow-pill flex items-center gap-1.5 cursor-pointer"
-                              >
-                                <Users className="w-4 h-4" /> Join Split (₹{matchedSplit.costPerHead})
-                              </button>
-                            </div>
-                          );
-                        }
-    
-                        return (
-                          <div className="absolute bottom-16 inset-x-4 lg:inset-x-auto lg:left-1/2 lg:-translate-x-1/2 lg:max-w-lg glass-grass border border-brand-border rounded-[24px] p-4 flex items-center justify-between z-30 shadow-premium animate-fade-in">
-                            <div className="text-left">
-                              <span className="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">SELECTED TIMELINE</span>
-                              <span className="font-extrabold text-[12px] text-brand-forest block">
-                                {app.bookingDate}, {slot.time.split(' - ')[0]}
-                              </span>
-                              <span className="text-[10px] text-slate-400 block font-medium">
-                                Pitch: {app.selectedPitchId === 'pitch-a' ? 'Pitch A' : 'Pitch B'}
-                              </span>
-                            </div>
-                            <button 
-                              onClick={() => app.openCheckoutModal()}
-                              className="px-6 py-3 tm-btn-grass font-extrabold rounded-2xl text-sm shadow-pill cursor-pointer transition lowercase"
-                            >
-                              book slot →
-                            </button>
-                          </div>
-                        );
-                      })()}
 
                       {/* Review Modal */}
                       {showReviewModal && (

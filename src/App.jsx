@@ -8,6 +8,7 @@ import CheckoutModal from './components/layout/CheckoutModal';
 import AvatarPickerModal from './components/onboarding/AvatarPickerModal';
 import JoinSplitReviewSheet from './components/split/JoinSplitReviewSheet';
 import SplitSuccessModal from './components/split/SplitSuccessModal';
+import BookingSuccessModal from './components/layout/BookingSuccessModal';
 
 const PORTAL_VIEWS = new Set(['owner_dashboard', 'super_admin']);
 
@@ -29,6 +30,7 @@ function AppShell() {
       )}
 
       <CheckoutModal />
+      <BookingSuccessModal />
       <JoinSplitReviewSheet />
       <SplitSuccessModal />
       <AvatarPickerModal />
