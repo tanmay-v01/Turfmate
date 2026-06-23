@@ -14,6 +14,7 @@
 | **3d** | ✅ | Squads + friend requests API persisted in DB |
 | **3e** | ✅ | Score → leaderboard server sync via match API |
 | **3f** | ✅ | Owner broadcasts with server-side `expiresAt` |
+| **3g** | ✅ | Split invite push + inbox notifications (FCM when configured) |
 
 ---
 
@@ -55,7 +56,7 @@
 
 - [x] User A's split visible to User B without shared browser
 - [x] Chat messages sync across two devices (same booking room)
-- [ ] Push notification on split invite (FCM)
+- [x] Push notification on split invite (FCM)
 
 ---
 
@@ -75,6 +76,16 @@
 - `GET/POST /api/broadcasts/me`, `POST /:id/deactivate` — owner campaigns (JWT + OWNER)
 - `refreshLockerFeed()` merges active broadcasts at top of locker feed
 - `OwnerBroadcast` publishes via API; server enforces expiry + cleanup interval
+
+---
+
+## 3g — Split invite push notifications
+
+- Migration `012_push_notifications.sql` — `push_tokens`, `user_notifications`
+- `POST /api/notifications/token`, `GET /api/notifications`, mark read
+- `POST /api/splits/:bookingId/invite-squad` — notify squad members
+- Split host checkout passes `inviteSquadId` → server persists inbox + FCM (`FCM_SERVER_KEY`)
+- `registerPushToken()` + `refreshNotifications()` on login
 
 ---
 

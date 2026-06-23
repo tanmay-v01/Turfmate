@@ -3,6 +3,8 @@ const db = require('../db/index');
 const bookingsRepo = require('./bookings');
 const ledgerRepo = require('./ledger');
 const chatRepo = require('./chat');
+const notificationsRepo = require('./notifications');
+const config = require('../lib/config');
 
 const isPg = db.driver === 'postgres';
 const SPLIT_FUNDING_MS = 4 * 60 * 60 * 1000;
@@ -149,6 +151,7 @@ async function initiateSplit({
   playersNeeded,
   isPublic = true,
   sport,
+  inviteSquadId,
 }) {
   const turf = await bookingsRepo.resolveTurf(turfLegacyId);
   if (!turf) throw Object.assign(new Error('Turf not found'), { status: 404 });
@@ -227,6 +230,19 @@ async function initiateSplit({
     meta: { turfId: row.legacy_id, turfName: row.name, bookingId, annId: split.id },
     systemText: `Welcome to the chatroom for your split game at ${row.name}! Coordinate with your squad here.`,
   });
+
+  if (inviteSquadId) {
+    const inviteLink = `${config.appUrl}/#join/${split.id}`;
+    await notificationsRepo.sendSplitSquadInvites({
+      hostUserId: userId,
+      bookingId,
+      annId: split.id,
+      squadId: inviteSquadId,
+      turfName: row.name,
+      costPerHead: Number(hostAdvance),
+      inviteLink,
+    });
+  }
 
   return { bookingId, message: 'Split initialized', split };
 }

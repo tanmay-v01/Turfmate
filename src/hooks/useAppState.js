@@ -24,6 +24,8 @@ import { mapApiChatRoom, mergeChats } from '../utils/chatMapper';
 import { socialApi } from '../services/socialApi';
 import { leaderboardApi } from '../services/leaderboardApi';
 import { broadcastsApi } from '../services/broadcastsApi';
+import { notificationsApi } from '../services/notificationsApi';
+import { getOrCreatePushToken } from '../utils/pushToken';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -354,14 +356,37 @@ export function useAppState() {
     }
   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
 
+  const registerPushToken = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      await notificationsApi.registerToken(getOrCreatePushToken(), 'web');
+    } catch (err) {
+      console.warn('[push] token register failed:', err.message);
+    }
+  }, []);
+
+  const refreshNotifications = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      const { notifications: rows } = await notificationsApi.list();
+      if (rows?.length) {
+        setNotifications(rows);
+      }
+    } catch (err) {
+      console.warn('[notifications] refresh failed:', err.message);
+    }
+  }, []);
+
   useEffect(() => {
     if (!userProfile?.isLoggedIn || !getToken()) return undefined;
     refreshMyBookings();
     refreshChats();
     refreshSocial();
     refreshLeaderboard();
+    registerPushToken();
+    refreshNotifications();
     return undefined;
-  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard]);
+  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard, registerPushToken, refreshNotifications]);
 
   useEffect(() => {
     if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
@@ -1469,8 +1494,11 @@ export function useAppState() {
           totalAmount: price,
           hostAdvance: perHeadShare,
           playersNeeded: splitPlayersCount - 1,
-          isPublic: true,
+          isPublic: !checkoutInviteGroupId,
           sport: selectedSportFilter !== 'all' ? selectedSportFilter : activeTurf.sports[0],
+          inviteSquadId: checkoutInviteGroupId && !String(checkoutInviteGroupId).startsWith('grp-')
+            ? checkoutInviteGroupId
+            : undefined,
         };
         let res = await fulfillViaPayments(splitPayload);
         if (!res) {
@@ -1482,8 +1510,9 @@ export function useAppState() {
             totalAmount: price,
             hostAdvance: perHeadShare,
             playersNeeded: splitPlayersCount - 1,
-            isPublic: true,
+            isPublic: !checkoutInviteGroupId,
             sport: splitPayload.sport,
+            inviteSquadId: splitPayload.inviteSquadId,
           });
         }
         bId = res.bookingId;
@@ -1573,19 +1602,23 @@ export function useAppState() {
         if (checkoutInviteGroupId) {
           const group = squadGroups.find((g) => g.id === checkoutInviteGroupId);
           if (group) {
-            const link = getSplitInviteLink(newAnn.id);
-            group.members.forEach(() => {
-              setNotifications((prev) => [
-                {
-                  id: Date.now() + Math.random(),
-                  text: `${userProfile.name} invited ${group.name} to split @ ${activeTurf.name}. Pay ₹${perHeadShare}: ${link}`,
-                  time: 'Just now',
-                  read: false,
-                },
-                ...prev,
-              ]);
-            });
-            showToast(`Invite sent to ${group.members.length} players in "${group.name}"`, 'success');
+            if (splitPayload.inviteSquadId) {
+              showToast(`Invite sent to "${group.name}" via push + inbox`, 'success');
+            } else {
+              const link = getSplitInviteLink(newAnn.id);
+              group.members.forEach(() => {
+                setNotifications((prev) => [
+                  {
+                    id: Date.now() + Math.random(),
+                    text: `${userProfile.name} invited ${group.name} to split @ ${activeTurf.name}. Pay ₹${perHeadShare}: ${link}`,
+                    time: 'Just now',
+                    read: false,
+                  },
+                  ...prev,
+                ]);
+              });
+              showToast(`Invite sent to ${group.members.length} players in "${group.name}"`, 'success');
+            }
           }
           setCheckoutInviteGroupId('');
         }
@@ -1899,12 +1932,23 @@ export function useAppState() {
     showToast(`Group "${name}" saved for 1-tap invites`, 'success');
   };
 
-  const inviteSquadGroupToSplit = (groupId, annId) => {
+  const inviteSquadGroupToSplit = async (groupId, annId) => {
     const group = squadGroups.find((g) => g.id === groupId);
     const ann = announcements.find((a) => a.id === annId);
     if (!group || !ann) return;
+
+    if (getToken() && ann.bookingId && !String(groupId).startsWith('grp-')) {
+      try {
+        const res = await bookingApi.inviteSquadToSplit(ann.bookingId, groupId);
+        showToast(`Invite sent to ${res.sent || group.members.length} players in "${group.name}"`, 'success');
+        return;
+      } catch (err) {
+        console.warn('[split] squad invite failed:', err.message);
+      }
+    }
+
     const link = getSplitInviteLink(annId);
-    group.members.forEach((member) => {
+    group.members.forEach(() => {
       setNotifications((prev) => [
         {
           id: Date.now() + Math.random(),

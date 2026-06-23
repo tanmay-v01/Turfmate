@@ -187,6 +187,35 @@ async function listSquads(ownerId) {
   return squads;
 }
 
+async function getSquadMemberUserIds(squadId, ownerId) {
+  const squad = await db.getOne(
+    isPg ? 'SELECT * FROM squads WHERE id = $1' : 'SELECT * FROM squads WHERE id = ?',
+    [squadId]
+  );
+  if (!squad) throw Object.assign(new Error('Squad not found'), { status: 404 });
+  if (squad.owner_id !== ownerId) {
+    throw Object.assign(new Error('Not your squad'), { status: 403 });
+  }
+
+  const rows = await db.getAll(
+    isPg
+      ? 'SELECT member_user_id, member_name FROM squad_members WHERE squad_id = $1'
+      : 'SELECT member_user_id, member_name FROM squad_members WHERE squad_id = ?',
+    [squadId]
+  );
+
+  const ids = new Set();
+  for (const row of rows) {
+    if (row.member_user_id) {
+      ids.add(row.member_user_id);
+      continue;
+    }
+    const user = await findUserByUsername(row.member_name);
+    if (user?.id) ids.add(user.id);
+  }
+  return [...ids];
+}
+
 async function createSquad({ ownerId, name, members = [] }) {
   const id = crypto.randomUUID();
   const ts = now();
@@ -219,5 +248,6 @@ module.exports = {
   declineRequest: (id, userId) => respondToRequest(id, userId, 'DECLINED'),
   listSquads,
   createSquad,
+  getSquadMemberUserIds,
   getUserBrief,
 };

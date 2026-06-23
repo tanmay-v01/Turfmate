@@ -27,7 +27,7 @@ router.post('/initiate', authRequired, loadUser, async (req, res) => {
   try {
     const {
       turfId, slotId, date = 'Today', slotTime, totalAmount, hostAdvance,
-      playersNeeded, isPublic = true, sport,
+      playersNeeded, isPublic = true, sport, inviteSquadId,
     } = req.body;
     if (!turfId || !slotId || totalAmount == null || hostAdvance == null || playersNeeded == null) {
       return res.status(400).json({ error: 'Missing required split fields' });
@@ -43,6 +43,38 @@ router.post('/initiate', authRequired, loadUser, async (req, res) => {
       playersNeeded: Number(playersNeeded),
       isPublic,
       sport,
+      inviteSquadId,
+    });
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
+router.post('/:bookingId/invite-squad', authRequired, loadUser, async (req, res) => {
+  try {
+    const { squadId } = req.body;
+    if (!squadId) return res.status(400).json({ error: 'squadId is required' });
+
+    const row = await splitsRepo.getSplitBooking(req.params.bookingId);
+    if (!row) return res.status(404).json({ error: 'Split not found' });
+    if (row.host_id !== req.user.id) {
+      return res.status(403).json({ error: 'Only the split host can send invites' });
+    }
+
+    const notificationsRepo = require('../repositories/notifications');
+    const config = require('../lib/config');
+    const annId = `ann-${req.params.bookingId}`;
+    const inviteLink = `${config.appUrl}/#join/${annId}`;
+
+    const result = await notificationsRepo.sendSplitSquadInvites({
+      hostUserId: req.user.id,
+      bookingId: req.params.bookingId,
+      annId,
+      squadId,
+      turfName: row.name,
+      costPerHead: Number(row.cost_per_head),
+      inviteLink,
     });
     res.json(result);
   } catch (err) {

@@ -20,6 +20,7 @@ const chatRoutes = require('./routes/chat');
 const socialRoutes = require('./routes/social');
 const leaderboardRoutes = require('./routes/leaderboard');
 const broadcastRoutes = require('./routes/broadcasts');
+const notificationRoutes = require('./routes/notifications');
 const { registerChatSocket } = require('./socket/chat');
 const paymentsRepo = require('./repositories/payments');
 const razorpayService = require('./services/razorpayService');
@@ -78,6 +79,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/social', socialRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/broadcasts', broadcastRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 async function bootstrapPhase1() {
   try {

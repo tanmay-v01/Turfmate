@@ -43,6 +43,12 @@ export const bookingApi = {
       body: JSON.stringify({}),
     }),
 
+  inviteSquadToSplit: (bookingId, squadId) =>
+    apiFetch(`/splits/${encodeURIComponent(bookingId)}/invite-squad`, {
+      method: 'POST',
+      body: JSON.stringify({ squadId }),
+    }),
+
 };
 
 export const socialApi = {

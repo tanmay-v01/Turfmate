@@ -25,4 +25,6 @@ module.exports = {
   razorpayKeyId: process.env.RAZORPAY_KEY_ID || '',
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET || '',
   razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
+  appUrl: (process.env.APP_URL || 'http://localhost:3000').replace(/\/$/, ''),
+  fcmServerKey: process.env.FCM_SERVER_KEY || '',
 };

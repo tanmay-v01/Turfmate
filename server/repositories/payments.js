@@ -89,6 +89,7 @@ async function fulfillOrder(order, userId) {
       playersNeeded: Number(payload.playersNeeded),
       isPublic: payload.isPublic !== false,
       sport: payload.sport,
+      inviteSquadId: payload.inviteSquadId,
     });
   } else if (order.purpose === 'SPLIT_JOIN') {
     const payAmount = Number(payload.amount ?? order.amount_paise / 100);
