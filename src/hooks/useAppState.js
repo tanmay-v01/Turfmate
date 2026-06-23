@@ -22,6 +22,7 @@ import { mapLockerPost, mergeLockerAnnouncements } from '../utils/lockerMapper';
 import { chatApi } from '../services/chatApi';
 import { mapApiChatRoom, mergeChats } from '../utils/chatMapper';
 import { socialApi } from '../services/socialApi';
+import { leaderboardApi } from '../services/leaderboardApi';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -270,8 +271,15 @@ export function useAppState() {
     refreshMyBookings();
     refreshChats();
     refreshSocial();
+    refreshLeaderboard();
     return undefined;
-  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial]);
+  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard]);
+
+  useEffect(() => {
+    if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
+    refreshLeaderboard('squad');
+    return undefined;
+  }, [view, userProfile?.isLoggedIn, refreshLeaderboard]);
 
   useEffect(() => {
     if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
@@ -328,6 +336,42 @@ export function useAppState() {
       console.warn('[social] refresh failed:', err.message);
     }
   }, []);
+
+  const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+    if (!getToken()) return;
+    try {
+      const [{ entries }, matchRes] = await Promise.all([
+        leaderboardApi.getEntries({
+          scope,
+          lat: userProfile?.lat,
+          lng: userProfile?.lng,
+          radiusKm: filterRadius,
+        }),
+        leaderboardApi.getMatches().catch(() => ({ matches: [] })),
+      ]);
+
+      if (entries?.length) {
+        setFriendStats((prev) => {
+          const normalized = entries.map((e) => ({
+            ...e,
+            id: e.isMe ? 'me' : (e.id || e.userId),
+          }));
+          const hasOnlyMe = normalized.length === 1 && normalized[0].isMe;
+          if (hasOnlyMe) {
+            const demoFriends = prev.filter((p) => !p.isMe);
+            return [...normalized, ...demoFriends];
+          }
+          return normalized;
+        });
+      }
+
+      if (matchRes.matches?.length) {
+        setGameHistory(matchRes.matches);
+      }
+    } catch (err) {
+      console.warn('[leaderboard] refresh failed:', err.message);
+    }
+  }, [userProfile?.lat, userProfile?.lng, filterRadius]);
 
   useEffect(() => {
     if (!userProfile?.isLoggedIn) return undefined;
@@ -2090,14 +2134,28 @@ export function useAppState() {
     }));
   };
 
-  const finalizeLiveGame = (game) => {
+  const finalizeLiveGame = async (game) => {
     const delta = extractPlayerDeltas(game, userProfile.name);
-    setFriendStats((prev) =>
-      prev.map((p) => (p.isMe ? { ...p, stats: applyStatDelta(p.stats, delta) } : p))
-    );
     const summary = game.sport === 'cricket'
       ? `${game.teamA.runs}/${game.teamA.wickets} vs ${game.teamB.runs}/${game.teamB.wickets}`
       : `${game.teamA.goals}–${game.teamB.goals}`;
+
+    if (getToken()) {
+      try {
+        await leaderboardApi.recordMatch({ sport: delta.sport || game.sport, summary, delta });
+        await refreshLeaderboard();
+      } catch (err) {
+        console.warn('[leaderboard] record match failed:', err.message);
+        setFriendStats((prev) =>
+          prev.map((p) => (p.isMe ? { ...p, stats: applyStatDelta(p.stats, delta) } : p))
+        );
+      }
+    } else {
+      setFriendStats((prev) =>
+        prev.map((p) => (p.isMe ? { ...p, stats: applyStatDelta(p.stats, delta) } : p))
+      );
+    }
+
     setGameHistory((prev) => [
       { id: Date.now(), sport: game.sport, summary, delta, finishedAt: new Date().toISOString() },
       ...prev,
@@ -2193,7 +2251,7 @@ export function useAppState() {
     bookings, setBookings, refreshMyBookings, announcements, setAnnouncements, refreshLockerFeed,
     chats, setChats, refreshChats, friendRequests, acceptFriendRequest, declineFriendRequest, notifications, setNotifications,
     toast, showToast, dismissToast,
-    friendStats, setFriendStats, liveGame, setLiveGame, gameHistory, finalizeLiveGame,
+    friendStats, setFriendStats, refreshLeaderboard, liveGame, setLiveGame, gameHistory, finalizeLiveGame,
     turfs, setTurfs, owners, setOwners, suspendedTurfIds, bannedUsers, banUser, unbanUser,
     ownerActiveTurfId, setOwnerActiveTurfId,
     phoneNumber, setPhoneNumber, otpSent, setOtpSent,

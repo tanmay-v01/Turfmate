@@ -12,7 +12,7 @@
 | **3b** | ✅ | Locker feed API + open splits refresh every 30s on Locker tab |
 | **3c** | ✅ | Socket.io chat rooms persisted in DB + inbox API |
 | **3d** | ✅ | Squads + friend requests API persisted in DB |
-| **3e** | ⏳ | Score → leaderboard server sync |
+| **3e** | ✅ | Score → leaderboard server sync via match API |
 | **3f** | ⏳ | Owner broadcasts with server-side `expiresAt` |
 
 ---
@@ -59,7 +59,16 @@
 
 ---
 
-## Infra preview (from Phase 2)
+## 3e — Score → leaderboard sync
+
+- Migration `010_leaderboard.sql` — `player_sport_stats`, `match_results`
+- `POST /api/leaderboard/matches` — save game + apply stat deltas
+- `GET /api/leaderboard?scope=squad|area` — ranked friend/area stats
+- `finalizeLiveGame()` posts to API; `refreshLeaderboard()` on login + Ranks page
+
+---
+
+## Exit criteria (Phase 3)
 
 - Razorpay Route linked accounts for owner T+2 payouts
 - Redis OTP store

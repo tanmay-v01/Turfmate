@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Trophy, Medal, TrendingUp } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
@@ -16,6 +16,12 @@ export default function LeaderboardPage() {
   const sports = Object.keys(LEADERBOARD_METRICS);
   const [sport, setSport] = useState(app.userProfile.favoriteSports?.[0] || 'football');
   const [scope, setScope] = useState('squad'); // squad or virar
+
+  useEffect(() => {
+    if (app.userProfile?.isLoggedIn && app.refreshLeaderboard) {
+      app.refreshLeaderboard(scope === 'virar' ? 'area' : 'squad');
+    }
+  }, [scope, app.userProfile?.isLoggedIn, app.refreshLeaderboard]);
 
   const metric = LEADERBOARD_METRICS[sport];
   const friendIds = getFriendIds();

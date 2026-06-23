@@ -18,6 +18,7 @@ const paymentRoutes = require('./routes/payments');
 const lockerRoutes = require('./routes/locker');
 const chatRoutes = require('./routes/chat');
 const socialRoutes = require('./routes/social');
+const leaderboardRoutes = require('./routes/leaderboard');
 const { registerChatSocket } = require('./socket/chat');
 const paymentsRepo = require('./repositories/payments');
 const razorpayService = require('./services/razorpayService');
@@ -73,6 +74,7 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/locker', lockerRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/social', socialRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
 
 async function bootstrapPhase1() {
   try {

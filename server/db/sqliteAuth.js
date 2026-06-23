@@ -239,6 +239,23 @@ async function migrate() {
       PRIMARY KEY(squad_id, member_name),
       FOREIGN KEY(squad_id) REFERENCES squads(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS player_sport_stats (
+      user_id TEXT NOT NULL,
+      sport TEXT NOT NULL,
+      stats TEXT NOT NULL DEFAULT '{}',
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY(user_id, sport),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS match_results (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      sport TEXT NOT NULL,
+      summary TEXT,
+      delta TEXT NOT NULL DEFAULT '{}',
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);
