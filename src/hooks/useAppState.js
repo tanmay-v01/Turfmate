@@ -21,6 +21,7 @@ import { lockerApi } from '../services/lockerApi';
 import { mapLockerPost, mergeLockerAnnouncements } from '../utils/lockerMapper';
 import { chatApi } from '../services/chatApi';
 import { mapApiChatRoom, mergeChats } from '../utils/chatMapper';
+import { socialApi } from '../services/socialApi';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -268,8 +269,9 @@ export function useAppState() {
     if (!userProfile?.isLoggedIn || !getToken()) return undefined;
     refreshMyBookings();
     refreshChats();
+    refreshSocial();
     return undefined;
-  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats]);
+  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial]);
 
   useEffect(() => {
     if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
@@ -301,6 +303,29 @@ export function useAppState() {
       setChats((prev) => mergeChats(mapped, prev));
     } catch (err) {
       console.warn('[chat] refresh failed:', err.message);
+    }
+  }, []);
+
+  const refreshSocial = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      const [reqRes, squadRes] = await Promise.all([
+        socialApi.listFriendRequests().catch(() => ({ requests: [] })),
+        socialApi.listSquads().catch(() => ({ squads: [] })),
+      ]);
+      if (reqRes.requests?.length) {
+        setFriendRequests(reqRes.requests);
+      }
+      if (squadRes.squads) {
+        setSquadGroups((prev) => {
+          if (!squadRes.squads.length) return prev;
+          const apiIds = new Set(squadRes.squads.map((s) => s.id));
+          const localOnly = prev.filter((g) => !apiIds.has(g.id) && String(g.id).startsWith('grp-'));
+          return [...squadRes.squads, ...localOnly];
+        });
+      }
+    } catch (err) {
+      console.warn('[social] refresh failed:', err.message);
     }
   }, []);
 
@@ -1749,15 +1774,36 @@ export function useAppState() {
 
   const joinSplitGame = (annId) => openJoinSplitReview(annId);
 
-  const sendFriendRequest = (player) => {
+  const sendFriendRequest = async (player) => {
     const username = player.username || player.full_name;
     if (!username) return;
-    if (sentFriendRequests.includes(username)) {
+    const key = username.replace(/^@/, '');
+    if (sentFriendRequests.includes(key) || sentFriendRequests.includes(`@${key}`)) {
       showToast('Request already sent', 'info');
       return;
     }
-    setSentFriendRequests((prev) => [...prev, username]);
-    showToast(`Friend request sent to @${username}`, 'success', 'Request sent');
+
+    if (getToken()) {
+      try {
+        await socialApi.sendFriendRequest({
+          toUserId: player.userId || player.id,
+          toUsername: username,
+          message: `Wants to connect on TurfMate`,
+        });
+        setSentFriendRequests((prev) => [...prev, key]);
+        showToast(`Friend request sent to @${key}`, 'success', 'Request sent');
+        return;
+      } catch (err) {
+        if (err.status === 409) {
+          showToast('Request already sent', 'info');
+          return;
+        }
+        console.warn('[social] send request failed:', err.message);
+      }
+    }
+
+    setSentFriendRequests((prev) => [...prev, key]);
+    showToast(`Friend request sent to @${key}`, 'success', 'Request sent');
   };
 
   const openDmWithUser = ({ name, avatar }) => {
@@ -1790,7 +1836,17 @@ export function useAppState() {
     setView('chat');
   };
 
-  const createSquadGroup = (name, memberNames) => {
+  const createSquadGroup = async (name, memberNames) => {
+    if (getToken()) {
+      try {
+        const { squad } = await socialApi.createSquad({ name, members: memberNames });
+        setSquadGroups((prev) => [squad, ...prev]);
+        showToast(`Group "${name}" saved for 1-tap invites`, 'success');
+        return;
+      } catch (err) {
+        console.warn('[social] create squad failed:', err.message);
+      }
+    }
     const group = { id: `grp-${Date.now()}`, name, members: memberNames, createdAt: Date.now() };
     setSquadGroups((prev) => [group, ...prev]);
     showToast(`Group "${name}" saved for 1-tap invites`, 'success');
@@ -1830,9 +1886,17 @@ export function useAppState() {
     return () => clearInterval(id);
   }, [announcements]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const acceptFriendRequest = (requestId) => {
+  const acceptFriendRequest = async (requestId) => {
     const req = friendRequests.find((r) => r.id === requestId);
     if (!req) return;
+
+    if (getToken() && !String(requestId).startsWith('req-')) {
+      try {
+        await socialApi.acceptFriendRequest(requestId);
+      } catch (err) {
+        console.warn('[social] accept failed:', err.message);
+      }
+    }
 
     const chatId = `chat-dm-${Date.now()}`;
     setChats((prev) => {
@@ -1863,7 +1927,14 @@ export function useAppState() {
     showToast(`Connected with ${req.name.split(' ')[0]}`, 'success');
   };
 
-  const declineFriendRequest = (requestId) => {
+  const declineFriendRequest = async (requestId) => {
+    if (getToken() && !String(requestId).startsWith('req-')) {
+      try {
+        await socialApi.declineFriendRequest(requestId);
+      } catch (err) {
+        console.warn('[social] decline failed:', err.message);
+      }
+    }
     setFriendRequests((prev) => prev.filter((r) => r.id !== requestId));
     showToast('Request declined', 'info');
   };
@@ -2147,7 +2218,7 @@ export function useAppState() {
     pendingJoinSplitId, pendingJoinSplitAnn, openJoinSplitReview, closeJoinSplitReview, confirmJoinSplit,
     showSplitSuccessModal, setShowSplitSuccessModal, splitSuccessAnnId, setSplitSuccessAnnId,
     checkoutSlotLockExpiresAt, cancelSplitGame, getSplitInviteLink, inviteSquadGroupToSplit,
-    squadGroups, createSquadGroup, sendFriendRequest, sentFriendRequests, openDmWithUser,
+    squadGroups, createSquadGroup, sendFriendRequest, sentFriendRequests, openDmWithUser, refreshSocial,
     impersonatingOwner, exitImpersonation, setCheckoutInviteGroupId,
     activeChatId, setActiveChatId,
     chatInput, setChatInput, hoveredMapPin, setHoveredMapPin,

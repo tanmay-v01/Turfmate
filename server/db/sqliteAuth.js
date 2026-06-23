@@ -215,6 +215,30 @@ async function migrate() {
       created_at INTEGER NOT NULL,
       FOREIGN KEY(room_id) REFERENCES chat_rooms(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS friend_requests (
+      id TEXT PRIMARY KEY,
+      from_user_id TEXT NOT NULL,
+      to_user_id TEXT,
+      to_username TEXT,
+      message TEXT,
+      status TEXT NOT NULL DEFAULT 'PENDING',
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(from_user_id) REFERENCES users(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS squads (
+      id TEXT PRIMARY KEY,
+      owner_id TEXT NOT NULL,
+      name TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(owner_id) REFERENCES users(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS squad_members (
+      squad_id TEXT NOT NULL,
+      member_name TEXT NOT NULL,
+      member_user_id TEXT,
+      PRIMARY KEY(squad_id, member_name),
+      FOREIGN KEY(squad_id) REFERENCES squads(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

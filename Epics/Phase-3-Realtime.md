@@ -11,7 +11,7 @@
 | **3a** | ✅ | My Bookings synced from `GET /api/bookings/me` |
 | **3b** | ✅ | Locker feed API + open splits refresh every 30s on Locker tab |
 | **3c** | ✅ | Socket.io chat rooms persisted in DB + inbox API |
-| **3d** | ⏳ | Squads + friend requests in DB |
+| **3d** | ✅ | Squads + friend requests API persisted in DB |
 | **3e** | ⏳ | Score → leaderboard server sync |
 | **3f** | ⏳ | Owner broadcasts with server-side `expiresAt` |
 
@@ -44,7 +44,14 @@
 
 ---
 
-## Exit criteria (Phase 3)
+## 3d — Squads + friend requests
+
+- Migration `009_social.sql` — `friend_requests`, `squads`, `squad_members`
+- `GET/POST /api/social/friend-requests`, accept/decline
+- `GET/POST /api/social/squads`
+- `refreshSocial()` on login; Radar send + Squad create wired to API
+
+---
 
 - [x] User A's split visible to User B without shared browser
 - [x] Chat messages sync across two devices (same booking room)
