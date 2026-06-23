@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Megaphone, Send, Sparkles, Check, Smartphone, Flame, Trophy } from 'lucide-react';
 import { SPORTS } from '../../data/mockData';
 import { useApp } from '../../context/AppContext';
+import { broadcastsApi } from '../../services/broadcastsApi';
 
 export default function OwnerBroadcast({ ownedTurfs }) {
   const app = useApp();
@@ -14,59 +15,64 @@ export default function OwnerBroadcast({ ownedTurfs }) {
   const [expirationHours, setExpirationHours] = useState('6'); // hours
   const [selectedSport, setSelectedSport] = useState('football');
   const [selectedTurfId, setSelectedTurfId] = useState(ownedTurfs[0]?.id || 'turf-1');
+  const [ownerCampaigns, setOwnerCampaigns] = useState([]);
+  const [loadingCampaigns, setLoadingCampaigns] = useState(false);
+  const [publishing, setPublishing] = useState(false);
 
-  const ownerAnnouncements = app.announcements.filter(a =>
-    ownedTurfs.some(t => t.id === a.turfId) || a.isAdminAnnouncement
-  ).slice(0, 5);
+  const loadOwnerCampaigns = useCallback(async () => {
+    setLoadingCampaigns(true);
+    try {
+      const res = await broadcastsApi.listMine();
+      const active = (res.broadcasts || []).filter(
+        (b) => !b.isExpired && b.broadcastStatus === 'ACTIVE'
+      );
+      setOwnerCampaigns(active);
+    } catch (err) {
+      console.warn('[broadcasts] load failed:', err.message);
+    } finally {
+      setLoadingCampaigns(false);
+    }
+  }, []);
 
-  const handlePublish = (e) => {
+  useEffect(() => {
+    loadOwnerCampaigns();
+  }, [loadOwnerCampaigns]);
+
+  const handlePublish = async (e) => {
     e.preventDefault();
     if (!headline.trim() || !message.trim()) {
       app.showToast('Please fill out the Headline and Message.', 'error');
       return;
     }
 
-    const expirationMs = Number(expirationHours) * 60 * 60 * 1000;
-    const expiresAt = Date.now() + expirationMs;
     const targetTurf = ownedTurfs.find(t => t.id === selectedTurfId) || ownedTurfs[0];
-
-    const newAnn = {
-      id: `ann-owner-promo-${Date.now()}`,
-      hostId: targetTurf?.ownerId || 'owner-1',
-      hostName: targetTurf?.name || 'Verified Venue',
-      hostAvatar: targetTurf?.image || 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=400',
-      hostLevel: 'Official Partner',
-      sport: selectedSport,
-      sportIcon: SPORTS.find(s => s.id === selectedSport)?.icon || '🏆',
-      sportLabel: category === 'PROMO' ? 'Discount Offer' : category === 'EVENT' ? 'Tournament' : 'Announcement',
-      turfId: targetTurf?.id,
-      turfName: targetTurf?.name,
-      time: `Expires in ${expirationHours} hrs`,
-      distance: '0.8 km',
-      costPerHead: 0,
-      playersNeeded: 0,
-      totalSpots: 0,
-      roster: [],
-      status: 'open',
-      isAdminAnnouncement: true,
-      
-      contentType: category,
-      isPromo: category === 'PROMO',
-      category: category,
-      headline: headline,
-      text: `${headline} — ${message}${promoCode ? `\nCode: ${promoCode}` : ''}`,
-      promoCode: promoCode,
-      ctaText: cta,
-      expiresAt: expiresAt
-    };
-
-    app.setAnnouncements(prev => [newAnn, ...prev]);
-    app.showToast('Broadcast published to Locker Room!', 'success', 'Campaign Active');
-    
-    // Clear form
-    setHeadline('');
-    setMessage('');
-    setPromoCode('');
+    setPublishing(true);
+    try {
+      const res = await broadcastsApi.create({
+        turfLegacyId: targetTurf?.id,
+        category,
+        headline: headline.trim(),
+        bodyText: message.trim(),
+        promoCode: promoCode.trim() || undefined,
+        ctaText: cta,
+        sport: selectedSport,
+        expirationHours: Number(expirationHours) || 6,
+      });
+      const newAnn = res.broadcast;
+      if (newAnn) {
+        app.setAnnouncements((prev) => [newAnn, ...prev.filter((a) => a.broadcastId !== newAnn.broadcastId)]);
+      }
+      await app.refreshLockerFeed?.();
+      await loadOwnerCampaigns();
+      app.showToast('Broadcast published to Locker Room!', 'success', 'Campaign Active');
+      setHeadline('');
+      setMessage('');
+      setPromoCode('');
+    } catch (err) {
+      app.showToast(err.message || 'Failed to publish broadcast', 'error');
+    } finally {
+      setPublishing(false);
+    }
   };
 
   const selectedSportMeta = SPORTS.find(s => s.id === selectedSport) || SPORTS[0];
@@ -216,8 +222,8 @@ export default function OwnerBroadcast({ ownedTurfs }) {
             </div>
           </div>
 
-          <button type="submit" className="w-full tm-btn-grass py-3.5 rounded-2xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-sm">
-            <Send className="w-4 h-4" /> Broadcast to Players
+          <button type="submit" disabled={publishing} className="w-full tm-btn-grass py-3.5 rounded-2xl font-extrabold text-sm flex items-center justify-center gap-2 shadow-sm disabled:opacity-60">
+            <Send className="w-4 h-4" /> {publishing ? 'Publishing…' : 'Broadcast to Players'}
           </button>
         </form>
 
@@ -315,13 +321,17 @@ export default function OwnerBroadcast({ ownedTurfs }) {
 
       <div className="border-t border-slate-200 pt-6">
         <h3 className="font-extrabold text-brand-forest text-sm mb-4">Active Campaigns</h3>
-        {ownerAnnouncements.length === 0 ? (
+        {loadingCampaigns ? (
+          <div className="bg-white border border-slate-200 p-8 rounded-2xl text-center text-slate-400 text-xs font-bold">
+            Loading campaigns…
+          </div>
+        ) : ownerCampaigns.length === 0 ? (
           <div className="bg-white border border-slate-200 p-8 rounded-2xl text-center text-slate-400 text-xs font-bold">
             No active broadcasts. Post one using the builder above!
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {ownerAnnouncements.map(ann => {
+            {ownerCampaigns.map(ann => {
               const isPromoAnn = ann.contentType === 'PROMO' || ann.isPromo || ann.category === 'PROMO';
               return (
                 <div key={ann.id} className={`bg-white border p-4 rounded-2xl flex items-start gap-3 relative ${

@@ -256,6 +256,22 @@ async function migrate() {
       created_at INTEGER NOT NULL,
       FOREIGN KEY(user_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS owner_broadcasts (
+      id TEXT PRIMARY KEY,
+      owner_user_id TEXT NOT NULL,
+      turf_id TEXT,
+      turf_legacy_id TEXT,
+      category TEXT NOT NULL DEFAULT 'PROMO',
+      headline TEXT NOT NULL,
+      body_text TEXT NOT NULL,
+      promo_code TEXT,
+      cta_text TEXT DEFAULT 'Book Now',
+      sport TEXT DEFAULT 'football',
+      expires_at INTEGER NOT NULL,
+      status TEXT NOT NULL DEFAULT 'ACTIVE',
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(owner_user_id) REFERENCES users(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

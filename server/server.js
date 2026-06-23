@@ -19,11 +19,13 @@ const lockerRoutes = require('./routes/locker');
 const chatRoutes = require('./routes/chat');
 const socialRoutes = require('./routes/social');
 const leaderboardRoutes = require('./routes/leaderboard');
+const broadcastRoutes = require('./routes/broadcasts');
 const { registerChatSocket } = require('./socket/chat');
 const paymentsRepo = require('./repositories/payments');
 const razorpayService = require('./services/razorpayService');
 const bookingsRepo = require('./repositories/bookings');
 const splitsRepo = require('./repositories/splits');
+const broadcastsRepo = require('./repositories/broadcasts');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 const { seedTurfs } = require('./scripts/seedTurfs');
 
@@ -75,6 +77,7 @@ app.use('/api/locker', lockerRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/social', socialRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/broadcasts', broadcastRoutes);
 
 async function bootstrapPhase1() {
   try {
@@ -94,6 +97,7 @@ bootstrapPhase1();
 setInterval(() => {
   bookingsRepo.cleanupExpiredLocks().catch(() => {});
   splitsRepo.cleanupExpiredSplits().catch(() => {});
+  broadcastsRepo.cleanupExpired().catch(() => {});
 }, 60 * 1000);
 
 app.get('/health', (_req, res) => {

@@ -23,6 +23,7 @@ import { chatApi } from '../services/chatApi';
 import { mapApiChatRoom, mergeChats } from '../utils/chatMapper';
 import { socialApi } from '../services/socialApi';
 import { leaderboardApi } from '../services/leaderboardApi';
+import { broadcastsApi } from '../services/broadcastsApi';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -291,13 +292,15 @@ export function useAppState() {
   const refreshLockerFeed = useCallback(async () => {
     if (!userProfile?.isLoggedIn) return;
     try {
-      const [splitsRes, feedRes] = await Promise.all([
+      const [splitsRes, feedRes, broadcastRes] = await Promise.all([
         bookingApi.listOpenSplits().catch(() => ({ splits: [] })),
         lockerApi.getFeed().catch(() => ({ posts: [] })),
+        broadcastsApi.listActive().catch(() => ({ broadcasts: [] })),
       ]);
       const splits = splitsRes.splits || [];
       const posts = (feedRes.posts || []).map(mapLockerPost);
-      setAnnouncements((prev) => mergeLockerAnnouncements(splits, posts, prev));
+      const broadcasts = broadcastRes.broadcasts || [];
+      setAnnouncements((prev) => mergeLockerAnnouncements(splits, posts, prev, broadcasts));
     } catch (err) {
       console.warn('[locker] refresh failed:', err.message);
     }

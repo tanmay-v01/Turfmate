@@ -13,7 +13,7 @@
 | **3c** | ✅ | Socket.io chat rooms persisted in DB + inbox API |
 | **3d** | ✅ | Squads + friend requests API persisted in DB |
 | **3e** | ✅ | Score → leaderboard server sync via match API |
-| **3f** | ⏳ | Owner broadcasts with server-side `expiresAt` |
+| **3f** | ✅ | Owner broadcasts with server-side `expiresAt` |
 
 ---
 
@@ -65,6 +65,16 @@
 - `POST /api/leaderboard/matches` — save game + apply stat deltas
 - `GET /api/leaderboard?scope=squad|area` — ranked friend/area stats
 - `finalizeLiveGame()` posts to API; `refreshLeaderboard()` on login + Ranks page
+
+---
+
+## 3f — Owner broadcasts
+
+- Migration `011_owner_broadcasts.sql` — `owner_broadcasts` with `expires_at`, `status`
+- `GET /api/broadcasts/active` — locker feed promos (public)
+- `GET/POST /api/broadcasts/me`, `POST /:id/deactivate` — owner campaigns (JWT + OWNER)
+- `refreshLockerFeed()` merges active broadcasts at top of locker feed
+- `OwnerBroadcast` publishes via API; server enforces expiry + cleanup interval
 
 ---
 

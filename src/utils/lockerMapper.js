@@ -32,13 +32,13 @@ export function mapLockerPost(row) {
   };
 }
 
-export function mergeLockerAnnouncements(apiSplits, apiPosts, prev = []) {
+export function mergeLockerAnnouncements(apiSplits, apiPosts, prev = [], apiBroadcasts = []) {
   const demoOnly = prev.filter((a) => {
-    if (a.source === 'api' || a.postId) return false;
+    if (a.source === 'api' || a.source === 'broadcast' || a.postId || a.broadcastId) return false;
     if (a.bookingId && !String(a.bookingId).startsWith('B-')) return false;
     return true;
   });
   const apiBookingIds = new Set((apiSplits || []).map((s) => s.bookingId).filter(Boolean));
   const keptDemo = demoOnly.filter((d) => !d.bookingId || !apiBookingIds.has(d.bookingId));
-  return [...(apiSplits || []), ...(apiPosts || []), ...keptDemo];
+  return [...(apiBroadcasts || []), ...(apiSplits || []), ...(apiPosts || []), ...keptDemo];
 }
