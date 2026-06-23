@@ -9,6 +9,7 @@ export const env = {
   demoMode: import.meta.env.VITE_DEMO_MODE !== 'false',
   appUrl: import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : ''),
   razorpayKey: import.meta.env.VITE_RAZORPAY_KEY_ID || '',
+  supportWhatsApp: import.meta.env.VITE_SUPPORT_WHATSAPP || '',
 };
 
 export default env;

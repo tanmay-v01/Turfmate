@@ -4,6 +4,7 @@ import PageRouter from './PageRouter';
 import AppNav from './AppNav';
 import NotificationsDrawer from './NotificationsDrawer';
 import ConfettiOverlay from './ConfettiOverlay';
+import SupportFab from './SupportFab';
 
 export default function UserWebLayout() {
   const { view } = useApp();
@@ -17,6 +18,7 @@ export default function UserWebLayout() {
       <div className={`relative min-h-screen flex flex-col ${showNav ? 'lg:pl-[248px] pb-[148px] lg:pb-0' : ''}`}>
         <NotificationsDrawer />
         <ConfettiOverlay />
+        {showNav && <SupportFab />}
         <main className="flex-1 w-full">
           <PageRouter />
         </main>

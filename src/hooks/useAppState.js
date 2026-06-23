@@ -1072,7 +1072,7 @@ export function useAppState() {
       console.warn('[auth] send-otp failed, demo fallback available:', err.message);
     }
 
-    if (viaWhatsApp) {
+    if (viaWhatsApp && env.demoMode) {
       setWhatsappNotification("TurfMate OTP: 1234 is your verification code.");
       setTimeout(() => setWhatsappNotification(null), 6000);
     }
@@ -1102,8 +1102,12 @@ export function useAppState() {
   };
 
   const handleVerifyOTP = async () => {
-    if (!(otpCode === '1234' || otpCode.length === 4)) {
-      showToast('Enter the 4-digit OTP (demo: 1234)', 'error', 'Invalid OTP');
+    if (otpCode.length !== 4) {
+      showToast(
+        env.demoMode ? 'Enter the 4-digit OTP (demo: 1234)' : 'Enter the 4-digit code from SMS',
+        'error',
+        'Invalid OTP'
+      );
       return;
     }
 
@@ -1115,7 +1119,12 @@ export function useAppState() {
       console.warn('[auth] verify-otp failed, trying local demo fallback:', err.message);
     }
 
-    if (env.demoMode && phoneNumber === '9876543210') {
+    if (!env.demoMode) {
+      showToast('Invalid or expired code. Try resend SMS.', 'error', 'Verification failed');
+      return;
+    }
+
+    if (phoneNumber === '9876543210') {
         const profile = {
           isLoggedIn: true,
           role: 'PLAYER',
@@ -1136,7 +1145,7 @@ export function useAppState() {
         localStorage.removeItem('tm_onboarding_progress');
         setIsAdminMode(false);
         setView('home');
-      } else if (env.demoMode && phoneNumber === '1111111111') {
+      } else if (phoneNumber === '1111111111') {
         const profile = {
           isLoggedIn: true,
           role: 'OWNER',
@@ -1154,7 +1163,7 @@ export function useAppState() {
         setIsAdminMode(false);
         setOwnerActiveTurfId('turf-1');
         setView('owner_dashboard');
-      } else if (env.demoMode && phoneNumber === SUPER_ADMIN_PHONE) {
+      } else if (phoneNumber === SUPER_ADMIN_PHONE) {
         const profile = {
           isLoggedIn: true,
           role: 'SUPER_ADMIN',

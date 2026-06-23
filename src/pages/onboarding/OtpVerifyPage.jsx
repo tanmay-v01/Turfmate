@@ -4,6 +4,8 @@ import TurfMateLogo from '../../components/ui/TurfMateLogo';
 import Button from '../../components/ui/Button';
 import GrassBackground from '../../components/ui/GrassBackground';
 import StepProgress from '../../components/onboarding/StepProgress';
+import env from '../../config/env';
+import { openSupportWhatsApp } from '../../utils/support';
 
 export default function OtpVerifyPage() {
   const app = useApp();
@@ -29,25 +31,27 @@ export default function OtpVerifyPage() {
             4 digits stand between you and your next kickoff.
           </p>
           
-          <div className="mt-8 p-5 rounded-[24px] bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
-            <p className="text-xs font-black text-white mb-3 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-brand-lime" /> demo credentials
-            </p>
-            <ul className="text-xs text-slate-300 space-y-2 font-mono">
-              <li className="flex justify-between border-b border-white/5 pb-1">
-                <span>Player:</span>
-                <span className="font-bold text-brand-lime">9876543210</span>
-              </li>
-              <li className="flex justify-between border-b border-white/5 pb-1">
-                <span>Owner:</span>
-                <span className="font-bold text-brand-lime">1111111111</span>
-              </li>
-              <li className="flex justify-between pb-1">
-                <span>Super Admin:</span>
-                <span className="font-bold text-brand-lime">9999999999</span>
-              </li>
-            </ul>
-          </div>
+          {env.demoMode && (
+            <div className="mt-8 p-5 rounded-[24px] bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
+              <p className="text-xs font-black text-white mb-3 flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-brand-lime" /> demo credentials
+              </p>
+              <ul className="text-xs text-slate-300 space-y-2 font-mono">
+                <li className="flex justify-between border-b border-white/5 pb-1">
+                  <span>Player:</span>
+                  <span className="font-bold text-brand-lime">9876543210</span>
+                </li>
+                <li className="flex justify-between border-b border-white/5 pb-1">
+                  <span>Owner:</span>
+                  <span className="font-bold text-brand-lime">1111111111</span>
+                </li>
+                <li className="flex justify-between pb-1">
+                  <span>Super Admin:</span>
+                  <span className="font-bold text-brand-lime">9999999999</span>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
@@ -113,29 +117,33 @@ export default function OtpVerifyPage() {
             ))}
           </div>
 
-          <details className="mt-4 sm:mt-6 rounded-[20px] border border-slate-200/80 bg-slate-50 overflow-hidden shadow-sm lg:hidden">
-            <summary className="px-4 py-3 text-xs font-black text-brand-forest cursor-pointer select-none flex justify-between items-center">
-              <span>🚀 quick credentials (OTP: 1234)</span>
-            </summary>
-            <ul className="px-4 pb-4 text-xs text-slate-600 space-y-2 font-mono border-t border-slate-100 pt-3">
-              <li className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span>Player:</span>
-                <span className="font-bold text-brand-grassDeep">9876543210</span>
-              </li>
-              <li className="flex justify-between border-b border-slate-100 pb-1.5">
-                <span>Owner:</span>
-                <span className="font-bold text-brand-grassDeep">1111111111</span>
-              </li>
-              <li className="flex justify-between">
-                <span>Super Admin:</span>
-                <span className="font-bold text-brand-grassDeep">9999999999</span>
-              </li>
-            </ul>
-          </details>
+          {env.demoMode && (
+            <details className="mt-4 sm:mt-6 rounded-[20px] border border-slate-200/80 bg-slate-50 overflow-hidden shadow-sm lg:hidden">
+              <summary className="px-4 py-3 text-xs font-black text-brand-forest cursor-pointer select-none flex justify-between items-center">
+                <span>🚀 quick credentials (OTP: 1234)</span>
+              </summary>
+              <ul className="px-4 pb-4 text-xs text-slate-600 space-y-2 font-mono border-t border-slate-100 pt-3">
+                <li className="flex justify-between border-b border-slate-100 pb-1.5">
+                  <span>Player:</span>
+                  <span className="font-bold text-brand-grassDeep">9876543210</span>
+                </li>
+                <li className="flex justify-between border-b border-slate-100 pb-1.5">
+                  <span>Owner:</span>
+                  <span className="font-bold text-brand-grassDeep">1111111111</span>
+                </li>
+                <li className="flex justify-between">
+                  <span>Super Admin:</span>
+                  <span className="font-bold text-brand-grassDeep">9999999999</span>
+                </li>
+              </ul>
+            </details>
+          )}
 
-          <div className="hidden lg:block mt-6 p-5 rounded-[24px] bg-brand-grassPale/50 border border-brand-border/60 text-xs text-brand-grassInk shadow-sm leading-relaxed">
-            <strong>demo instructions:</strong> type <strong>1234</strong> to verify and login instantly.
-          </div>
+          {env.demoMode && (
+            <div className="hidden lg:block mt-6 p-5 rounded-[24px] bg-brand-grassPale/50 border border-brand-border/60 text-xs text-brand-grassInk shadow-sm leading-relaxed">
+              <strong>demo instructions:</strong> type <strong>1234</strong> to verify and login instantly.
+            </div>
+          )}
 
           <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm">
             <span className="text-brand-muted font-medium">didn&apos;t get it?</span>
@@ -152,6 +160,19 @@ export default function OtpVerifyPage() {
               </div>
             )}
           </div>
+
+          {!env.demoMode && env.supportWhatsApp && (
+            <p className="mt-3 text-xs text-brand-muted">
+              Still stuck?{' '}
+              <button
+                type="button"
+                onClick={() => openSupportWhatsApp('Hi, I am not receiving my TurfMate OTP.')}
+                className="font-bold text-[#25D366] hover:underline"
+              >
+                message support on WhatsApp
+              </button>
+            </p>
+          )}
 
           <Button
             size="md"
