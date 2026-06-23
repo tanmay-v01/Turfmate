@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const db = require('../db/index');
 const config = require('../lib/config');
 const ledgerRepo = require('./ledger');
+const chatRepo = require('./chat');
 
 const isPg = db.driver === 'postgres';
 const LOCK_TTL_MS = 5 * 60 * 1000;
@@ -176,6 +177,18 @@ async function checkoutPrivate({
   );
 
   await ledgerRepo.recordSettlement(bookingId);
+
+  const turfRow = await db.getOne(
+    isPg ? 'SELECT name FROM turfs WHERE id = $1' : 'SELECT name FROM turfs WHERE id = ?',
+    [turf.id]
+  );
+  await chatRepo.ensureBookingRoom({
+    bookingId,
+    hostUserId: userId,
+    name: `Game @ ${turfRow?.name || 'Turf'}`,
+    meta: { turfId: turf.legacyId, bookingId, slotTime, dateLabel },
+    systemText: `Private booking confirmed for ${slotTime || 'your slot'}. Coordinate with your squad here.`,
+  });
 
   return {
     bookingId,

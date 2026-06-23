@@ -10,7 +10,7 @@
 |-------|--------|---------|
 | **3a** | ✅ | My Bookings synced from `GET /api/bookings/me` |
 | **3b** | ✅ | Locker feed API + open splits refresh every 30s on Locker tab |
-| **3c** | ⏳ | Socket.io chat rooms persisted |
+| **3c** | ✅ | Socket.io chat rooms persisted in DB + inbox API |
 | **3d** | ⏳ | Squads + friend requests in DB |
 | **3e** | ⏳ | Score → leaderboard server sync |
 | **3f** | ⏳ | Owner broadcasts with server-side `expiresAt` |
@@ -34,8 +34,20 @@
 
 ---
 
-- [ ] User A's split visible to User B without shared browser
-- [ ] Chat messages sync across two devices
+## 3c — Persisted game chat
+
+- Migration `008_chat.sql` — `chat_rooms`, `chat_members`, `chat_messages`
+- `GET /api/chat/rooms`, `POST /api/chat/rooms/:id/messages`, mark read
+- Socket.io saves messages to DB; auto room on private/split booking
+- `refreshChats()` on login + Chat tab (30s poll)
+- Room id: `chat-booking-{bookingId}`
+
+---
+
+## Exit criteria (Phase 3)
+
+- [x] User A's split visible to User B without shared browser
+- [x] Chat messages sync across two devices (same booking room)
 - [ ] Push notification on split invite (FCM)
 
 ---

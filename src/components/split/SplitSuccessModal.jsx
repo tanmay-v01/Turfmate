@@ -1,5 +1,6 @@
 import { Trophy, MessageSquare } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { splitChatId } from '../../utils/chatMapper';
 
 export default function SplitSuccessModal() {
   const app = useApp();
@@ -7,7 +8,7 @@ export default function SplitSuccessModal() {
   if (!app.showSplitSuccessModal) return null;
 
   const ann = app.announcements.find((a) => a.id === app.splitSuccessAnnId);
-  const chatId = ann ? `chat-ann-${ann.id}` : null;
+  const chatId = splitChatId(ann);
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-brand-forest/60 backdrop-blur-md animate-fade-in">

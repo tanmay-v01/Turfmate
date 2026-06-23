@@ -186,6 +186,35 @@ async function migrate() {
       created_at INTEGER NOT NULL,
       FOREIGN KEY(author_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS chat_rooms (
+      id TEXT PRIMARY KEY,
+      room_type TEXT NOT NULL DEFAULT 'game',
+      booking_id TEXT,
+      name TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'ACTIVE',
+      meta TEXT NOT NULL DEFAULT '{}',
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(booking_id) REFERENCES bookings(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS chat_members (
+      room_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      joined_at INTEGER NOT NULL,
+      last_read_at INTEGER,
+      PRIMARY KEY(room_id, user_id),
+      FOREIGN KEY(room_id) REFERENCES chat_rooms(id),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`,
+    `CREATE TABLE IF NOT EXISTS chat_messages (
+      id TEXT PRIMARY KEY,
+      room_id TEXT NOT NULL,
+      sender_id TEXT,
+      sender_name TEXT NOT NULL,
+      content_type TEXT NOT NULL DEFAULT 'TEXT',
+      content TEXT NOT NULL,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(room_id) REFERENCES chat_rooms(id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

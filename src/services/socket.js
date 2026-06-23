@@ -10,9 +10,9 @@ class SocketService {
   }
 
   connect(userId) {
+    this.userId = userId;
     if (!this.socket) {
       this.socket = io(SOCKET_URL);
-      this.userId = userId;
 
       this.socket.on('connect', () => {
         console.log('Connected to socket server with ID:', this.socket.id);

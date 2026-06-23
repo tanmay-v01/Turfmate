@@ -19,6 +19,8 @@ import { getToken } from '../services/apiClient';
 import { mapApiBooking } from '../utils/bookingMapper';
 import { lockerApi } from '../services/lockerApi';
 import { mapLockerPost, mergeLockerAnnouncements } from '../utils/lockerMapper';
+import { chatApi } from '../services/chatApi';
+import { mapApiChatRoom, mergeChats } from '../utils/chatMapper';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -265,8 +267,16 @@ export function useAppState() {
   useEffect(() => {
     if (!userProfile?.isLoggedIn || !getToken()) return undefined;
     refreshMyBookings();
+    refreshChats();
     return undefined;
-  }, [userProfile?.isLoggedIn, refreshMyBookings]);
+  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats]);
+
+  useEffect(() => {
+    if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
+    refreshChats();
+    const timer = setInterval(refreshChats, 30000);
+    return () => clearInterval(timer);
+  }, [view, userProfile?.isLoggedIn, refreshChats]);
 
   const refreshLockerFeed = useCallback(async () => {
     if (!userProfile?.isLoggedIn) return;
@@ -282,6 +292,17 @@ export function useAppState() {
       console.warn('[locker] refresh failed:', err.message);
     }
   }, [userProfile?.isLoggedIn]);
+
+  const refreshChats = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      const { rooms = [] } = await chatApi.getInbox();
+      const mapped = rooms.map(mapApiChatRoom);
+      setChats((prev) => mergeChats(mapped, prev));
+    } catch (err) {
+      console.warn('[chat] refresh failed:', err.message);
+    }
+  }, []);
 
   useEffect(() => {
     if (!userProfile?.isLoggedIn) return undefined;
@@ -524,7 +545,7 @@ export function useAppState() {
   // Connect socket and listen globally
   useEffect(() => {
     if (userProfile && userProfile.isLoggedIn) {
-      const userId = userProfile.username || 'testUser';
+      const userId = userProfile.userId || userProfile.username || 'testUser';
       socketService.connect(userId);
 
       // Join all current rooms
@@ -568,7 +589,7 @@ export function useAppState() {
     return () => {
       // Keep it connected for the session
     };
-  }, [userProfile.isLoggedIn, userProfile.username]);
+  }, [userProfile.isLoggedIn, userProfile.userId, userProfile.username]);
 
   // Join new chat rooms when they are added to chats list
   useEffect(() => {
@@ -585,6 +606,9 @@ export function useAppState() {
       setChats((prevChats) =>
         prevChats.map((c) => (c.id === activeChatId ? { ...c, unread: 0 } : c))
       );
+      if (getToken() && activeChatId.startsWith('chat-booking-')) {
+        chatApi.markRead(activeChatId).catch(() => {});
+      }
     }
   }, [activeChatId]);
 
@@ -1445,10 +1469,13 @@ export function useAppState() {
         )));
       }
 
+      const chatId = `chat-booking-${bId}`;
+      newBooking.chatId = chatId;
+
       // If split option selected, auto-create game announcement in Locker Room
       if (checkoutOption === 'split') {
         const newAnn = apiSplit || {
-          id: `ann-${Date.now()}`,
+          id: `ann-${bId}`,
           bookingId: bId,
           hostId: userProfile.userId || 'user-id',
           hostName: userProfile.name,
@@ -1470,18 +1497,6 @@ export function useAppState() {
           fundingExpiresAt: Date.now() + 4 * 3600 * 1000,
         };
         setAnnouncements(prev => [newAnn, ...prev.filter((a) => a.id !== newAnn.id)]);
-
-        const newChat = {
-          id: `chat-ann-${newAnn.id}`,
-          name: `⚽ Split Game @ ${activeTurf.name}`,
-          type: 'game',
-          unread: 0,
-          meta: { turfId: activeTurf.id, annId: newAnn.id, roster: [userProfile.name] },
-          messages: [
-            { sender: 'System', text: `Welcome to the chatroom for your game at ${activeTurf.name}! Splitting the cost. Warning: Chat room archives 24 hours after game ends.`, time: 'Just now' }
-          ]
-        };
-        setChats(prev => [newChat, ...prev]);
         newBooking.annId = newAnn.id;
         if (checkoutInviteGroupId) {
           const group = squadGroups.find((g) => g.id === checkoutInviteGroupId);
@@ -1502,19 +1517,27 @@ export function useAppState() {
           }
           setCheckoutInviteGroupId('');
         }
+      }
+
+      if (getToken()) {
+        await refreshChats();
       } else {
-        const chatId = `chat-booking-${bId}`;
-        setChats(prev => [{
+        setChats((prev) => [{
           id: chatId,
-          name: `Game @ ${activeTurf.name}`,
+          name: checkoutOption === 'split' ? `⚽ Split Game @ ${activeTurf.name}` : `Game @ ${activeTurf.name}`,
           type: 'game',
           unread: 0,
-          meta: { turfId: activeTurf.id, bookingId: bId },
+          meta: { turfId: activeTurf.id, bookingId: bId, annId: newBooking.annId },
           messages: [
-            { sender: 'System', text: `Private booking confirmed for ${slot.time}. Coordinate with your squad here.`, time: 'Just now' },
+            {
+              sender: 'System',
+              text: checkoutOption === 'split'
+                ? `Welcome to the chatroom for your game at ${activeTurf.name}! Splitting the cost.`
+                : `Private booking confirmed for ${slot.time}. Coordinate with your squad here.`,
+              time: 'Just now',
+            },
           ],
-        }, ...prev]);
-        newBooking.chatId = chatId;
+        }, ...prev.filter((c) => c.id !== chatId)]);
       }
 
       setBookingSuccessData(newBooking);
@@ -1635,7 +1658,9 @@ export function useAppState() {
         })
       );
 
-      const chatId = `chat-ann-${annId}`;
+      const chatId = ann.bookingId && !String(ann.bookingId).startsWith('B-')
+        ? `chat-booking-${ann.bookingId}`
+        : `chat-ann-${annId}`;
       setChats((prev) =>
         prev.map((c) => {
           if (c.id !== chatId) return c;
@@ -1681,6 +1706,7 @@ export function useAppState() {
       showToast(`UPI payment of ₹${ann.costPerHead} completed`, 'success', 'Joined the squad!');
       setIsProcessingPayment(false);
       refreshLockerFeed();
+      if (getToken()) refreshChats();
       return { filled, chatId };
     } catch (error) {
       console.error('Join Split Error:', error);
@@ -2094,7 +2120,7 @@ export function useAppState() {
     isAdminMode, setIsAdminMode, view, setView,
     onboardingData, setOnboardingData, userProfile, setUserProfile,
     bookings, setBookings, refreshMyBookings, announcements, setAnnouncements, refreshLockerFeed,
-    chats, setChats, friendRequests, acceptFriendRequest, declineFriendRequest, notifications, setNotifications,
+    chats, setChats, refreshChats, friendRequests, acceptFriendRequest, declineFriendRequest, notifications, setNotifications,
     toast, showToast, dismissToast,
     friendStats, setFriendStats, liveGame, setLiveGame, gameHistory, finalizeLiveGame,
     turfs, setTurfs, owners, setOwners, suspendedTurfIds, bannedUsers, banUser, unbanUser,

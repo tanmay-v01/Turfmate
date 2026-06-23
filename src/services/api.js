@@ -79,9 +79,4 @@ export const socialApi = {
   },
 };
 
-export const chatApi = {
-  getInbox: async () => [],
-  getRoomHistory: async () => [],
-};
-
 export default bookingApi;

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { ArrowLeft, Share2, Users, Clock, ShieldCheck, AlertCircle } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
+import { splitChatId } from '../../utils/chatMapper';
 
 function formatCountdown(seconds) {
   const h = Math.floor(seconds / 3600);
@@ -19,7 +20,7 @@ export default function SplitHubPage() {
   ) || app.announcements.find((a) => a.roster?.includes(app.userProfile.name) && (a.status === 'open' || a.status === 'filled'));
 
   const isHost = activeSplit?.hostName === app.userProfile.name;
-  const chatId = activeSplit ? `chat-ann-${activeSplit.id}` : null;
+  const chatId = splitChatId(activeSplit);
 
   useEffect(() => {
     if (!activeSplit?.fundingExpiresAt) return;

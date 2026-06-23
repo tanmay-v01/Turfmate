@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const db = require('../db/index');
 const bookingsRepo = require('./bookings');
 const ledgerRepo = require('./ledger');
+const chatRepo = require('./chat');
 
 const isPg = db.driver === 'postgres';
 const SPLIT_FUNDING_MS = 4 * 60 * 60 * 1000;
@@ -219,6 +220,14 @@ async function initiateSplit({
   const roster = await getRosterNames(bookingId);
   const split = await splitToAnnouncement(row, row, row, hostDisplay, roster);
 
+  await chatRepo.ensureBookingRoom({
+    bookingId,
+    hostUserId: userId,
+    name: `Split Game @ ${row.name}`,
+    meta: { turfId: row.legacy_id, turfName: row.name, bookingId, annId: split.id },
+    systemText: `Welcome to the chatroom for your split game at ${row.name}! Coordinate with your squad here.`,
+  });
+
   return { bookingId, message: 'Split initialized', split };
 }
 
@@ -294,6 +303,8 @@ async function joinSplit({ bookingId, userId, amount }) {
   const hostDisplay = await getUserDisplay(updated.host_id);
   const newRoster = await getRosterNames(bookingId);
   const split = await splitToAnnouncement(updated, updated, updated, hostDisplay, newRoster);
+
+  await chatRepo.addBookingRoomMember(bookingId, userId);
 
   return {
     message: 'Successfully joined split',

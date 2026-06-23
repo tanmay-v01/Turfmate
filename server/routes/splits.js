@@ -61,9 +61,10 @@ router.post('/:bookingId/join', authRequired, loadUser, async (req, res) => {
 
     const io = req.app.get('io');
     if (io && result.filled) {
-      io.to(`room-${req.params.bookingId}`).emit('receive_message', {
+      const chatRepo = require('../repositories/chat');
+      io.to(chatRepo.bookingRoomId(req.params.bookingId)).emit('receive_message', {
         id: `sys-${Date.now()}`,
-        roomId: `room-${req.params.bookingId}`,
+        roomId: chatRepo.bookingRoomId(req.params.bookingId),
         sender: 'TurfMate Bot',
         text: '🎉 Split fully funded — game confirmed!',
         type: 'SYSTEM_ALERT',

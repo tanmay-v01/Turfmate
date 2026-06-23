@@ -16,6 +16,8 @@ const ownerRoutes = require('./routes/owners');
 const adminRoutes = require('./routes/admin');
 const paymentRoutes = require('./routes/payments');
 const lockerRoutes = require('./routes/locker');
+const chatRoutes = require('./routes/chat');
+const { registerChatSocket } = require('./socket/chat');
 const paymentsRepo = require('./repositories/payments');
 const razorpayService = require('./services/razorpayService');
 const bookingsRepo = require('./repositories/bookings');
@@ -68,6 +70,7 @@ app.use('/api/owners', ownerRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/locker', lockerRoutes);
+app.use('/api/chat', chatRoutes);
 
 async function bootstrapPhase1() {
   try {
@@ -215,62 +218,7 @@ setInterval(() => {
 }, 60000);
 
 // --- MODULE 6: WEBSOCKETS (SOCKET.IO) ---
-
-io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
-
-  socket.on('join_room', (roomId) => {
-    socket.join(roomId);
-    console.log(`User ${socket.id} joined room: ${roomId}`);
-  });
-
-  socket.on('send_message', (data, callback) => {
-    const { roomId, userId, userName, text, type = 'TEXT' } = data;
-    
-    // Simple Rate Limit for Images
-    if (type === 'IMAGE') {
-      const now = Date.now();
-      const oneMinAgo = now - 60000;
-      db.get(`SELECT COUNT(*) as count FROM messages WHERE room_id = ? AND sender_id = ? AND content_type = 'IMAGE' AND created_at > ?`, [roomId, userId, oneMinAgo], (err, row) => {
-        if (row && row.count >= 3) {
-          if (callback) callback({ error: 'Rate limit: Max 3 images per minute' });
-          return;
-        }
-        processMessage();
-      });
-    } else {
-      processMessage();
-    }
-
-    function processMessage() {
-      const msgId = crypto.randomUUID();
-      const now = Date.now();
-      db.run(
-        `INSERT INTO messages (message_id, room_id, sender_id, sender_name, content_type, content, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [msgId, roomId, userId, userName, type, text, now],
-        (err) => {
-          if (!err) {
-            const messagePayload = {
-              id: msgId,
-              roomId,
-              sender: userName,
-              senderId: userId,
-              text,
-              type,
-              time: new Date(now).toLocaleTimeString()
-            };
-            io.to(roomId).emit('receive_message', messagePayload);
-            if (callback) callback({ success: true });
-          }
-        }
-      );
-    }
-  });
-
-  socket.on('disconnect', () => {
-    console.log(`User disconnected: ${socket.id}`);
-  });
-});
+registerChatSocket(io);
 
 // Start the server (0.0.0.0 for Railway/Render containers)
 server.listen(PORT, '0.0.0.0', () => {
