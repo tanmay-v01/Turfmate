@@ -11,60 +11,81 @@
 | Slice | Status | Summary |
 |-------|--------|---------|
 | **4a** | ✅ | Pilot mode: hide demo credentials, WhatsApp support link |
-| **4b** | ⏳ | Staging env matrix (`VITE_DEMO_MODE=false` on Vercel preview) |
-| **4c** | ⏳ | Onboard 2–3 live partner turfs via owner KYC |
-| **4d** | ⏳ | QA: [Demo User Journey](./Demo%20User%20Journey.md) on staging with MSG91 + Razorpay test |
+| **4b** | ✅ | Staging env templates + `verify:pilot` script |
+| **4c** | ✅ | `seed:pilot` — 3 approved partner turfs + owner accounts |
+| **4d** | ✅ | `pilot:smoke` + [Pilot QA Checklist](./Pilot-QA-Checklist.md) |
 
 ---
 
 ## 4a — Pilot mode UX
 
 - Demo credential panels hidden when `VITE_DEMO_MODE=false`
-- Google/Apple mock login disabled in pilot mode (real OTP only)
-- `VITE_SUPPORT_WHATSAPP` — floating support button on logged-in player app
-- OTP error copy no longer references demo code in pilot mode
-- Local demo login fallback in `useAppState` only runs when `env.demoMode`
+- Google/Apple mock login disabled in pilot mode
+- `VITE_SUPPORT_WHATSAPP` — floating support button
+- Local demo login fallback only when `env.demoMode`
 
 ---
 
-## Staging environment (Vercel + Railway)
+## 4b — Staging environment
 
-### Frontend (Vercel)
+**Templates:** `.env.staging.example` (Vercel) · `server/.env.staging.example` (Railway)
+
+```bash
+# Verify before go-live
+API_URL=https://YOUR-RAILWAY-APP.up.railway.app npm run verify:pilot
+```
+
+### Vercel (frontend)
 
 | Variable | Pilot value |
 |----------|-------------|
-| `VITE_API_URL` | `https://<railway-api>/api` |
-| `VITE_SOCKET_URL` | `https://<railway-api>` |
+| `VITE_API_URL` | `https://<railway>/api` |
+| `VITE_SOCKET_URL` | `https://<railway>` |
 | `VITE_APP_URL` | `https://turfmate-gray.vercel.app` |
 | `VITE_DEMO_MODE` | `false` |
 | `VITE_RAZORPAY_KEY_ID` | `rzp_test_...` |
-| `VITE_SUPPORT_WHATSAPP` | `9198XXXXXXXX` (no + or spaces) |
+| `VITE_SUPPORT_WHATSAPP` | `9198XXXXXXXX` |
 
-### API (Railway)
+### Railway (API)
 
 | Variable | Pilot value |
 |----------|-------------|
 | `DEMO_MODE` | `false` |
-| `MSG91_AUTH_KEY` | live MSG91 key |
-| `MSG91_TEMPLATE_ID` | OTP template id |
-| `RAZORPAY_KEY_ID` | test key |
-| `RAZORPAY_KEY_SECRET` | test secret |
-| `APP_URL` | Vercel app URL |
-| `CORS_ORIGIN` | Vercel app URL |
-| `SEED_ON_START` | `false` (pilot — no demo seed) |
-
-Redeploy after migrations `001`–`012` are applied.
+| `SEED_ON_START` | `false` |
+| `SEED_PILOT_ON_START` | `true` (once) then `false` |
+| `MIGRATE_ON_START` | `true` |
+| `MSG91_AUTH_KEY` + `MSG91_TEMPLATE_ID` | live OTP |
+| `RAZORPAY_*` | test keys |
+| `APP_URL` + `CORS_ORIGIN` | Vercel URL |
 
 ---
 
-## Owner onboarding (manual)
+## 4c — Pilot partner turfs
 
-1. Owner signs up with real phone → completes owner KYC flow
-2. Super admin approves via `GET /api/admin/kyc/pending`
-3. Turf goes live in discovery feed
-4. Train owner on: calendar, broadcast, revenue tab
+```bash
+npm run seed:pilot --prefix server
+```
 
-Target partners: Green Valley Arena, Vasai Box Cricket (or local equivalents).
+| Turf | Legacy ID | Owner phone | City |
+|------|-----------|-------------|------|
+| Green Valley Arena | `turf-1` | `9820012345` | Virar |
+| Kanakia Sports Hub | `turf-2` | `9820012346` | Virar |
+| Vasai Box Cricket Arena | `turf-pilot-vasai` | `9820012347` | Vasai |
+
+Super admin: `9999999999` (OTP `1234` in demo mode only).
+
+Owners are pre-approved (`kyc_status = APPROVED`) and turfs are `ACTIVE`.
+
+---
+
+## 4d — QA
+
+```bash
+npm run pilot:smoke --prefix server
+API_URL=https://staging-api npm run pilot:smoke --prefix server
+```
+
+Manual checklist: [Pilot-QA-Checklist.md](./Pilot-QA-Checklist.md)
 
 ---
 
@@ -72,12 +93,10 @@ Target partners: Green Valley Arena, Vasai Box Cricket (or local equivalents).
 
 | Issue | Action |
 |-------|--------|
-| Payment failed | Check Razorpay dashboard; retry booking |
-| Split not filling | Host can cancel; auto-refund on expiry |
-| OTP not received | Verify MSG91 credits; resend SMS |
-| Dispute (no-show) | E15 manual refund via super admin |
-
-**WhatsApp support:** number in `VITE_SUPPORT_WHATSAPP` — players tap floating button in app.
+| Payment failed | Razorpay dashboard; retry booking |
+| Split not filling | Host cancel; auto-refund on expiry |
+| OTP not received | MSG91 credits; resend SMS |
+| Dispute | Super admin manual refund (E15) |
 
 ---
 
@@ -87,9 +106,3 @@ Target partners: Green Valley Arena, Vasai Box Cricket (or local equivalents).
 - [ ] <2% payment failure rate
 - [ ] No P0 bugs open >48h
 - [ ] `VITE_DEMO_MODE=false` on production Vercel
-
----
-
-## Next: Phase 5
-
-Security hardening, PWA, load tests — see [Production Roadmap](./Production%20Roadmap.md).

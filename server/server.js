@@ -29,6 +29,7 @@ const splitsRepo = require('./repositories/splits');
 const broadcastsRepo = require('./repositories/broadcasts');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 const { seedTurfs } = require('./scripts/seedTurfs');
+const { seedPilotPartners } = require('./scripts/seedPilotPartners');
 
 const app = express();
 const server = http.createServer(app);
@@ -84,7 +85,10 @@ app.use('/api/notifications', notificationRoutes);
 async function bootstrapPhase1() {
   try {
     await dbStore.migrate();
-    if (config.seedOnStart || config.demoMode) {
+    if (process.env.SEED_PILOT_ON_START === 'true') {
+      await seedPilotPartners();
+      console.log('[Phase 4] Pilot partners seeded');
+    } else if (config.seedOnStart || config.demoMode) {
       await seedDemoUsers();
       await seedTurfs();
       console.log('[Phase 1] Demo users + turfs seeded');

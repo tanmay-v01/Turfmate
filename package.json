@@ -11,7 +11,10 @@
     "build": "vite build",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "dev:server": "npm --prefix server run dev"
+    "dev:server": "npm --prefix server run dev",
+    "verify:pilot": "npm --prefix server run verify:pilot",
+    "pilot:smoke": "npm --prefix server run pilot:smoke",
+    "seed:pilot": "npm --prefix server run seed:pilot"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

@@ -90,21 +90,6 @@ export default function WelcomeCarouselPage() {
             <p className="mt-2 text-slate-500 text-xs font-semibold leading-relaxed">{slide.description}</p>
           </div>
 
-          {/* Interactive Feature Cards */}
-          <div className="grid grid-cols-2 gap-3">
-            {FEATURES.map((f) => (
-              <div key={f.text} className="bg-white border border-slate-100 hover:border-brand-primary/60 p-4 rounded-3xl flex items-center gap-3 shadow-[0_4px_20px_rgba(34,197,94,0.02)] hover:shadow-[0_8px_30px_rgba(34,197,94,0.06)] hover:-translate-y-0.5 transition-all duration-300 group">
-                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${f.color}`}>
-                  <f.icon className="w-5 h-5" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[11px] font-black text-brand-forest leading-tight">{f.text}</p>
-                  <p className="text-[9px] text-slate-400 font-bold mt-0.5">{f.sub}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
           {/* Page Indicators */}
           <div className="flex justify-center gap-1.5">
             {SLIDES.map((_, idx) => (
@@ -131,6 +116,21 @@ export default function WelcomeCarouselPage() {
                 sign in →
               </button>
             </p>
+          </div>
+
+          {/* Interactive Feature Cards */}
+          <div className="grid grid-cols-2 gap-3">
+            {FEATURES.map((f) => (
+              <div key={f.text} className="bg-white border border-slate-100 hover:border-brand-primary/60 p-4 rounded-3xl flex items-center gap-3 shadow-[0_4px_20px_rgba(34,197,94,0.02)] hover:shadow-[0_8px_30px_rgba(34,197,94,0.06)] hover:-translate-y-0.5 transition-all duration-300 group">
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105 ${f.color}`}>
+                  <f.icon className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-black text-brand-forest leading-tight">{f.text}</p>
+                  <p className="text-[9px] text-slate-400 font-bold mt-0.5">{f.sub}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

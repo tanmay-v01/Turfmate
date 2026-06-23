@@ -78,9 +78,9 @@ async function getTurfByLegacyId(legacyId, userLat, userLng) {
   return row ? rowToClient(row, userLat, userLng) : null;
 }
 
-async function upsertTurf(demo) {
+async function upsertTurf(demo, ownerUserId = null) {
   const meta = {
-    ownerId: demo.ownerId,
+    ownerId: demo.ownerId || ownerUserId,
     image: demo.image,
     gallery: demo.gallery,
     reviews: demo.reviews,
@@ -103,14 +103,16 @@ async function upsertTurf(demo) {
     await db.run(
       isPg
         ? `UPDATE turfs SET name = $1, city = $2, location_lat = $3, location_lng = $4,
-            rating = $5, amenities = $6::jsonb, images = $7::jsonb, sports = $8::jsonb, meta = $9::jsonb
-           WHERE legacy_id = $10`
+            rating = $5, amenities = $6::jsonb, images = $7::jsonb, sports = $8::jsonb, meta = $9::jsonb,
+            status = 'ACTIVE', owner_user_id = COALESCE($10, owner_user_id)
+           WHERE legacy_id = $11`
         : `UPDATE turfs SET name = ?, city = ?, location_lat = ?, location_lng = ?,
-            rating = ?, amenities = ?, images = ?, sports = ?, meta = ?
+            rating = ?, amenities = ?, images = ?, sports = ?, meta = ?,
+            status = 'ACTIVE', owner_user_id = COALESCE(?, owner_user_id)
            WHERE legacy_id = ?`,
       isPg
-        ? [demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson, demo.id]
-        : [demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson, demo.id]
+        ? [demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson, ownerUserId, demo.id]
+        : [demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson, ownerUserId, demo.id]
     );
     return existing.id;
   }
@@ -118,13 +120,13 @@ async function upsertTurf(demo) {
   const id = crypto.randomUUID();
   await db.run(
     isPg
-      ? `INSERT INTO turfs (id, legacy_id, name, city, location_lat, location_lng, rating, amenities, images, sports, meta, status)
+      ? `INSERT INTO turfs (id, owner_user_id, legacy_id, name, city, location_lat, location_lng, rating, amenities, images, sports, meta, status)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8::jsonb,$9::jsonb,$10::jsonb,$11::jsonb,'ACTIVE')`
-      : `INSERT INTO turfs (id, legacy_id, name, city, location_lat, location_lng, rating, amenities, images, sports, meta, status)
-         VALUES (?,?,?,?,?,?,?,?,?,?,?,'ACTIVE')`,
+      : `INSERT INTO turfs (id, owner_user_id, legacy_id, name, city, location_lat, location_lng, rating, amenities, images, sports, meta, status)
+         VALUES (?,?,?,?,?,?,?,?,?,?,?,?,'ACTIVE')`,
     isPg
-      ? [id, demo.id, demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson]
-      : [id, demo.id, demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson]
+      ? [id, ownerUserId, demo.id, demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson]
+      : [id, ownerUserId, demo.id, demo.name, demo.city, demo.lat, demo.lng, demo.rating, amenitiesJson, imagesJson, sportsJson, metaJson]
   );
   return id;
 }

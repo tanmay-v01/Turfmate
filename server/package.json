@@ -18,6 +18,9 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "migrate": "node scripts/migrate.js"
+    "migrate": "node scripts/migrate.js",
+    "seed:pilot": "node scripts/seedPilotPartners.js",
+    "verify:pilot": "node scripts/verifyPilotEnv.js",
+    "pilot:smoke": "node scripts/pilotSmokeTest.js"
   }
 }

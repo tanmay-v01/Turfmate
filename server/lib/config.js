@@ -22,6 +22,7 @@ module.exports = {
   demoPhones: DEMO_PHONES,
   migrateOnStart: process.env.MIGRATE_ON_START === 'true',
   seedOnStart: process.env.SEED_ON_START === 'true',
+  seedPilotOnStart: process.env.SEED_PILOT_ON_START === 'true',
   razorpayKeyId: process.env.RAZORPAY_KEY_ID || '',
   razorpayKeySecret: process.env.RAZORPAY_KEY_SECRET || '',
   razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',

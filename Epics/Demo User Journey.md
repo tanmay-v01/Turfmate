@@ -45,3 +45,15 @@ Clear stale demo data if needed: `tm_chats`, `tm_announcements`, `tm_bookings`, 
 ## Deep link test
 
 Paste invite URL with hash `#join/{announcementId}` while logged in as player — join review sheet should open automatically.
+
+---
+
+## Pilot mode (Phase 4d)
+
+When `VITE_DEMO_MODE=false`:
+
+1. Use a **real phone** — no `9876543210` shortcut.
+2. Turfs load from API — expect **Green Valley**, **Kanakia**, **Vasai Box Cricket** after `npm run seed:pilot`.
+3. Payment uses **Razorpay test** keys.
+4. Run automated smoke: `npm run pilot:smoke --prefix server`
+5. Full checklist: [Pilot QA Checklist](./Pilot-QA-Checklist.md)
