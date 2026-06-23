@@ -1,16 +1,26 @@
+import { lazy, Suspense } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import DevHeader from './components/layout/DevHeader';
 import Toast from './components/ui/Toast';
 import UserWebLayout from './components/layout/UserWebLayout';
-import OwnerDashboardPage from './pages/owner/OwnerDashboardPage';
-import SuperAdminDashboardPage from './pages/admin/SuperAdminDashboardPage';
 import CheckoutModal from './components/layout/CheckoutModal';
 import AvatarPickerModal from './components/onboarding/AvatarPickerModal';
 import JoinSplitReviewSheet from './components/split/JoinSplitReviewSheet';
 import SplitSuccessModal from './components/split/SplitSuccessModal';
 import BookingSuccessModal from './components/layout/BookingSuccessModal';
 
+const OwnerDashboardPage = lazy(() => import('./pages/owner/OwnerDashboardPage'));
+const SuperAdminDashboardPage = lazy(() => import('./pages/admin/SuperAdminDashboardPage'));
+
 const PORTAL_VIEWS = new Set(['owner_dashboard', 'super_admin']);
+
+function PortalLoading() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <p className="text-sm font-bold text-brand-muted animate-pulse">loading dashboard…</p>
+    </div>
+  );
+}
 
 function AppShell() {
   const { view } = useApp();
@@ -22,9 +32,13 @@ function AppShell() {
       {!isPortal && <Toast />}
 
       {view === 'owner_dashboard' ? (
-        <OwnerDashboardPage />
+        <Suspense fallback={<PortalLoading />}>
+          <OwnerDashboardPage />
+        </Suspense>
       ) : view === 'super_admin' ? (
-        <SuperAdminDashboardPage />
+        <Suspense fallback={<PortalLoading />}>
+          <SuperAdminDashboardPage />
+        </Suspense>
       ) : (
         <UserWebLayout />
       )}

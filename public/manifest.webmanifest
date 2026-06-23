@@ -1,0 +1,20 @@
+{
+  "name": "TurfMate",
+  "short_name": "TurfMate",
+  "description": "Book turfs, split costs, find your squad",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F0FDF4",
+  "theme_color": "#14532D",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "lifestyle"],
+  "lang": "en-IN"
+}

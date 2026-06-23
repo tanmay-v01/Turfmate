@@ -5,6 +5,7 @@ import AppNav from './AppNav';
 import NotificationsDrawer from './NotificationsDrawer';
 import ConfettiOverlay from './ConfettiOverlay';
 import SupportFab from './SupportFab';
+import InstallPrompt from './InstallPrompt';
 
 export default function UserWebLayout() {
   const { view } = useApp();
@@ -19,6 +20,7 @@ export default function UserWebLayout() {
         <NotificationsDrawer />
         <ConfettiOverlay />
         {showNav && <SupportFab />}
+        {showNav && <InstallPrompt />}
         <main className="flex-1 w-full">
           <PageRouter />
         </main>

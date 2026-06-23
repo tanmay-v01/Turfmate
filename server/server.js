@@ -30,6 +30,7 @@ const broadcastsRepo = require('./repositories/broadcasts');
 const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 const { seedTurfs } = require('./scripts/seedTurfs');
 const { seedPilotPartners } = require('./scripts/seedPilotPartners');
+const { authLimiter, apiLimiter } = require('./middleware/rateLimit');
 
 const app = express();
 const server = http.createServer(app);
@@ -66,6 +67,9 @@ app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), asy
 });
 
 app.use(express.json());
+
+app.use('/api/auth', authLimiter);
+app.use('/api', apiLimiter);
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);

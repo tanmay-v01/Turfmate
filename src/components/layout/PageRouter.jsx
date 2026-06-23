@@ -1,40 +1,42 @@
+import { lazy, Suspense } from 'react';
 import { useApp } from '../../context/AppContext';
 import { ONBOARDING_VIEWS } from '../../constants/views';
+
 import SplashPage from '../../pages/onboarding/SplashPage';
 import WelcomeCarouselPage from '../../pages/onboarding/WelcomeCarouselPage';
 import LoginPage from '../../pages/onboarding/LoginPage';
 import OtpVerifyPage from '../../pages/onboarding/OtpVerifyPage';
-import RoleSelectionPage from '../../pages/onboarding/RoleSelectionPage';
-import ProfileSetupPage from '../../pages/onboarding/ProfileSetupPage';
-import SportsDnaPage from '../../pages/onboarding/SportsDnaPage';
-import LocationPermissionPage from '../../pages/onboarding/LocationPermissionPage';
-import LocationManualPage from '../../pages/onboarding/LocationManualPage';
-import OwnerBusinessPage from '../../pages/onboarding/OwnerBusinessPage';
-import OwnerMapPage from '../../pages/onboarding/OwnerMapPage';
-import OwnerKycPage from '../../pages/onboarding/OwnerKycPage';
-import OwnerPayoutPage from '../../pages/onboarding/OwnerPayoutPage';
-import OwnerPendingPage from '../../pages/onboarding/OwnerPendingPage';
-import MyBookingsPage from '../../pages/user/MyBookingsPage';
 import HomePage from '../../pages/user/HomePage';
-import SearchEnginePage from '../../pages/user/SearchEnginePage';
-import TurfDetailsPage from '../../pages/user/TurfDetailsPage';
-import PlayRadiusPage from '../../pages/user/PlayRadiusPage';
-import LockerRoomPage from '../../pages/user/LockerRoomPage';
-import ChatPage from '../../pages/user/ChatPage';
-import SplitHubPage from '../../pages/user/SplitHubPage';
-import PlayerRadarPage from '../../pages/user/PlayerRadarPage';
-import MySquadPage from '../../pages/user/MySquadPage';
-import LeaderboardPage from '../../pages/user/LeaderboardPage';
-import ScoreCalculatorPage from '../../pages/user/ScoreCalculatorPage';
-import TournamentsPage from '../../pages/user/TournamentsPage';
-import OwnerDashboardPage from '../../pages/owner/OwnerDashboardPage';
-import SuperAdminDashboardPage from '../../pages/admin/SuperAdminDashboardPage';
+
+const RoleSelectionPage = lazy(() => import('../../pages/onboarding/RoleSelectionPage'));
+const ProfileSetupPage = lazy(() => import('../../pages/onboarding/ProfileSetupPage'));
+const SportsDnaPage = lazy(() => import('../../pages/onboarding/SportsDnaPage'));
+const LocationPermissionPage = lazy(() => import('../../pages/onboarding/LocationPermissionPage'));
+const LocationManualPage = lazy(() => import('../../pages/onboarding/LocationManualPage'));
+const OwnerBusinessPage = lazy(() => import('../../pages/onboarding/OwnerBusinessPage'));
+const OwnerMapPage = lazy(() => import('../../pages/onboarding/OwnerMapPage'));
+const OwnerKycPage = lazy(() => import('../../pages/onboarding/OwnerKycPage'));
+const OwnerPayoutPage = lazy(() => import('../../pages/onboarding/OwnerPayoutPage'));
+const OwnerPendingPage = lazy(() => import('../../pages/onboarding/OwnerPendingPage'));
+const MyBookingsPage = lazy(() => import('../../pages/user/MyBookingsPage'));
+const SearchEnginePage = lazy(() => import('../../pages/user/SearchEnginePage'));
+const TurfDetailsPage = lazy(() => import('../../pages/user/TurfDetailsPage'));
+const PlayRadiusPage = lazy(() => import('../../pages/user/PlayRadiusPage'));
+const LockerRoomPage = lazy(() => import('../../pages/user/LockerRoomPage'));
+const ChatPage = lazy(() => import('../../pages/user/ChatPage'));
+const SplitHubPage = lazy(() => import('../../pages/user/SplitHubPage'));
+const PlayerRadarPage = lazy(() => import('../../pages/user/PlayerRadarPage'));
+const MySquadPage = lazy(() => import('../../pages/user/MySquadPage'));
+const LeaderboardPage = lazy(() => import('../../pages/user/LeaderboardPage'));
+const ScoreCalculatorPage = lazy(() => import('../../pages/user/ScoreCalculatorPage'));
+const TournamentsPage = lazy(() => import('../../pages/user/TournamentsPage'));
 
 const VIEW_MAP = {
   splash: SplashPage,
   welcome_carousel: WelcomeCarouselPage,
   login: LoginPage,
   otp_verify: OtpVerifyPage,
+  home: HomePage,
   role_selection: RoleSelectionPage,
   profile_setup: ProfileSetupPage,
   sports_dna: SportsDnaPage,
@@ -45,7 +47,6 @@ const VIEW_MAP = {
   owner_kyc: OwnerKycPage,
   owner_payout: OwnerPayoutPage,
   owner_pending: OwnerPendingPage,
-  home: HomePage,
   my_bookings: MyBookingsPage,
   search_engine: SearchEnginePage,
   turf_details: TurfDetailsPage,
@@ -58,23 +59,38 @@ const VIEW_MAP = {
   leaderboard: LeaderboardPage,
   score_calculator: ScoreCalculatorPage,
   tournaments: TournamentsPage,
-  owner_dashboard: OwnerDashboardPage,
-  super_admin: SuperAdminDashboardPage,
 };
 
 const FULL_WIDTH_VIEWS = new Set(['home', 'my_bookings', 'turf_details', 'search_engine', 'chat', 'owner_dashboard', 'super_admin', ...ONBOARDING_VIEWS]);
 
+function PageLoading() {
+  return (
+    <div className="min-h-[40vh] flex items-center justify-center">
+      <p className="text-sm font-bold text-brand-muted animate-pulse">loading…</p>
+    </div>
+  );
+}
+
 export default function PageRouter() {
   const { view } = useApp();
   const Page = VIEW_MAP[view] || HomePage;
+  const isEager = view === 'splash' || view === 'welcome_carousel' || view === 'login' || view === 'otp_verify' || view === 'home';
+
+  const content = isEager ? (
+    <Page />
+  ) : (
+    <Suspense fallback={<PageLoading />}>
+      <Page />
+    </Suspense>
+  );
 
   if (FULL_WIDTH_VIEWS.has(view)) {
-    return <Page />;
+    return content;
   }
 
   return (
     <div className="tm-page animate-fade-up pb-24 lg:pb-10">
-      <Page />
+      {content}
     </div>
   );
 }
