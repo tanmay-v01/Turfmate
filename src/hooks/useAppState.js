@@ -267,28 +267,6 @@ export function useAppState() {
     return () => { cancelled = true; };
   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
 
-  useEffect(() => {
-    if (!userProfile?.isLoggedIn || !getToken()) return undefined;
-    refreshMyBookings();
-    refreshChats();
-    refreshSocial();
-    refreshLeaderboard();
-    return undefined;
-  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard]);
-
-  useEffect(() => {
-    if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
-    refreshLeaderboard('squad');
-    return undefined;
-  }, [view, userProfile?.isLoggedIn, refreshLeaderboard]);
-
-  useEffect(() => {
-    if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
-    refreshChats();
-    const timer = setInterval(refreshChats, 30000);
-    return () => clearInterval(timer);
-  }, [view, userProfile?.isLoggedIn, refreshChats]);
-
   const refreshLockerFeed = useCallback(async () => {
     if (!userProfile?.isLoggedIn) return;
     try {
@@ -375,6 +353,28 @@ export function useAppState() {
       console.warn('[leaderboard] refresh failed:', err.message);
     }
   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+
+  useEffect(() => {
+    if (!userProfile?.isLoggedIn || !getToken()) return undefined;
+    refreshMyBookings();
+    refreshChats();
+    refreshSocial();
+    refreshLeaderboard();
+    return undefined;
+  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard]);
+
+  useEffect(() => {
+    if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
+    refreshLeaderboard('squad');
+    return undefined;
+  }, [view, userProfile?.isLoggedIn, refreshLeaderboard]);
+
+  useEffect(() => {
+    if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
+    refreshChats();
+    const timer = setInterval(refreshChats, 30000);
+    return () => clearInterval(timer);
+  }, [view, userProfile?.isLoggedIn, refreshChats]);
 
   useEffect(() => {
     if (!userProfile?.isLoggedIn) return undefined;
