@@ -9,7 +9,7 @@
 | Slice | Status | Summary |
 |-------|--------|---------|
 | **5a** | ✅ | PWA manifest + install prompt; API rate limits; lazy route loading |
-| **5b** | ⏳ | Structured request logging + health metrics |
+| **5b** | ✅ | Structured JSON request logs + `/health` with DB ping |
 | **5c** | ⏳ | Account deletion API + data retention policy |
 | **5d** | ⏳ | Load test script (100 concurrent slot locks) |
 
@@ -33,6 +33,21 @@
 
 ---
 
+## 5b — Observability
+
+**Structured logging**
+- `server/lib/logger.js` — JSON lines to stdout (`LOG_LEVEL=info|warn|error|debug`)
+- `server/middleware/requestLog.js` — logs method, path, status, durationMs per request
+
+**Health checks**
+- `GET /health` and `GET /api/health` — DB ping, uptime, memory, driver
+- `?detailed=1` — adds `activeTurfs` + `pendingKyc` counts
+- Returns **503** when database is unreachable (`ok: false`)
+
+Railway log drain example filter: `level:info msg:http_request`
+
+---
+
 ## Exit criteria (Phase 5)
 
 - [ ] Load test: 100 concurrent checkout attempts, 0 double-books
@@ -45,6 +60,5 @@
 
 | Slice | Work |
 |-------|------|
-| **5b** | `pino` or structured JSON logs; `/api/health` with DB ping |
 | **5c** | `DELETE /api/users/me` soft-delete + anonymize |
 | **5d** | `scripts/load-test-locks.mjs` k6 or autocannon |

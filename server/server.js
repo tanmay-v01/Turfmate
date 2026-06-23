@@ -31,6 +31,9 @@ const { seedDemoUsers } = require('./scripts/seedDemoUsers');
 const { seedTurfs } = require('./scripts/seedTurfs');
 const { seedPilotPartners } = require('./scripts/seedPilotPartners');
 const { authLimiter, apiLimiter } = require('./middleware/rateLimit');
+const { requestLog } = require('./middleware/requestLog');
+const healthRoutes = require('./routes/health');
+const logger = require('./lib/logger');
 
 const app = express();
 const server = http.createServer(app);
@@ -68,6 +71,9 @@ app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), asy
 
 app.use(express.json());
 
+app.use(healthRoutes);
+app.use(requestLog);
+
 app.use('/api/auth', authLimiter);
 app.use('/api', apiLimiter);
 
@@ -91,15 +97,15 @@ async function bootstrapPhase1() {
     await dbStore.migrate();
     if (process.env.SEED_PILOT_ON_START === 'true') {
       await seedPilotPartners();
-      console.log('[Phase 4] Pilot partners seeded');
+      logger.info('pilot_partners_seeded');
     } else if (config.seedOnStart || config.demoMode) {
       await seedDemoUsers();
       await seedTurfs();
-      console.log('[Phase 1] Demo users + turfs seeded');
+      logger.info('demo_data_seeded');
     }
-    console.log(`[Phase 1] Database driver: ${dbStore.driver}`);
+    logger.info('database_ready', { driver: dbStore.driver });
   } catch (err) {
-    console.error('[Phase 1] Bootstrap failed:', err.message);
+    logger.error('bootstrap_failed', { error: err.message });
   }
 }
 bootstrapPhase1();
@@ -109,14 +115,6 @@ setInterval(() => {
   splitsRepo.cleanupExpiredSplits().catch(() => {});
   broadcastsRepo.cleanupExpired().catch(() => {});
 }, 60 * 1000);
-
-app.get('/health', (_req, res) => {
-  res.json({ ok: true, service: 'turfmate-api', ts: Date.now() });
-});
-
-app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, service: 'turfmate-api', ts: Date.now() });
-});
 
 // Legacy social routes (feed, radar, squads)
 
@@ -240,5 +238,5 @@ registerChatSocket(io);
 
 // Start the server (0.0.0.0 for Railway/Render containers)
 server.listen(PORT, '0.0.0.0', () => {
-  console.log(`TurfMate API listening on port ${PORT} (CORS: ${CORS_ORIGINS.join(', ')})`);
+  logger.info('server_started', { port: PORT, cors: CORS_ORIGINS });
 });

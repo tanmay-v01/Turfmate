@@ -43,13 +43,16 @@ async function main() {
   try {
     const res = await fetch(`${API_BASE}/health`);
     const body = await res.json().catch(() => ({}));
-    pass = check('GET /health', res.ok && body.ok, res.status) && pass;
+    pass = check('GET /health', res.ok && body.ok, `${res.status} db=${body.db?.driver}`) && pass;
+    if (body.db) {
+      check('DB ping', body.db.ok, `${body.db.latencyMs}ms`);
+    }
   } catch (err) {
     pass = check('GET /health', false, err.message) && false;
   }
 
   try {
-    const res = await fetch(`${API_BASE}/api/health`);
+    const res = await fetch(`${API_BASE}/api/health?detailed=1`);
     const body = await res.json().catch(() => ({}));
     pass = check('GET /api/health', res.ok && body.ok, res.status) && pass;
   } catch (err) {
