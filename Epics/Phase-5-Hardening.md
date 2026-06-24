@@ -13,6 +13,7 @@
 | **5c** | ✅ | Account deletion API + data retention policy |
 | **5d** | ✅ | Load test script (100 concurrent slot locks) |
 | **5e** | ✅ | OWASP security headers, prod config guard, booking uniqueness |
+| **5f** | ✅ | Service worker + raster icons + iOS install prompt |
 
 ---
 
@@ -100,8 +101,27 @@ Railway log drain example filter: `level:info msg:http_request`
 
 ---
 
+## 5f — PWA install polish
+
+**Service worker**
+- `public/sw.js` — precaches app shell; network-first navigation fallback
+- `src/registerPwa.js` — registers on production builds (`VITE_ENABLE_SW=true` for local preview test)
+
+**Icons**
+- `npm run generate:pwa-icons` — rasterizes `icon.svg` → `apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png`
+- `manifest.webmanifest` — PNG icons for Chrome installability
+
+**iOS**
+- `InstallPrompt` — Share → Add to Home Screen instructions when `beforeinstallprompt` unavailable
+- `apple-touch-icon.png` + `black-translucent` status bar style
+
+**QA**
+- `Epics/PWA-Install-Checklist.md` — Android Chrome + iOS Safari manual steps
+
+---
+
 ## Exit criteria (Phase 5)
 
 - [x] Load test: 100 concurrent checkout attempts, 0 double-books (`npm run load-test:locks`)
 - [x] Pen test or OWASP top-10 review (`npm run security:audit` + `Epics/OWASP-Review.md`)
-- [ ] PWA installable on Android Chrome + iOS Safari (Add to Home Screen)
+- [x] PWA installable on Android Chrome + iOS Safari (`Epics/PWA-Install-Checklist.md`)
