@@ -11,7 +11,7 @@
 | **5a** | ✅ | PWA manifest + install prompt; API rate limits; lazy route loading |
 | **5b** | ✅ | Structured JSON request logs + `/health` with DB ping |
 | **5c** | ✅ | Account deletion API + data retention policy |
-| **5d** | ⏳ | Load test script (100 concurrent slot locks) |
+| **5d** | ✅ | Load test script (100 concurrent slot locks) |
 
 ---
 
@@ -68,16 +68,25 @@ Railway log drain example filter: `level:info msg:http_request`
 
 ---
 
-## Exit criteria (Phase 5)
+## 5d — Slot lock load test
 
-- [ ] Load test: 100 concurrent checkout attempts, 0 double-books
-- [ ] Pen test or OWASP top-10 review
-- [ ] PWA installable on Android Chrome + iOS Safari (Add to Home Screen)
+**Script**
+- `scripts/load-test-locks.mjs` → `server/scripts/loadTestLocks.js`
+- `npm run load-test:locks` (API must be running on `API_URL`, default `http://localhost:3001`)
+
+**What it does**
+1. Provisions `LOAD_TEST_CONCURRENCY` (default **100**) test users via DB (skips OTP rate limits)
+2. Fires concurrent `POST /api/bookings/lock` on the same slot → asserts **1** lock row in DB
+3. Fires concurrent `POST /api/bookings/checkout` from all users → asserts **1** confirmed booking (0 double-books)
+4. Cleans up test locks/bookings
+
+**Env overrides**
+- `LOAD_TEST_CONCURRENCY`, `LOAD_TEST_TURF`, `LOAD_TEST_SLOT`, `LOAD_TEST_DATE`, `API_URL`
 
 ---
 
-## Next slices
+## Exit criteria (Phase 5)
 
-| Slice | Work |
-|-------|------|
-| **5d** | `scripts/load-test-locks.mjs` k6 or autocannon |
+- [x] Load test: 100 concurrent checkout attempts, 0 double-books (`npm run load-test:locks`)
+- [ ] Pen test or OWASP top-10 review
+- [ ] PWA installable on Android Chrome + iOS Safari (Add to Home Screen)

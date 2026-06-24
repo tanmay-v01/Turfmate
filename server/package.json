@@ -21,6 +21,7 @@
     "migrate": "node scripts/migrate.js",
     "seed:pilot": "node scripts/seedPilotPartners.js",
     "verify:pilot": "node scripts/verifyPilotEnv.js",
-    "pilot:smoke": "node scripts/pilotSmokeTest.js"
+    "pilot:smoke": "node scripts/pilotSmokeTest.js",
+    "load-test:locks": "node scripts/loadTestLocks.js"
   }
 }
