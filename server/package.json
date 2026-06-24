@@ -22,6 +22,7 @@
     "seed:pilot": "node scripts/seedPilotPartners.js",
     "verify:pilot": "node scripts/verifyPilotEnv.js",
     "pilot:smoke": "node scripts/pilotSmokeTest.js",
-    "load-test:locks": "node scripts/loadTestLocks.js"
+    "load-test:locks": "node scripts/loadTestLocks.js",
+    "security:audit": "node scripts/securityAudit.js"
   }
 }

@@ -12,6 +12,7 @@
 | **5b** | ✅ | Structured JSON request logs + `/health` with DB ping |
 | **5c** | ✅ | Account deletion API + data retention policy |
 | **5d** | ✅ | Load test script (100 concurrent slot locks) |
+| **5e** | ✅ | OWASP security headers, prod config guard, booking uniqueness |
 
 ---
 
@@ -85,8 +86,22 @@ Railway log drain example filter: `level:info msg:http_request`
 
 ---
 
+## 5e — OWASP security pass
+
+**API hardening**
+- `server/middleware/securityHeaders.js` — `nosniff`, `DENY` framing, `Referrer-Policy`, HSTS in production
+- `server/lib/validateProduction.js` — fails boot when `NODE_ENV=production` with weak JWT, demo mode, or wildcard CORS
+- Migration `014_booking_slot_unique.sql` — partial unique index on active `bookings.slot_key`
+- Race-safe lock/checkout — unique violations return **409**; post-checkout ledger/chat failures logged, not 500
+
+**Audit**
+- `npm run security:audit` — checks headers, auth, CORS, OTP rate limit
+- `Epics/OWASP-Review.md` — Top 10 checklist with status
+
+---
+
 ## Exit criteria (Phase 5)
 
 - [x] Load test: 100 concurrent checkout attempts, 0 double-books (`npm run load-test:locks`)
-- [ ] Pen test or OWASP top-10 review
+- [x] Pen test or OWASP top-10 review (`npm run security:audit` + `Epics/OWASP-Review.md`)
 - [ ] PWA installable on Android Chrome + iOS Safari (Add to Home Screen)

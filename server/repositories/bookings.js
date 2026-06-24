@@ -3,9 +3,17 @@ const db = require('../db/index');
 const config = require('../lib/config');
 const ledgerRepo = require('./ledger');
 const chatRepo = require('./chat');
+const logger = require('../lib/logger');
 
 const isPg = db.driver === 'postgres';
 const LOCK_TTL_MS = 5 * 60 * 1000;
+
+function isUniqueViolation(err) {
+  if (!err) return false;
+  if (err.code === 'SQLITE_CONSTRAINT' || err.code === 'SQLITE_CONSTRAINT_UNIQUE') return true;
+  if (err.code === '23505') return true;
+  return /UNIQUE constraint failed/i.test(String(err.message));
+}
 
 function slotKey(turfLegacyId, slotId, dateLabel = 'Today') {
   return `${turfLegacyId}:${slotId}:${dateLabel}`;
@@ -86,16 +94,23 @@ async function lockSlot({ turfLegacyId, slotId, dateLabel, userId }) {
     );
   } else {
     const lockId = crypto.randomUUID();
-    await db.run(
-      isPg
-        ? `INSERT INTO slot_locks (id, turf_id, slot_key, locked_by, expires_at, created_at)
-           VALUES ($1, $2, $3, $4, $5, $6)`
-        : `INSERT INTO slot_locks (id, turf_id, slot_key, locked_by, expires_at, created_at)
-           VALUES (?, ?, ?, ?, ?, ?)`,
-      isPg
-        ? [lockId, turf.id, key, userId, expiry, now()]
-        : [lockId, turf.id, key, userId, expiryMs, Date.now()]
-    );
+    try {
+      await db.run(
+        isPg
+          ? `INSERT INTO slot_locks (id, turf_id, slot_key, locked_by, expires_at, created_at)
+             VALUES ($1, $2, $3, $4, $5, $6)`
+          : `INSERT INTO slot_locks (id, turf_id, slot_key, locked_by, expires_at, created_at)
+             VALUES (?, ?, ?, ?, ?, ?)`,
+        isPg
+          ? [lockId, turf.id, key, userId, expiry, now()]
+          : [lockId, turf.id, key, userId, expiryMs, Date.now()]
+      );
+    } catch (err) {
+      if (isUniqueViolation(err)) {
+        throw Object.assign(new Error('Slot temporarily locked by another user'), { status: 409 });
+      }
+      throw err;
+    }
   }
 
   return {
@@ -146,18 +161,25 @@ async function checkoutPrivate({
   const platformFee = Math.floor(Number(amount) * 0.1);
   const ts = now();
 
-  await db.run(
-    isPg
-      ? `INSERT INTO bookings
-          (id, turf_id, host_id, booking_type, status, slot_key, total_cost, platform_fee, created_at)
-         VALUES ($1, $2, $3, 'PRIVATE_FULL', 'CONFIRMED', $4, $5, $6, $7)`
-      : `INSERT INTO bookings
-          (id, turf_id, host_id, booking_type, status, slot_key, total_cost, platform_fee, created_at)
-         VALUES (?, ?, ?, 'PRIVATE_FULL', 'CONFIRMED', ?, ?, ?, ?)`,
-    isPg
-      ? [bookingId, turf.id, userId, key, amount, platformFee, ts]
-      : [bookingId, turf.id, userId, key, amount, platformFee, Date.now()]
-  );
+  try {
+    await db.run(
+      isPg
+        ? `INSERT INTO bookings
+            (id, turf_id, host_id, booking_type, status, slot_key, total_cost, platform_fee, created_at)
+           VALUES ($1, $2, $3, 'PRIVATE_FULL', 'CONFIRMED', $4, $5, $6, $7)`
+        : `INSERT INTO bookings
+            (id, turf_id, host_id, booking_type, status, slot_key, total_cost, platform_fee, created_at)
+           VALUES (?, ?, ?, 'PRIVATE_FULL', 'CONFIRMED', ?, ?, ?, ?)`,
+      isPg
+        ? [bookingId, turf.id, userId, key, amount, platformFee, ts]
+        : [bookingId, turf.id, userId, key, amount, platformFee, Date.now()]
+    );
+  } catch (err) {
+    if (isUniqueViolation(err)) {
+      throw Object.assign(new Error('Slot already booked'), { status: 409 });
+    }
+    throw err;
+  }
 
   const rosterId = crypto.randomUUID();
   await db.run(
@@ -176,19 +198,27 @@ async function checkoutPrivate({
     [key]
   );
 
-  await ledgerRepo.recordSettlement(bookingId);
+  try {
+    await ledgerRepo.recordSettlement(bookingId);
+  } catch (err) {
+    logger.warn('checkout_settlement_failed', { bookingId, error: err.message });
+  }
 
   const turfRow = await db.getOne(
     isPg ? 'SELECT name FROM turfs WHERE id = $1' : 'SELECT name FROM turfs WHERE id = ?',
     [turf.id]
   );
-  await chatRepo.ensureBookingRoom({
-    bookingId,
-    hostUserId: userId,
-    name: `Game @ ${turfRow?.name || 'Turf'}`,
-    meta: { turfId: turf.legacyId, bookingId, slotTime, dateLabel },
-    systemText: `Private booking confirmed for ${slotTime || 'your slot'}. Coordinate with your squad here.`,
-  });
+  try {
+    await chatRepo.ensureBookingRoom({
+      bookingId,
+      hostUserId: userId,
+      name: `Game @ ${turfRow?.name || 'Turf'}`,
+      meta: { turfId: turf.legacyId, bookingId, slotTime, dateLabel },
+      systemText: `Private booking confirmed for ${slotTime || 'your slot'}. Coordinate with your squad here.`,
+    });
+  } catch (err) {
+    logger.warn('checkout_chat_room_failed', { bookingId, error: err.message });
+  }
 
   return {
     bookingId,

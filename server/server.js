@@ -32,8 +32,12 @@ const { seedTurfs } = require('./scripts/seedTurfs');
 const { seedPilotPartners } = require('./scripts/seedPilotPartners');
 const { authLimiter, apiLimiter } = require('./middleware/rateLimit');
 const { requestLog } = require('./middleware/requestLog');
+const { securityHeaders } = require('./middleware/securityHeaders');
+const { validateProductionConfig } = require('./lib/validateProduction');
 const healthRoutes = require('./routes/health');
 const logger = require('./lib/logger');
+
+validateProductionConfig(config);
 
 const app = express();
 const server = http.createServer(app);
@@ -51,7 +55,9 @@ const io = new Server(server, {
 });
 
 app.set('io', io);
+app.disable('x-powered-by');
 
+app.use(securityHeaders);
 app.use(cors({ origin: CORS_ORIGINS, credentials: true }));
 
 app.post('/api/payments/webhook', express.raw({ type: 'application/json' }), async (req, res) => {

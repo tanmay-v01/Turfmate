@@ -363,6 +363,11 @@ async function migrate() {
   if (!(await tableHasColumn('users', 'deleted_at'))) {
     await run('ALTER TABLE users ADD COLUMN deleted_at INTEGER');
   }
+
+  await run(
+    `CREATE UNIQUE INDEX IF NOT EXISTS idx_bookings_slot_active
+     ON bookings (slot_key) WHERE status IN ('CONFIRMED', 'PENDING_FUNDING')`
+  );
 }
 
 async function close() {
