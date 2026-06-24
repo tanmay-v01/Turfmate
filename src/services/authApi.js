@@ -24,6 +24,11 @@ export const authApi = {
       body: JSON.stringify(patch),
     }),
 
+  deleteMe: () =>
+    apiFetch('/users/me', {
+      method: 'DELETE',
+    }),
+
   logout: () => setToken(null),
 };
 

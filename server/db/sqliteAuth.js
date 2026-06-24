@@ -359,6 +359,10 @@ async function migrate() {
       await run(`ALTER TABLE turf_owners ADD COLUMN ${col} ${type}`);
     }
   }
+
+  if (!(await tableHasColumn('users', 'deleted_at'))) {
+    await run('ALTER TABLE users ADD COLUMN deleted_at INTEGER');
+  }
 }
 
 async function close() {

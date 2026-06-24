@@ -185,6 +185,58 @@ async function updatePlayerProfile(userId, patch) {
   return getPlayerProfile(userId);
 }
 
+async function deleteAccount(userId) {
+  const user = await findById(userId);
+  if (!user) {
+    throw Object.assign(new Error('User not found'), { status: 404 });
+  }
+  if (user.status === 'DELETED') {
+    throw Object.assign(new Error('Account already deleted'), { status: 400 });
+  }
+  if (user.role === 'SUPER_ADMIN') {
+    throw Object.assign(new Error('Super admin accounts cannot be self-deleted'), { status: 403 });
+  }
+  if (user.role === 'OWNER') {
+    throw Object.assign(new Error('Contact support to close an owner account'), { status: 403 });
+  }
+
+  const ts = now();
+  const anonPhone = `9${String(userId).replace(/-/g, '').slice(0, 9)}`;
+
+  await db.run(
+    isPg
+      ? `UPDATE users SET status = 'DELETED', phone = $1, deleted_at = $2, updated_at = $2 WHERE id = $3`
+      : `UPDATE users SET status = 'DELETED', phone = ?, deleted_at = ?, updated_at = ? WHERE id = ?`,
+    isPg ? [anonPhone, ts, userId] : [anonPhone, Date.now(), Date.now(), userId]
+  );
+
+  await db.run(
+    isPg
+      ? `UPDATE player_profiles SET
+          full_name = 'Deleted User', username = NULL, avatar_url = NULL,
+          location_label = NULL, location_lat = NULL, location_lng = NULL,
+          sports_dna = '[]'::jsonb, updated_at = $1
+         WHERE user_id = $2`
+      : `UPDATE player_profiles SET
+          full_name = 'Deleted User', username = NULL, avatar_url = NULL,
+          location_label = NULL, location_lat = NULL, location_lng = NULL,
+          sports_dna = '[]', updated_at = ?
+         WHERE user_id = ?`,
+    isPg ? [ts, userId] : [Date.now(), userId]
+  );
+
+  await db.run(
+    isPg ? 'DELETE FROM push_tokens WHERE user_id = $1' : 'DELETE FROM push_tokens WHERE user_id = ?',
+    [userId]
+  );
+  await db.run(
+    isPg ? 'DELETE FROM user_notifications WHERE user_id = $1' : 'DELETE FROM user_notifications WHERE user_id = ?',
+    [userId]
+  );
+
+  return { ok: true, deletedAt: isPg ? ts : Date.now() };
+}
+
 module.exports = {
   findByPhone,
   findById,
@@ -196,4 +248,5 @@ module.exports = {
   getOwnerProfile,
   markOnboardingComplete,
   updatePlayerProfile,
+  deleteAccount,
 };

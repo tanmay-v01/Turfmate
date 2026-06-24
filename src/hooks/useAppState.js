@@ -2299,6 +2299,23 @@ export function useAppState() {
     triggerConfetti();
   };
 
+  const deleteMyAccount = async () => {
+    if (
+      !window.confirm(
+        'Delete your TurfMate account? This cannot be undone. Your profile will be removed and you will be signed out.'
+      )
+    ) {
+      return;
+    }
+    try {
+      await authApi.deleteMe();
+      showToast('Account deleted');
+      resetApp();
+    } catch (err) {
+      showToast(err?.message || 'Could not delete account', 'error');
+    }
+  };
+
   const pendingJoinSplitAnn = announcements.find((a) => a.id === pendingJoinSplitId) || null;
 
   return {
@@ -2347,7 +2364,7 @@ export function useAppState() {
     grantLocation, selectManualLocation, updatePlayerLocation, createLockerPost,
     processBookingPayment, joinSplitGame,
     sendMessage, createAdminAnnouncement, toggleAdminSlot, handlePriceChange,
-    totalRevenue, pendingSplitRevenue, platformCommission, resetApp,
+    totalRevenue, pendingSplitRevenue, platformCommission, resetApp, deleteMyAccount,
     getCurrentOwnerId, getOwnerTurfs, getOwnerBookings, getOwnerRevenueMetrics,
     getPlatformMetrics, getOwnerById, getTurfOwnerName,
     approveOwnerApplication, rejectOwnerApplication, suspendTurf, activateTurf,

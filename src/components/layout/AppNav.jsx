@@ -132,6 +132,16 @@ export default function AppNav() {
             </p>
           </div>
         </button>
+
+        {app.userProfile?.isLoggedIn && app.userProfile?.role === 'PLAYER' && !app.isAdminMode && (
+          <button
+            type="button"
+            onClick={app.deleteMyAccount}
+            className="mt-2 w-full text-left px-2 py-1.5 text-[11px] text-slate-400 hover:text-red-500 transition"
+          >
+            Delete account
+          </button>
+        )}
       </aside>
 
       {/* Mobile — frosted bottom dock */}

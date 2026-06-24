@@ -63,4 +63,13 @@ router.patch('/me', authRequired, loadUser, async (req, res) => {
   }
 });
 
+router.delete('/me', authRequired, loadUser, async (req, res) => {
+  try {
+    const result = await usersRepo.deleteAccount(req.user.id);
+    res.json(result);
+  } catch (err) {
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
+
 module.exports = router;
