@@ -4,7 +4,8 @@ import ChatRoomHeader from './ChatRoomHeader';
 import ChatMessageList from './ChatMessageList';
 import ChatInputBar from './ChatInputBar';
 import ChatMembersPanel from './ChatMembersPanel';
-
+import { socketService } from '../../services/socket';
+import { chatApi } from '../../services/chatApi';
 export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
   const app = useApp();
   const liveChat = app.chats.find((c) => c.id === chat.id) || chat;
@@ -108,7 +109,6 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
 
   useEffect(() => {
     if (readOnly) return;
-    const { socketService } = require('../../services/socket');
     
     const handleTyping = ({ roomId, userName }) => {
       if (roomId === chat.id) {
@@ -131,7 +131,6 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
     setLoadingMore(true);
     try {
       const oldestMsg = liveChat.messages[0];
-      const { chatApi } = require('../../services/chatApi');
       const { messages } = await chatApi.getRoomHistory(chat.id, oldestMsg.id);
       
       if (messages.length < 50) setHasMore(false);
@@ -171,7 +170,6 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
 
   const handleInputTyping = (isTyping) => {
     if (readOnly) return;
-    const { socketService } = require('../../services/socket');
     socketService.sendTyping(chat.id, app.userProfile.name || 'Player', isTyping);
   };
 
