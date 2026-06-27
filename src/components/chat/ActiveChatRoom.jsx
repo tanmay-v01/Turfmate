@@ -21,6 +21,24 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
   }, [liveChat.messages?.length]);
 
   useEffect(() => {
+    let active = true;
+    if (chat.id && !chat.id.startsWith('chat-fallback')) {
+      const { chatApi } = require('../../services/chatApi');
+      chatApi.getRoomHistory(chat.id).then(({ messages = [] }) => {
+        if (active) {
+          app.setChats(prev => prev.map(c => {
+            if (c.id === chat.id) {
+              return { ...c, messages: messages };
+            }
+            return c;
+          }));
+        }
+      }).catch(err => console.warn('Failed to fetch chat history', err));
+    }
+    return () => { active = false; };
+  }, [chat.id]);
+
+  useEffect(() => {
     if (readOnly) return;
     setTypingHint(true);
     const t = setTimeout(() => setTypingHint(false), 2500);

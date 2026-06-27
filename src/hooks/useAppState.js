@@ -173,7 +173,7 @@ export function useAppState() {
 
   const [announcements, setAnnouncements] = useState(() => readJson('tm_announcements', INITIAL_ANNOUNCEMENTS));
 
-  const [chats, setChats] = useState(() => readJson('tm_chats', INITIAL_CHATS));
+  const [chats, setChats] = useState(() => readJson('tm_chats', []));
 
   const [friendRequests, setFriendRequests] = useState(() => readJson('tm_friend_requests', INITIAL_FRIEND_REQUESTS));
 
@@ -2040,100 +2040,27 @@ export function useAppState() {
   };
 
   // Send Message in Chat (Supports Socket or Offline Fallback)
-  const sendMessage = (roomId, text, type = 'TEXT') => {
+  const sendMessage = async (roomId, text, type = 'TEXT') => {
     const isSocketConnected = socketService.socket && socketService.socket.connected;
 
     if (isSocketConnected) {
       socketService.sendMessage(roomId, userProfile.name || 'You', text, type);
     } else {
-      // Fallback/Mock behavior
-      const newMsg = {
-        id: `msg-fallback-${Date.now()}`,
-        sender: 'You',
-        text,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        dateLabel: 'Today',
-        type,
-      };
-
-      setChats(prev => prev.map(c => {
-        if (c.id === roomId) {
-          return {
-            ...c,
-            unread: 0,
-            messages: [...c.messages, newMsg]
-          };
-        }
-        return c;
-      }));
-
-      // Simulate Quick Reply for mock behavior
-      setTimeout(() => {
-        let replier = 'Player';
-        let replyText = 'Awesome! Count me in.';
-
-        if (roomId.startsWith('chat-ann-')) {
-          replier = 'Joshua';
-          replyText = 'Sweet! I will bring the pump just in case.';
-        } else if (roomId === 'chat-lobby-football') {
-          replier = 'Aniket Sawant';
-          replyText = 'Is the slot booked? I can play keeper if needed.';
-        } else if (roomId === 'chat-friend-1') {
-          replier = 'Rahul Mehta';
-          replyText = 'Perfect. Let me know when you reach.';
-        } else if (roomId === 'chat-friend-2') {
-          replier = 'Sneha Rao';
-          replyText = 'Sounds good — ping me when you reach the turf.';
-        } else if (roomId === 'chat-lobby-cricket') {
-          replier = 'Vikram Singh';
-          replyText = 'Thanks! I will check that store tomorrow.';
-        } else if (roomId.startsWith('chat-dm-')) {
-          setChats((prev) => {
-            const chat = prev.find((c) => c.id === roomId);
-            const replierName = chat?.name || 'Friend';
-            const replyMsg = {
-              id: `msg-fallback-reply-${Date.now()}`,
-              sender: replierName,
-              text: 'Got it! See you on the pitch.',
-              time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              dateLabel: 'Today',
-              type: 'TEXT',
-            };
-            return prev.map((c) =>
-              c.id === roomId
-                ? {
-                    ...c,
-                    unread: activeChatIdRef.current === roomId ? 0 : (c.unread || 0) + 1,
-                    messages: [...c.messages, replyMsg],
-                  }
-                : c
-            );
-          });
-          return;
-        } else {
-          return;
-        }
-
-        const replyMsg = {
-          id: `msg-fallback-reply-${Date.now()}`,
-          sender: replier,
-          text: replyText,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          dateLabel: 'Today',
-          type: 'TEXT',
-        };
-
+      try {
+        const { message } = await chatApi.sendMessage(roomId, text, type);
         setChats(prev => prev.map(c => {
           if (c.id === roomId) {
             return {
               ...c,
-              unread: activeChatIdRef.current === roomId ? 0 : (c.unread || 0) + 1,
-              messages: [...c.messages, replyMsg]
+              unread: 0,
+              messages: [...c.messages, message]
             };
           }
           return c;
         }));
-      }, 2000);
+      } catch (err) {
+        showToast('Failed to send message', 'error');
+      }
     }
   };
 
