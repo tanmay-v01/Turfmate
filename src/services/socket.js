@@ -44,6 +44,24 @@ class SocketService {
     }
   }
 
+  sendTyping(roomId, userName, isTyping) {
+    if (this.socket) {
+      this.socket.emit(isTyping ? 'typing' : 'stop_typing', { roomId, userName });
+    }
+  }
+
+  onTyping(callback) {
+    if (this.socket) {
+      this.socket.on('typing', callback);
+    }
+  }
+
+  onStopTyping(callback) {
+    if (this.socket) {
+      this.socket.on('stop_typing', callback);
+    }
+  }
+
   disconnect() {
     if (this.socket) {
       this.socket.disconnect();

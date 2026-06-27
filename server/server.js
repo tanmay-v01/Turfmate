@@ -47,12 +47,22 @@ const CORS_ORIGINS = config.corsOrigin
   .map((s) => s.trim())
   .filter(Boolean);
 
+const { createAdapter } = require('@socket.io/redis-adapter');
+const Redis = require('ioredis');
+
 const io = new Server(server, {
   cors: {
     origin: CORS_ORIGINS,
     methods: ['GET', 'POST'],
   },
 });
+
+if (process.env.REDIS_URL) {
+  const pubClient = new Redis(process.env.REDIS_URL);
+  const subClient = pubClient.duplicate();
+  io.adapter(createAdapter(pubClient, subClient));
+  logger.info('socketio_redis_adapter_enabled');
+}
 
 app.set('io', io);
 app.disable('x-powered-by');

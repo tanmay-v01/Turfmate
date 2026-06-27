@@ -30,6 +30,14 @@ function registerChatSocket(io) {
       }
     });
 
+    socket.on('typing', ({ roomId, userName }) => {
+      socket.to(roomId).emit('typing', { roomId, userName });
+    });
+
+    socket.on('stop_typing', ({ roomId, userName }) => {
+      socket.to(roomId).emit('stop_typing', { roomId, userName });
+    });
+
     socket.on('disconnect', () => {
       console.log(`User disconnected: ${socket.id}`);
     });

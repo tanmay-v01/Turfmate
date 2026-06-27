@@ -23,7 +23,11 @@ router.get('/rooms/:roomId/messages', authRequired, loadUser, async (req, res) =
   try {
     const member = await chatRepo.isMember(req.params.roomId, req.user.id);
     if (!member) return res.status(403).json({ error: 'Not a member of this chat' });
-    const messages = await chatRepo.getRoomMessages(req.params.roomId);
+    const { beforeId, limit } = req.query;
+    const messages = await chatRepo.getRoomMessages(req.params.roomId, {
+      beforeId,
+      limit: limit ? parseInt(limit) : 50,
+    });
     res.json({ messages });
   } catch (err) {
     res.status(500).json({ error: err.message });

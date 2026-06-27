@@ -137,14 +137,31 @@ async function addBookingRoomMember(bookingId, userId) {
   return roomId;
 }
 
-async function getRoomMessages(roomId, { limit = 50 } = {}) {
-  const rows = await db.getAll(
-    isPg
-      ? `SELECT * FROM chat_messages WHERE room_id = $1 ORDER BY created_at ASC LIMIT $2`
-      : `SELECT * FROM chat_messages WHERE room_id = ? ORDER BY created_at ASC LIMIT ?`,
-    [roomId, limit]
-  );
-  return rows.map(rowToMessage);
+async function getRoomMessages(roomId, { limit = 50, beforeId } = {}) {
+  let query = '';
+  let params = [];
+
+  if (beforeId) {
+    // Need to find the created_at of the beforeId message to paginate
+    const beforeMsg = await db.getOne(
+      isPg ? 'SELECT created_at FROM chat_messages WHERE id = $1' : 'SELECT created_at FROM chat_messages WHERE id = ?',
+      [beforeId]
+    );
+    if (!beforeMsg) return []; // Invalid cursor
+    
+    query = isPg
+      ? `SELECT * FROM chat_messages WHERE room_id = $1 AND created_at < $2 ORDER BY created_at DESC LIMIT $3`
+      : `SELECT * FROM chat_messages WHERE room_id = ? AND created_at < ? ORDER BY created_at DESC LIMIT ?`;
+    params = isPg ? [roomId, beforeMsg.created_at, limit] : [roomId, beforeMsg.created_at, limit];
+  } else {
+    query = isPg
+      ? `SELECT * FROM chat_messages WHERE room_id = $1 ORDER BY created_at DESC LIMIT $2`
+      : `SELECT * FROM chat_messages WHERE room_id = ? ORDER BY created_at DESC LIMIT ?`;
+    params = [roomId, limit];
+  }
+
+  const rows = await db.getAll(query, params);
+  return rows.reverse().map(rowToMessage);
 }
 
 async function countUnread(roomId, userId) {

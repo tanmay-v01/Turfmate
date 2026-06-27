@@ -6,6 +6,7 @@ export default function ChatInputBar({
   inputText,
   setInputText,
   onSend,
+  onTyping,
   disabled = false,
 }) {
   const quickReplies = QUICK_REPLIES[chatType] || QUICK_REPLIES.dm;
@@ -14,6 +15,12 @@ export default function ChatInputBar({
     if (!inputText.trim() || disabled) return;
     onSend(inputText.trim());
     setInputText('');
+    if (onTyping) onTyping(false);
+  };
+
+  const handleChange = (e) => {
+    setInputText(e.target.value);
+    if (onTyping) onTyping(e.target.value.length > 0);
   };
 
   return (
@@ -48,7 +55,7 @@ export default function ChatInputBar({
           placeholder={disabled ? 'Archived room' : 'Type a message…'}
           value={inputText}
           disabled={disabled}
-          onChange={(e) => setInputText(e.target.value)}
+          onChange={handleChange}
           onKeyDown={(e) => e.key === 'Enter' && handleSend()}
           className="tm-chat-input"
         />
