@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const config = require('../lib/config');
+const emailService = require('./emailService');
 
 /** In-memory OTP store (Phase 1). Production: Redis optional. */
 const otpStore = new Map();
@@ -38,7 +39,7 @@ function verifyLocalOtp(phone, otp) {
 }
 
 async function verifyMsg91Otp(phone, otp) {
-  if (!isMsg91Live()) return null;
+  if (phone.includes('@') || !isMsg91Live()) return null;
 
   const mobile = `91${phone}`;
   const params = new URLSearchParams({ otp, mobile });
@@ -66,6 +67,19 @@ async function verifyOtpAsync(phone, otp) {
 }
 
 async function sendOtp(phone, otp) {
+  if (phone.includes('@')) {
+    const sent = await emailService.sendOtpEmail(phone, otp);
+    if (sent) {
+      return { channel: 'email' };
+    } else {
+      console.error(`[OTP] Email failed for ${phone}`);
+      if (config.demoMode) {
+        return { channel: 'demo-fallback', devHint: otp };
+      }
+      throw new Error('Failed to send OTP via Email');
+    }
+  }
+
   if (isMsg91Live()) {
     const mobile = `91${phone}`;
     const res = await fetch('https://control.msg91.com/api/v5/otp', {
@@ -94,7 +108,7 @@ async function sendOtp(phone, otp) {
     return { channel: 'sms' };
   }
 
-  console.log(`[OTP] Demo OTP for +91${phone}: ${otp}`);
+  console.log(`[OTP] Demo OTP for ${phone.includes('@') ? '' : '+91'}${phone}: ${otp}`);
   return { channel: 'demo', devHint: config.demoMode ? config.demoOtp : undefined };
 }
 

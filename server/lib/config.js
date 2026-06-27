@@ -28,4 +28,9 @@ module.exports = {
   razorpayWebhookSecret: process.env.RAZORPAY_WEBHOOK_SECRET || '',
   appUrl: (process.env.APP_URL || 'http://localhost:3000').replace(/\/$/, ''),
   fcmServerKey: process.env.FCM_SERVER_KEY || '',
+  smtpHost: process.env.SMTP_HOST || '',
+  smtpPort: Number(process.env.SMTP_PORT) || 587,
+  smtpUser: process.env.SMTP_USER || '',
+  smtpPass: process.env.SMTP_PASS || '',
+  smtpFrom: process.env.SMTP_FROM || 'noreply@turfmate.com',
 };

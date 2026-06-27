@@ -81,7 +81,7 @@ export default function OtpVerifyPage() {
           <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-brand-forest lowercase leading-tight">
             enter the code
           </h1>
-          <p className="mt-1 sm:mt-2 text-brand-muted text-xs sm:text-sm">sent to +91 {app.phoneNumber}</p>
+          <p className="mt-1 sm:mt-2 text-brand-muted text-xs sm:text-sm">sent to {app.phoneNumber.includes('@') ? '' : '+91 '}{app.phoneNumber}</p>
 
           <div className="mt-6 sm:mt-8 flex justify-center gap-2 sm:gap-3">
             {Array.from({ length: 4 }).map((_, idx) => (

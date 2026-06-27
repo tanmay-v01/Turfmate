@@ -45,7 +45,7 @@ router.post('/send-otp', async (req, res) => {
   try {
     const phone = normalizePhone(req.body.phone);
     if (!isValidPhone(phone)) {
-      return res.status(400).json({ error: 'Enter a valid 10-digit mobile number' });
+      return res.status(400).json({ error: 'Enter a valid 10-digit mobile number or email' });
     }
     const sendResult = await otpService.createAndSendOtp(phone);
     res.json({
@@ -66,7 +66,7 @@ router.post('/verify-otp', async (req, res) => {
     const otp = String(req.body.otp || '').trim();
 
     if (!isValidPhone(phone)) {
-      return res.status(400).json({ error: 'Invalid phone number' });
+      return res.status(400).json({ error: 'Invalid phone number or email' });
     }
     const ok = await otpService.verifyOtpAsync(phone, otp);
     if (!ok) {
