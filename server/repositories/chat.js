@@ -254,6 +254,50 @@ async function saveUserMessage({ roomId, userId, userName, text, type = 'TEXT' }
   });
 }
 
+async function saveRoomKeys(roomId, keysObj) {
+  // keysObj is { userId: encryptedKey, ... }
+  for (const [userId, encryptedKey] of Object.entries(keysObj)) {
+    if (isPg) {
+      await db.run(
+        `INSERT INTO chat_room_keys (room_id, user_id, encrypted_key) 
+         VALUES ($1, $2, $3)
+         ON CONFLICT (room_id, user_id) DO UPDATE SET encrypted_key = EXCLUDED.encrypted_key`,
+        [roomId, userId, encryptedKey]
+      );
+    } else {
+      await db.run(
+        `INSERT INTO chat_room_keys (room_id, user_id, encrypted_key)
+         VALUES (?, ?, ?)
+         ON CONFLICT(room_id, user_id) DO UPDATE SET encrypted_key = excluded.encrypted_key`,
+        [roomId, userId, encryptedKey]
+      );
+    }
+  }
+}
+
+async function getRoomKeyAndMembers(roomId, userId) {
+  const memberKeyRow = await db.getOne(
+    isPg ? 'SELECT encrypted_key FROM chat_room_keys WHERE room_id = $1 AND user_id = $2'
+         : 'SELECT encrypted_key FROM chat_room_keys WHERE room_id = ? AND user_id = ?',
+    [roomId, userId]
+  );
+  
+  const members = await db.getAll(
+    isPg ? `SELECT m.user_id, u.public_key FROM chat_members m
+            JOIN users u ON u.id = m.user_id
+            WHERE m.room_id = $1`
+         : `SELECT m.user_id, u.public_key FROM chat_members m
+            JOIN users u ON u.id = m.user_id
+            WHERE m.room_id = ?`,
+    [roomId]
+  );
+  
+  return {
+    encryptedKey: memberKeyRow?.encrypted_key || null,
+    members: members.map(m => ({ userId: m.user_id, publicKey: m.public_key }))
+  };
+}
+
 module.exports = {
   bookingRoomId,
   ensureBookingRoom,
@@ -264,4 +308,6 @@ module.exports = {
   markRoomRead,
   isMember,
   insertMessage,
+  saveRoomKeys,
+  getRoomKeyAndMembers,
 };

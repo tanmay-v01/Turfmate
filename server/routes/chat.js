@@ -65,4 +65,30 @@ router.post('/rooms/:roomId/messages', authRequired, loadUser, async (req, res) 
   }
 });
 
+router.get('/rooms/:roomId/keys', authRequired, loadUser, async (req, res) => {
+  try {
+    const member = await chatRepo.isMember(req.params.roomId, req.user.id);
+    if (!member) return res.status(403).json({ error: 'Not a member of this chat' });
+    const data = await chatRepo.getRoomKeyAndMembers(req.params.roomId, req.user.id);
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+router.post('/rooms/:roomId/keys', authRequired, loadUser, async (req, res) => {
+  try {
+    const member = await chatRepo.isMember(req.params.roomId, req.user.id);
+    if (!member) return res.status(403).json({ error: 'Not a member of this chat' });
+    const { keys } = req.body;
+    if (!keys || typeof keys !== 'object') {
+      return res.status(400).json({ error: 'keys mapping is required' });
+    }
+    await chatRepo.saveRoomKeys(req.params.roomId, keys);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

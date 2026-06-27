@@ -21,24 +21,90 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [liveChat.messages?.length]);
 
+  const [decryptedMessages, setDecryptedMessages] = useState([]);
+  
+  // Load room keys and decrypt history
   useEffect(() => {
     let active = true;
     if (chat.id && !chat.id.startsWith('chat-fallback')) {
-      const { chatApi } = require('../../services/chatApi');
-      chatApi.getRoomHistory(chat.id).then(({ messages = [] }) => {
-        if (active) {
-          app.setChats(prev => prev.map(c => {
-            if (c.id === chat.id) {
-              return { ...c, messages: messages };
+      const loadHistory = async () => {
+        try {
+          const { chatApi } = await import('../../services/chatApi');
+          const { cryptoService, cryptoCache } = await import('../../services/cryptoService');
+          
+          let aesKey = cryptoCache.roomKeys.get(chat.id);
+          
+          if (!readOnly && !aesKey) {
+            const privJwkStr = localStorage.getItem('tm_chat_privkey');
+            if (privJwkStr) {
+              const privKey = await cryptoService.importPrivateKey(privJwkStr);
+              const keyData = await chatApi.getRoomKeys(chat.id);
+              
+              if (keyData.encryptedKey) {
+                // Decrypt room key
+                const rawBase64 = await cryptoService.decryptRoomKey(keyData.encryptedKey, privKey);
+                aesKey = await cryptoService.importRoomKey(rawBase64);
+                cryptoCache.roomKeys.set(chat.id, aesKey);
+              } else if (keyData.members && keyData.members.length > 0) {
+                // Generate room key
+                aesKey = await cryptoService.generateRoomKey();
+                const rawBase64 = await cryptoService.exportRoomKey(aesKey);
+                
+                // Encrypt for all members
+                const uploadKeys = {};
+                for (const m of keyData.members) {
+                  if (m.publicKey) {
+                    const pub = await cryptoService.importPublicKey(m.publicKey);
+                    uploadKeys[m.userId] = await cryptoService.encryptRoomKey(rawBase64, pub);
+                  }
+                }
+                if (Object.keys(uploadKeys).length > 0) {
+                  await chatApi.saveRoomKeys(chat.id, uploadKeys);
+                  cryptoCache.roomKeys.set(chat.id, aesKey);
+                }
+              }
             }
+          }
+
+          const { messages = [] } = await chatApi.getRoomHistory(chat.id);
+          if (!active) return;
+          
+          app.setChats(prev => prev.map(c => {
+            if (c.id === chat.id) return { ...c, messages };
             return c;
           }));
           setHasMore(messages.length === 50);
+        } catch (err) {
+          console.warn('Failed to load chat history or keys', err);
         }
-      }).catch(err => console.warn('Failed to fetch chat history', err));
+      };
+      loadHistory();
     }
     return () => { active = false; };
-  }, [chat.id]);
+  }, [chat.id, readOnly]);
+
+  // Decrypt live messages
+  useEffect(() => {
+    let active = true;
+    const decryptAll = async () => {
+      const { cryptoService, cryptoCache } = await import('../../services/cryptoService');
+      const aesKey = cryptoCache.roomKeys.get(chat.id);
+      
+      const decrypted = [];
+      for (const msg of (liveChat.messages || [])) {
+        if (aesKey && msg.text.startsWith('E2EE|')) {
+          const [, ivBase64, ciphertext] = msg.text.split('|');
+          const plain = await cryptoService.decryptMessage(ciphertext, ivBase64, aesKey);
+          decrypted.push({ ...msg, text: plain });
+        } else {
+          decrypted.push(msg); // fallback for plaintext or un-decryptable
+        }
+      }
+      if (active) setDecryptedMessages(decrypted);
+    };
+    decryptAll();
+    return () => { active = false; };
+  }, [liveChat.messages, chat.id]);
 
   useEffect(() => {
     if (readOnly) return;
@@ -85,9 +151,22 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
     }
   };
 
-  const handleSend = (text) => {
+  const handleSend = async (text) => {
     if (readOnly) return;
-    app.sendMessage(liveChat.id, text, 'TEXT');
+    
+    let outText = text;
+    try {
+      const { cryptoService, cryptoCache } = await import('../../services/cryptoService');
+      const aesKey = cryptoCache.roomKeys.get(chat.id);
+      if (aesKey) {
+        const { ciphertext, iv } = await cryptoService.encryptMessage(text, aesKey);
+        outText = `E2EE|${iv}|${ciphertext}`;
+      }
+    } catch (err) {
+      console.error('Encryption failed', err);
+    }
+    
+    app.sendMessage(liveChat.id, outText, 'TEXT');
   };
 
   const handleInputTyping = (isTyping) => {
@@ -114,7 +193,7 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
       />
 
       <ChatMessageList
-        chat={liveChat}
+        chat={{ ...liveChat, messages: decryptedMessages.length > 0 || !liveChat.messages?.length ? decryptedMessages : liveChat.messages }}
         userProfile={app.userProfile}
         messagesEndRef={messagesEndRef}
         onLoadMore={handleLoadMore}

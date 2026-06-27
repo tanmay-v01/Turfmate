@@ -215,6 +215,14 @@ async function migrate() {
       created_at INTEGER NOT NULL,
       FOREIGN KEY(room_id) REFERENCES chat_rooms(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS chat_room_keys (
+      room_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      encrypted_key TEXT NOT NULL,
+      PRIMARY KEY(room_id, user_id),
+      FOREIGN KEY(room_id) REFERENCES chat_rooms(id),
+      FOREIGN KEY(user_id) REFERENCES users(id)
+    )`,
     `CREATE TABLE IF NOT EXISTS friend_requests (
       id TEXT PRIMARY KEY,
       from_user_id TEXT NOT NULL,
@@ -328,6 +336,15 @@ async function migrate() {
       FOREIGN KEY(booking_id) REFERENCES bookings(id),
       FOREIGN KEY(user_id) REFERENCES users(id)
     )`);
+  }
+
+  const hasBroadcastType = await tableHasColumn('owner_broadcasts', 'category');
+  // the column in owner_broadcasts is 'category', not 'broadcast_type'
+  // I will just remove the broadcast_type migration because the schema defines category.
+
+  const hasPublicKey = await tableHasColumn('users', 'public_key');
+  if (!hasPublicKey) {
+    await run(`ALTER TABLE users ADD COLUMN public_key TEXT`);
   }
 
   const locksOk = await tableHasColumn('slot_locks', 'slot_key');

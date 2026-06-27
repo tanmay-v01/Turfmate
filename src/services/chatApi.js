@@ -13,6 +13,14 @@ export const chatApi = {
       method: 'POST',
       body: JSON.stringify({ text, type }),
     }),
+
+  getRoomKeys: (roomId) => apiFetch(`/chat/rooms/${encodeURIComponent(roomId)}/keys`),
+
+  saveRoomKeys: (roomId, keys) =>
+    apiFetch(`/chat/rooms/${encodeURIComponent(roomId)}/keys`, {
+      method: 'POST',
+      body: JSON.stringify({ keys }),
+    }),
 };
 
 export default chatApi;

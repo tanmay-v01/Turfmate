@@ -24,6 +24,12 @@ export const authApi = {
       body: JSON.stringify(patch),
     }),
 
+  updatePublicKey: (publicKey) =>
+    apiFetch('/users/me/public-key', {
+      method: 'PUT',
+      body: JSON.stringify({ publicKey }),
+    }),
+
   deleteMe: () =>
     apiFetch('/users/me', {
       method: 'DELETE',

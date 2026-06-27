@@ -63,6 +63,17 @@ router.patch('/me', authRequired, loadUser, async (req, res) => {
   }
 });
 
+router.put('/me/public-key', authRequired, loadUser, async (req, res) => {
+  try {
+    const { publicKey } = req.body;
+    if (!publicKey) return res.status(400).json({ error: 'publicKey is required' });
+    await usersRepo.updatePublicKey(req.user.id, publicKey);
+    res.json({ ok: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 router.delete('/me', authRequired, loadUser, async (req, res) => {
   try {
     const result = await usersRepo.deleteAccount(req.user.id);

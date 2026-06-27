@@ -143,6 +143,37 @@ export function useAppState() {
     }
   }, []);
 
+  // Ensure E2EE Keys exist for logged-in user
+  useEffect(() => {
+    if (!userProfile?.isLoggedIn) return;
+    
+    let active = true;
+    const ensureE2EEKeys = async () => {
+      try {
+        const { cryptoService } = await import('../services/cryptoService');
+        const privJwk = localStorage.getItem('tm_chat_privkey');
+        
+        if (!privJwk) {
+          console.log('[E2EE] Generating new RSA keypair...');
+          const keyPair = await cryptoService.generateKeyPair();
+          const pubJwk = await cryptoService.exportKey(keyPair.publicKey);
+          const privJwkStr = await cryptoService.exportKey(keyPair.privateKey);
+          
+          if (!active) return;
+          
+          await authApi.updatePublicKey(pubJwk);
+          localStorage.setItem('tm_chat_privkey', privJwkStr);
+          console.log('[E2EE] Keys generated and uploaded.');
+        }
+      } catch (err) {
+        console.error('[E2EE] Failed to ensure keys:', err);
+      }
+    };
+    
+    ensureE2EEKeys();
+    return () => { active = false; };
+  }, [userProfile?.isLoggedIn]);
+
   const [owners, setOwners] = useState(() => readJson('tm_owners', INITIAL_OWNERS));
 
   const [ownerRevenue, setOwnerRevenue] = useState(null);

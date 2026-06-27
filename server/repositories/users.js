@@ -143,6 +143,13 @@ async function upsertOwnerProfile(userId, data) {
   );
 }
 
+async function updatePublicKey(id, publicKey) {
+  if (isPg) {
+    return db.run(`UPDATE users SET public_key = $1, updated_at = $2 WHERE id = $3`, [publicKey, now(), id]);
+  }
+  return db.run(`UPDATE users SET public_key = ?, updated_at = ? WHERE id = ?`, [publicKey, now(), id]);
+}
+
 async function getPlayerProfile(userId) {
   return db.getOne(
     isPg ? 'SELECT * FROM player_profiles WHERE user_id = $1' : 'SELECT * FROM player_profiles WHERE user_id = ?',
@@ -249,4 +256,5 @@ module.exports = {
   markOnboardingComplete,
   updatePlayerProfile,
   deleteAccount,
+  updatePublicKey,
 };
