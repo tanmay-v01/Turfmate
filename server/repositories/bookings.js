@@ -220,6 +220,19 @@ async function checkoutPrivate({
     logger.warn('checkout_chat_room_failed', { bookingId, error: err.message });
   }
 
+  try {
+    const notificationsRepo = require('./notifications');
+    await notificationsRepo.createNotification({
+      userId,
+      type: 'BOOKING_CONFIRMED',
+      title: 'Booking Confirmed!',
+      body: `Your booking at ${turfRow?.name || 'Turf'} for ${slotTime || dateLabel} is confirmed.`,
+      data: { bookingId, turfId: turf.legacyId, slotTime, dateLabel }
+    });
+  } catch (err) {
+    logger.warn('checkout_notification_failed', { bookingId, error: err.message });
+  }
+
   return {
     bookingId,
     slotKey: key,

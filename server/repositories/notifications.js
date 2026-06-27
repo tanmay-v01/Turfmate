@@ -89,9 +89,22 @@ async function createNotification({ userId, type, title, body, data = {}, push =
   );
 
   let pushResult = null;
+  let emailResult = null;
   if (push) {
     const tokens = await getTokensForUser(userId);
     pushResult = await pushService.sendPush({ tokens, title, body, data });
+
+    // Send email notification if user has an email identifier
+    const user = await db.getOne(isPg ? 'SELECT phone FROM users WHERE id = $1' : 'SELECT phone FROM users WHERE id = ?', [userId]);
+    if (user && user.phone && user.phone.includes('@')) {
+      const emailService = require('../services/emailService');
+      emailResult = await emailService.sendEmail({
+        to: user.phone,
+        subject: title,
+        text: body,
+        html: `<p><strong>${title}</strong></p><p>${body}</p>`
+      });
+    }
   }
 
   const row = await db.getOne(
