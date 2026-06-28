@@ -9,8 +9,9 @@ function isMsg91Live() {
   return Boolean(config.msg91AuthKey && config.msg91TemplateId);
 }
 
-function generateOtp() {
-  if (config.demoMode && !isMsg91Live()) {
+function generateOtp(phone) {
+  const { DEMO_PHONES } = require('../utils/phone');
+  if (config.demoMode && !isMsg91Live() && DEMO_PHONES.has(phone)) {
     return config.demoOtp;
   }
   return String(crypto.randomInt(1000, 9999));
@@ -26,7 +27,8 @@ function storeOtp(phone, otp) {
 function verifyLocalOtp(phone, otp) {
   const entry = otpStore.get(phone);
   if (!entry) {
-    if (config.demoMode && otp === config.demoOtp) return true;
+    const { DEMO_PHONES } = require('../utils/phone');
+    if (config.demoMode && DEMO_PHONES.has(phone) && otp === config.demoOtp) return true;
     return false;
   }
   if (Date.now() > entry.expiresAt) {
@@ -113,7 +115,7 @@ async function sendOtp(phone, otp) {
 }
 
 async function createAndSendOtp(phone) {
-  const otp = generateOtp();
+  const otp = generateOtp(phone);
   storeOtp(phone, otp);
   const sendResult = await sendOtp(phone, otp);
   return sendResult;
