@@ -295,7 +295,7 @@ export default function TurfDetailsPage() {
                                 <span className="text-lg">⚠️</span>
                                 <div className="text-left space-y-1">
                                   <span className="font-extrabold text-xs text-amber-800 block">Completely Sold Out!</span>
-                                  <span className="text-[10px] text-amber-700 block leading-normal">This arena has no open slots left for {app.bookingDate}. Check tomorrow's slots or choose a different pitch!</span>
+                                  <span className="text-[10px] text-amber-700 block leading-normal">This arena has no open slots left for {app.bookingDate}. Check tomorrow&apos;s slots or choose a different pitch!</span>
                                 </div>
                               </div>
                             );

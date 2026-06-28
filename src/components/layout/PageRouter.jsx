@@ -1,7 +1,7 @@
 import { lazy, Suspense } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import { ONBOARDING_VIEWS } from '../../constants/views';
-
 import SplashPage from '../../pages/onboarding/SplashPage';
 import WelcomeCarouselPage from '../../pages/onboarding/WelcomeCarouselPage';
 import LoginPage from '../../pages/onboarding/LoginPage';
@@ -84,13 +84,18 @@ export default function PageRouter() {
     </Suspense>
   );
 
-  if (FULL_WIDTH_VIEWS.has(view)) {
-    return content;
-  }
-
   return (
-    <div className="tm-page animate-fade-up pb-24 lg:pb-10">
-      {content}
-    </div>
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={view}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -15 }}
+        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        className={FULL_WIDTH_VIEWS.has(view) ? '' : 'tm-page pb-24 lg:pb-10'}
+      >
+        {content}
+      </motion.div>
+    </AnimatePresence>
   );
 }

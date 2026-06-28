@@ -1,7 +1,7 @@
 import L from 'leaflet';
 
-const FOREST = '#166534';
-const FRESH = '#4ADE80';
+const FOREST = '#047857'; // emerald-700
+const FRESH = '#10B981'; // emerald-500
 const WHITE = '#ffffff';
 
 export function createUserIcon() {

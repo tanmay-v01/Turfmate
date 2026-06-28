@@ -8,26 +8,26 @@ export default {
     extend: {
       colors: {
         brand: {
-          grass: '#86EFAC',
-          grassLight: '#BBF7D0',
-          grassPale: '#DCFCE7',
-          grassFresh: '#4ADE80',
-          grassDeep: '#22C55E',
-          grassInk: '#15803D',
-          forest: '#166534',
-          forestSoft: '#14532D',
-          background: '#F0FDF4',
+          grass: '#34D399', // Emerald 400
+          grassLight: '#A7F3D0', // Emerald 200
+          grassPale: '#D1FAE5', // Emerald 100
+          grassFresh: '#10B981', // Emerald 500
+          grassDeep: '#059669', // Emerald 600
+          grassInk: '#047857', // Emerald 700
+          forest: '#064E3B', // Emerald 900
+          forestSoft: '#065F46', // Emerald 800
+          background: '#FFFFFF', // White
           surface: '#FFFFFF',
-          text: '#14532D',
-          muted: '#6B9B7A',
-          border: '#BBF7D0',
-          accent: '#ECFCCB',
-          lime: '#BEF264',
+          text: '#064E3B',
+          muted: '#4B5563', // Gray 600
+          border: '#D1FAE5',
+          accent: '#ECFDF5',
+          lime: '#34D399',
           // legacy aliases
-          primary: '#86EFAC',
-          primaryDark: '#4ADE80',
-          forestMid: '#166534',
-          forestLight: '#22C55E',
+          primary: '#10B981',
+          primaryDark: '#059669',
+          forestMid: '#065F46',
+          forestLight: '#059669',
           card: '#FFFFFF',
         }
       },

@@ -5,6 +5,7 @@ import { Marker } from 'react-leaflet';
 import TurfMapBase from '../../components/map/TurfMapBase';
 import { createUserIcon, createTurfIcon } from '../../components/map/mapIcons';
 import { filterTurfs } from '../../utils/turfMapFilters';
+import EmptyState from '../../components/ui/EmptyState';
 
 export default function SearchEnginePage() {
   const app = useApp();
@@ -66,26 +67,19 @@ export default function SearchEnginePage() {
         {/* List */}
         <div className={`w-full lg:w-[45%] xl:w-[40%] flex flex-col h-full overflow-y-auto p-4 space-y-3 pb-24 lg:pb-4 no-scrollbar ${app.searchViewMode === 'map' ? 'hidden lg:flex' : 'flex'}`}>
           {filteredList.length === 0 ? (
-            <div className="py-12 px-6 text-center space-y-4">
-              <div className="w-12 h-12 rounded-2xl tm-icon-accent-green flex items-center justify-center mx-auto">
-                <Search className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-extrabold text-sm text-brand-forest">No Results Found</h3>
-                <p className="text-xs text-slate-400 mt-1">Try expanding your search radius or selecting a different sport filter.</p>
-              </div>
-              <button
-                onClick={() => {
-                  app.setFilterRadius(15);
-                  app.setFilterSport('all');
-                  app.setFilterPitchSize('all');
-                  app.setSearchQuery('');
-                }}
-                className="px-4 py-2.5 tm-btn-primary rounded-xl text-xs font-bold cursor-pointer"
-              >
-                Reset Search Parameters
-              </button>
-            </div>
+            <EmptyState
+              icon={Search}
+              title="No Results Found"
+              description="Try expanding your search radius or selecting a different sport filter."
+              actionText="Reset Search Parameters"
+              onAction={() => {
+                app.setFilterRadius(15);
+                app.setFilterSport('all');
+                app.setFilterPitchSize('all');
+                app.setSearchQuery('');
+              }}
+              className="my-10 border border-slate-100"
+            />
           ) : (
             filteredList.map((turf) => {
               const dist = app.getDistance(lat1, lng1, turf.lat, turf.lng).toFixed(1);

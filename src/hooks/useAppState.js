@@ -30,23 +30,8 @@ import { getOrCreatePushToken } from '../utils/pushToken';
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
   const parsed = readJson('tm_turfs', null);
-  if (!parsed || !Array.isArray(parsed)) return MOCK_TURFS;
-  const mockById = Object.fromEntries(MOCK_TURFS.map((t) => [t.id, t]));
-  const merged = parsed.map((t) => {
-    const mock = mockById[t.id];
-    if (!mock) return { ...t, image: t.image || t.gallery?.[0] };
-    return {
-      ...mock,
-      ...t,
-      image: t.image || mock.image,
-      gallery: t.gallery?.length ? t.gallery : mock.gallery,
-    };
-  });
-  const savedIds = new Set(parsed.map((t) => t.id));
-  MOCK_TURFS.forEach((t) => {
-    if (!savedIds.has(t.id)) merged.push(t);
-  });
-  return merged;
+  if (parsed && Array.isArray(parsed)) return parsed;
+  return [];
 }
 
 export function useAppState() {
@@ -76,6 +61,8 @@ export function useAppState() {
       ifsc: '',
       accountHolder: ''
     }));
+
+  const DEFAULT_FALLBACK = { name: 'Virar', lat: 19.456, lng: 72.812 };
 
   const [userProfile, setUserProfile] = useState(() => readJson('tm_profile', {
       isLoggedIn: false,
@@ -126,6 +113,15 @@ export function useAppState() {
   const [turfs, setTurfs] = useState(loadTurfs);
   const turfsRef = useRef(turfs);
   useEffect(() => { turfsRef.current = turfs; }, [turfs]);
+
+  useEffect(() => {
+    turfsApi.list().then(({ turfs: apiTurfs }) => {
+      if (apiTurfs && apiTurfs.length > 0) {
+        setTurfs(apiTurfs);
+        localStorage.setItem('tm_turfs', JSON.stringify(apiTurfs));
+      }
+    }).catch(err => console.warn('Failed to load turfs:', err));
+  }, []);
 
   const refreshMyBookings = useCallback(async () => {
     if (!getToken()) return;
@@ -278,9 +274,8 @@ export function useAppState() {
   };
   const setFilterRadius = setPlayRadius;
 
-  // Phase 1b: load turfs from API when logged in
+  // Phase 1b: load turfs from API
   useEffect(() => {
-    if (!userProfile?.isLoggedIn) return undefined;
     let cancelled = false;
     const lat = userProfile.lat ?? 19.456;
     const lng = userProfile.lng ?? 72.812;
@@ -1642,7 +1637,7 @@ export function useAppState() {
         if (checkoutInviteGroupId) {
           const group = squadGroups.find((g) => g.id === checkoutInviteGroupId);
           if (group) {
-            if (splitPayload.inviteSquadId) {
+            if (checkoutInviteGroupId && !String(checkoutInviteGroupId).startsWith('grp-')) {
               showToast(`Invite sent to "${group.name}" via push + inbox`, 'success');
             } else {
               const link = getSplitInviteLink(newAnn.id);

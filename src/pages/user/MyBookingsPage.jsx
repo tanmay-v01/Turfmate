@@ -3,6 +3,7 @@ import { Calendar, MapPin, QrCode, ChevronRight } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
 import TurfImage from '../../components/ui/TurfImage';
+import EmptyState from '../../components/ui/EmptyState';
 
 function isPreviousBooking(booking) {
   const s = (booking.status || '').toLowerCase();
@@ -70,11 +71,10 @@ function BookingCard({ booking, turfs, onOpenTurf }) {
 export default function MyBookingsPage() {
   const app = useApp();
   const [tab, setTab] = useState('current');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
     Promise.resolve(app.refreshMyBookings?.())
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
@@ -126,26 +126,14 @@ export default function MyBookingsPage() {
       </div>
 
       {list.length === 0 ? (
-        <div className="glass-card p-8 text-center">
-          <p className="text-4xl mb-3">{tab === 'current' ? '📅' : '📋'}</p>
-          <p className="font-bold text-brand-forest">
-            {tab === 'current' ? 'No upcoming bookings' : 'No past bookings yet'}
-          </p>
-          <p className="text-sm text-slate-500 mt-2">
-            {tab === 'current'
-              ? 'Book a slot from Explore or any turf page.'
-              : 'Completed and cancelled bookings appear here.'}
-          </p>
-          {tab === 'current' && (
-            <button
-              type="button"
-              onClick={() => app.setView('home')}
-              className="mt-4 px-5 py-2.5 tm-btn-grass rounded-xl text-sm font-bold"
-            >
-              Explore turfs
-            </button>
-          )}
-        </div>
+        <EmptyState
+          icon={Calendar}
+          title={tab === 'current' ? 'No upcoming bookings' : 'No past bookings yet'}
+          description={tab === 'current' ? 'Book a slot from Explore or any turf page.' : 'Completed and cancelled bookings appear here.'}
+          actionText={tab === 'current' ? 'Explore turfs' : undefined}
+          onAction={tab === 'current' ? () => app.setView('home') : undefined}
+          className="my-10"
+        />
       ) : (
         <div className="space-y-3">
           {list.map((b) => (

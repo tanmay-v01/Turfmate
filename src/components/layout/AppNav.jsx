@@ -177,7 +177,7 @@ export default function AppNav() {
                       className={`glass-nav-item flex-1 ${active ? 'glass-nav-item-active' : ''}`}
                       aria-current={active ? 'page' : undefined}
                     >
-                      <span className={`relative flex items-center justify-center w-8 h-8 rounded-xl transition ${active ? 'bg-white/20' : iconAccent}`}>
+                      <span className={`relative flex items-center justify-center w-8 h-8 rounded-xl transition ${active ? '' : iconAccent}`}>
                         <Icon className="w-[18px] h-[18px]" strokeWidth={active ? 2.5 : 2} />
                         {item.id === 'chat' && unread > 0 && (
                           <span className="absolute -top-0.5 -right-0.5 min-w-[14px] h-[14px] px-0.5 rounded-full bg-brand-lime text-brand-forest text-[8px] font-black flex items-center justify-center ring-2 ring-white shadow-sm">

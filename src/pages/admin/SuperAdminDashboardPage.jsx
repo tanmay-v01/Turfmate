@@ -8,6 +8,8 @@ import { useApp } from '../../context/AppContext';
 import StatCard from '../../components/dashboard/StatCard';
 import MiniBarChart from '../../components/dashboard/MiniBarChart';
 
+import { adminApi } from '../../services/adminApi';
+
 export default function SuperAdminDashboardPage() {
   const app = useApp();
   const [activeTab, setActiveTab] = useState('overview');
@@ -129,9 +131,23 @@ export default function SuperAdminDashboardPage() {
   };
 
   const platform = app.getPlatformMetrics();
-  const pendingOwners = app.owners.filter(o => o.approvalStatus === 'Pending_Approval');
+  const pendingOwners = app.owners.filter(o => o.approvalStatus === 'Pending_Approval' || o.approvalStatus === 'Pending');
   const approvedOwners = app.owners.filter(o => o.approvalStatus === 'Approved');
   const appBookings = app.bookings.filter(b => b.source === 'app');
+
+  React.useEffect(() => {
+    adminApi.listPendingKyc()
+      .then(res => {
+        if (res?.owners) {
+          app.setOwners(prev => {
+            const map = new Map(prev.map(o => [o.id, o]));
+            res.owners.forEach(o => map.set(o.id, { ...map.get(o.id), ...o }));
+            return Array.from(map.values());
+          });
+        }
+      })
+      .catch(err => console.warn('Failed to load pending KYC:', err));
+  }, []);
 
   const TABS = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard, mobile: true },
@@ -194,14 +210,14 @@ export default function SuperAdminDashboardPage() {
   };
 
   return (
-    <div className="min-h-screen dash-super-bg flex text-slate-300 font-display">
+    <div className="min-h-screen bg-slate-50 flex text-slate-700 font-display">
       {/* Mobile header */}
       <div className="md:hidden fixed top-0 left-0 right-0 z-50 dash-sidebar-super px-4 py-3 flex items-center justify-between border-b border-emerald-500/10">
         <div className="flex items-center gap-2">
           <ShieldCheck className="w-5 h-5 text-brand-grassFresh" />
-          <span className="font-display font-extrabold text-white">God Mode</span>
+          <span className="font-display font-extrabold text-brand-text">God Mode</span>
         </div>
-        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-xl bg-slate-800 text-brand-grassFresh">
+        <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-2 rounded-xl bg-white text-brand-grassFresh">
           {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
@@ -214,7 +230,7 @@ export default function SuperAdminDashboardPage() {
               <ShieldCheck className="w-5 h-5 text-brand-grassFresh" />
             </div>
             <div>
-              <p className="font-display font-extrabold text-xl text-white">TurfMate<span className="text-brand-grassFresh">.</span></p>
+              <p className="font-display font-extrabold text-xl text-brand-text">TurfMate<span className="text-brand-grassFresh">.</span></p>
               <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Platform Super Admin</p>
             </div>
           </div>
@@ -251,7 +267,7 @@ export default function SuperAdminDashboardPage() {
       <main className="flex-1 flex flex-col min-w-0 min-h-screen pt-14 md:pt-0 pb-20 md:pb-0">
         <header className="hidden md:flex border-b border-emerald-500/10 bg-slate-950/80 backdrop-blur px-6 lg:px-8 py-4 items-center justify-between sticky top-0 z-20">
           <div>
-            <h1 className="text-xl font-extrabold text-white">{TABS.find(t => t.id === activeTab)?.label}</h1>
+            <h1 className="text-xl font-extrabold text-brand-text">{TABS.find(t => t.id === activeTab)?.label}</h1>
             <p className="text-[10px] font-bold text-brand-grassFresh/70 uppercase tracking-wider mt-0.5">10% commission on all app bookings</p>
           </div>
           <div className="flex items-center gap-3">
@@ -268,10 +284,10 @@ export default function SuperAdminDashboardPage() {
               <div className="dash-hero-super">
                 <div className="relative z-10">
                   <p className="text-brand-grassFresh text-xs font-bold uppercase tracking-wider mb-2">TurfMate Platform</p>
-                  <h2 className="text-2xl lg:text-3xl font-display font-extrabold text-white">
-                    {formatMoney(platform.totalCommission)} <span className="text-lg text-slate-400 font-bold">earned</span>
+                  <h2 className="text-2xl lg:text-3xl font-display font-extrabold text-brand-text">
+                    {formatMoney(platform.totalCommission)} <span className="text-lg text-slate-600 font-bold">earned</span>
                   </h2>
-                  <p className="text-sm text-slate-400 font-bold mt-1">{platform.totalBookings} bookings · {platform.activeTurfs} active turfs · {approvedOwners.length} partners</p>
+                  <p className="text-sm text-slate-600 font-bold mt-1">{platform.totalBookings} bookings · {platform.activeTurfs} active turfs · {approvedOwners.length} partners</p>
                 </div>
               </div>
 
@@ -283,11 +299,11 @@ export default function SuperAdminDashboardPage() {
               </div>
 
               <div className="grid lg:grid-cols-5 gap-6">
-                <div className="lg:col-span-3 rounded-3xl border border-emerald-500/15 bg-slate-800/40 p-6">
+                <div className="lg:col-span-3 rounded-3xl border border-emerald-500/15 bg-white p-6">
                   <MiniBarChart data={chartData} label="Daily commission (₹)" dark />
                 </div>
-                <div className="lg:col-span-2 rounded-3xl border border-emerald-500/15 bg-slate-800/40 p-5">
-                  <h3 className="font-extrabold text-white text-sm mb-4 flex items-center gap-2">
+                <div className="lg:col-span-2 rounded-3xl border border-emerald-500/15 bg-white p-5">
+                  <h3 className="font-extrabold text-brand-text text-sm mb-4 flex items-center gap-2">
                     <Zap className="w-4 h-4 text-brand-grassFresh" /> Live Activity
                   </h3>
                   <div className="space-y-1 max-h-52 overflow-y-auto">
@@ -297,7 +313,7 @@ export default function SuperAdminDashboardPage() {
                       <div key={item.id} className="flex gap-3 p-3 rounded-xl hover:bg-slate-700/30 transition">
                         <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${item.type === 'booking' ? 'bg-brand-grassFresh' : 'bg-amber-400'}`} />
                         <div className="min-w-0 flex-1">
-                          <p className="text-sm font-bold text-white truncate">{item.text}</p>
+                          <p className="text-sm font-bold text-brand-text truncate">{item.text}</p>
                           <p className="text-[10px] text-slate-500 font-bold">{item.meta}</p>
                         </div>
                         <span className="text-[10px] text-slate-600 font-bold shrink-0">{item.time}</span>
@@ -327,24 +343,24 @@ export default function SuperAdminDashboardPage() {
           {activeTab === 'owners' && (
             <div className="max-w-6xl mx-auto space-y-8 animate-fade-in">
               <div>
-                <h2 className="text-2xl font-display font-extrabold text-white">Partner Applications</h2>
+                <h2 className="text-2xl font-display font-extrabold text-brand-text">Partner Applications</h2>
                 <p className="text-sm text-slate-500 font-bold mt-1">Onboard turf owners to the platform · 10% commission on their bookings</p>
               </div>
 
               {pendingOwners.length === 0 ? (
-                <div className="rounded-3xl border border-emerald-500/15 bg-slate-800/30 p-12 text-center">
+                <div className="rounded-3xl border border-emerald-500/15 bg-white p-12 text-center">
                   <div className="text-4xl mb-3">✅</div>
-                  <p className="text-slate-400 font-bold">All caught up — no pending applications</p>
+                  <p className="text-slate-600 font-bold">All caught up — no pending applications</p>
                 </div>
               ) : (
                 <div className="grid gap-4">
                   {pendingOwners.map(owner => (
-                    <div key={owner.id} className="rounded-2xl border border-slate-700/80 bg-slate-800/50 p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 hover:border-brand-grassFresh/20 transition">
+                    <div key={owner.id} className="rounded-2xl border border-slate-200 bg-white p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 hover:border-brand-grassFresh/20 transition">
                       <div className="flex items-start gap-4">
                         <div className="w-12 h-12 rounded-2xl bg-brand-grassFresh/10 border border-brand-grassFresh/20 flex items-center justify-center text-xl">🏟️</div>
                         <div>
-                          <p className="font-extrabold text-white text-lg">{owner.businessName}</p>
-                          <p className="text-sm text-slate-400 font-bold">{owner.name} · {owner.phone}</p>
+                          <p className="font-extrabold text-brand-text text-lg">{owner.businessName}</p>
+                          <p className="text-sm text-slate-600 font-bold">{owner.name} · {owner.phone}</p>
                           <p className="text-[10px] text-slate-500 mt-1">{owner.turfIds?.length || 0} turf · PAN {owner.pan || '—'} · Joined {owner.joinedAt}</p>
                         </div>
                       </div>
@@ -362,15 +378,15 @@ export default function SuperAdminDashboardPage() {
               )}
 
               <div>
-                <h3 className="text-lg font-extrabold text-white mb-4">Active Partners ({approvedOwners.length})</h3>
+                <h3 className="text-lg font-extrabold text-brand-text mb-4">Active Partners ({approvedOwners.length})</h3>
                 <div className="grid sm:grid-cols-2 gap-3">
                   {approvedOwners.map(owner => {
                     const ownerRevenue = app.bookings.filter(b => b.ownerId === owner.id).reduce((s, b) => s + (b.paidAmount || 0), 0);
                     return (
-                      <div key={owner.id} className="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-4 hover:border-brand-grassFresh/20 transition group">
+                      <div key={owner.id} className="rounded-2xl border border-slate-200 bg-white p-4 hover:border-brand-grassFresh/20 transition group">
                         <div className="flex justify-between items-start">
                           <div>
-                            <p className="font-bold text-white">{owner.businessName}</p>
+                            <p className="font-bold text-brand-text">{owner.businessName}</p>
                             <p className="text-xs text-slate-500 font-bold mt-0.5">{owner.turfIds?.length} turfs · {owner.phone}</p>
                             <p className="text-xs text-brand-grassFresh font-bold mt-2">{formatMoney(ownerRevenue)} processed</p>
                           </div>
@@ -390,18 +406,18 @@ export default function SuperAdminDashboardPage() {
             <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                  <h2 className="text-2xl font-display font-extrabold text-white">Turf Directory</h2>
+                  <h2 className="text-2xl font-display font-extrabold text-brand-text">Turf Directory</h2>
                   <p className="text-sm text-slate-500 font-bold">{app.turfs.length} venues on platform</p>
                 </div>
                 <div className="relative">
                   <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
-                  <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search turfs..." className="pl-9 pr-4 py-2.5 bg-slate-800 border border-slate-700 text-white text-sm rounded-xl focus:outline-none focus:border-brand-grassFresh/50 w-full sm:w-64" />
+                  <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search turfs..." className="pl-9 pr-4 py-2.5 bg-white border border-slate-200 text-brand-text text-sm rounded-xl focus:outline-none focus:border-brand-grassFresh/50 w-full sm:w-64" />
                 </div>
               </div>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {turfRows.map(turf => (
-                  <div key={turf.id} className="rounded-2xl border border-slate-700/60 bg-slate-800/40 overflow-hidden hover:border-brand-grassFresh/25 transition group">
+                  <div key={turf.id} className="rounded-2xl border border-slate-200 bg-white overflow-hidden hover:border-brand-grassFresh/25 transition group">
                     {turf.image && (
                       <div className="h-28 overflow-hidden relative">
                         <img src={turf.image} alt="" className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition" />
@@ -411,10 +427,10 @@ export default function SuperAdminDashboardPage() {
                       </div>
                     )}
                     <div className="p-4">
-                      <p className="font-extrabold text-white">{turf.name}</p>
+                      <p className="font-extrabold text-brand-text">{turf.name}</p>
                       <p className="text-xs text-slate-500 font-bold mt-0.5">{turf.owner}</p>
                       <div className="flex justify-between mt-3 text-xs font-bold">
-                        <span className="text-slate-400">Revenue <span className="text-white">₹{turf.revenue.toLocaleString()}</span></span>
+                        <span className="text-slate-600">Revenue <span className="text-brand-text">₹{turf.revenue.toLocaleString()}</span></span>
                         <span className="text-brand-grassFresh">Fee ₹{turf.commission.toLocaleString()}</span>
                       </div>
                       <div className="flex gap-2 mt-4">
@@ -473,7 +489,7 @@ export default function SuperAdminDashboardPage() {
               <div className="max-w-6xl mx-auto space-y-6 animate-fade-in">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   <div>
-                    <h2 className="text-2xl font-display font-extrabold text-white">All App Bookings</h2>
+                    <h2 className="text-2xl font-display font-extrabold text-brand-text">All App Bookings</h2>
                     <p className="text-xs text-slate-500 font-bold mt-0.5">Click any booking row to inspect or issue a refund</p>
                   </div>
                   <div className="relative">
@@ -483,15 +499,15 @@ export default function SuperAdminDashboardPage() {
                       value={bookingSearch}
                       onChange={(e) => setBookingSearch(e.target.value)}
                       placeholder="Search by ID, turf, user..."
-                      className="pl-9 pr-4 py-2.5 bg-slate-800 border border-slate-700 text-white text-xs rounded-xl focus:outline-none focus:border-brand-grassFresh/50 w-full sm:w-64"
+                      className="pl-9 pr-4 py-2.5 bg-white border border-slate-200 text-brand-text text-xs rounded-xl focus:outline-none focus:border-brand-grassFresh/50 w-full sm:w-64"
                     />
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-slate-700/60 bg-slate-800/30 overflow-x-auto">
+                <div className="rounded-2xl border border-slate-200 bg-white overflow-x-auto">
                   <table className="w-full text-left text-sm min-w-[640px]">
                     <thead>
-                      <tr className="border-b border-slate-700 text-[10px] font-bold text-slate-500 uppercase">
+                      <tr className="border-b border-slate-200 text-[10px] font-bold text-slate-500 uppercase">
                         <th className="p-4">Booking</th>
                         <th className="p-4">Turf</th>
                         <th className="p-4">Player</th>
@@ -515,9 +531,9 @@ export default function SuperAdminDashboardPage() {
                             <span className="font-mono text-xs text-slate-500">{b.id}</span>
                             <span className={`ml-2 text-[10px] font-black uppercase px-1.5 py-0.5 rounded ${b.type === 'split' ? 'bg-amber-500/15 text-amber-400' : 'bg-emerald-500/15 text-emerald-400'}`}>{b.type}</span>
                           </td>
-                          <td className="p-4 text-white font-bold">{b.turfName}</td>
-                          <td className="p-4 text-slate-400">{b.roster?.[0]}</td>
-                          <td className="p-4 text-right text-white font-bold">₹{b.paidAmount}</td>
+                          <td className="p-4 text-brand-text font-bold">{b.turfName}</td>
+                          <td className="p-4 text-slate-600">{b.roster?.[0]}</td>
+                          <td className="p-4 text-right text-brand-text font-bold">₹{b.paidAmount}</td>
                           <td className="p-4 text-right text-brand-grassFresh font-black">₹{b.commissionAmount || 0}</td>
                           <td className="p-4 text-right">
                             <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${
@@ -545,35 +561,35 @@ export default function SuperAdminDashboardPage() {
                       <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 shadow-2xl relative animate-slide-up text-left">
                         <button 
                           onClick={() => setSelectedBooking(null)}
-                          className="absolute top-4 right-4 text-slate-400 hover:text-white"
+                          className="absolute top-4 right-4 text-slate-600 hover:text-brand-text"
                         >
                           <X className="w-5 h-5" />
                         </button>
                         
-                        <h3 className="font-display font-extrabold text-white text-lg mb-4">Inspect Booking</h3>
+                        <h3 className="font-display font-extrabold text-brand-text text-lg mb-4">Inspect Booking</h3>
                         
                         <div className="space-y-3 text-xs border-b border-slate-800 pb-4">
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Booking ID</span><span className="font-mono text-white">{b.id}</span></div>
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Venue</span><span className="text-white font-bold">{b.turfName}</span></div>
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Host / Player</span><span className="text-white font-bold">{b.roster?.[0]}</span></div>
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Time Slot</span><span className="text-white">{b.slotTime}</span></div>
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Booking Type</span><span className="text-white font-bold uppercase">{b.type}</span></div>
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Status</span><span className="text-white font-bold uppercase">{b.status}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Booking ID</span><span className="font-mono text-brand-text">{b.id}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Venue</span><span className="text-brand-text font-bold">{b.turfName}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Host / Player</span><span className="text-brand-text font-bold">{b.roster?.[0]}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Time Slot</span><span className="text-brand-text">{b.slotTime}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Booking Type</span><span className="text-brand-text font-bold uppercase">{b.type}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Status</span><span className="text-brand-text font-bold uppercase">{b.status}</span></div>
                         </div>
 
                         <div className="space-y-3 text-xs pt-4">
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Amount Paid</span><span className="text-white font-bold">₹{b.paidAmount}</span></div>
-                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Convenience Fee</span><span className="text-slate-400">₹20</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Amount Paid</span><span className="text-brand-text font-bold">₹{b.paidAmount}</span></div>
+                          <div className="flex justify-between"><span className="text-slate-500 font-bold uppercase">Convenience Fee</span><span className="text-slate-600">₹20</span></div>
                           <div className="flex justify-between"><span className="text-brand-grassFresh font-bold uppercase">Commission (10%)</span><span className="text-brand-grassFresh font-black">₹{b.commissionAmount || 0}</span></div>
-                          <div className="flex justify-between border-t border-dashed border-slate-800 pt-3"><span className="text-slate-400 font-extrabold uppercase">Owner Payout</span><span className="text-lg font-black text-white">₹{b.ownerPayout || 0}</span></div>
+                          <div className="flex justify-between border-t border-dashed border-slate-800 pt-3"><span className="text-slate-600 font-extrabold uppercase">Owner Payout</span><span className="text-lg font-black text-brand-text">₹{b.ownerPayout || 0}</span></div>
                         </div>
 
                         <div className="flex gap-2 mt-6 pt-4 border-t border-slate-800">
-                          <button onClick={() => setSelectedBooking(null)} className="flex-1 py-3 bg-slate-800 text-slate-300 font-bold rounded-xl text-xs hover:bg-slate-700 transition">Close</button>
+                          <button onClick={() => setSelectedBooking(null)} className="flex-1 py-3 bg-white text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-700 transition">Close</button>
                           {!isRefunded && (
                             <button 
                               onClick={() => handleForceRefund(b.id)}
-                              className="flex-1 py-3 bg-red-500 text-white font-bold rounded-xl text-xs hover:bg-red-650 transition uppercase tracking-wider"
+                              className="flex-1 py-3 bg-red-500 text-brand-text font-bold rounded-xl text-xs hover:bg-red-650 transition uppercase tracking-wider"
                             >
                               Force Refund
                             </button>
@@ -591,48 +607,48 @@ export default function SuperAdminDashboardPage() {
           {activeTab === 'moderation' && (
             <div className="max-w-6xl mx-auto space-y-8 animate-fade-in text-left">
               <div>
-                <h2 className="text-2xl font-display font-extrabold text-white">Trust & Safety Moderation</h2>
+                <h2 className="text-2xl font-display font-extrabold text-brand-text">Trust & Safety Moderation</h2>
                 <p className="text-sm text-slate-500 font-bold mt-1">Review flagged items, inspect user reliability, and enforce permanent bans.</p>
               </div>
 
               <div className="grid lg:grid-cols-3 gap-8">
                 {/* Left: Flagged items feed */}
                 <div className="lg:col-span-2 space-y-4">
-                  <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                  <h3 className="text-lg font-extrabold text-brand-text flex items-center gap-2">
                     <ShieldAlert className="w-5 h-5 text-red-400" /> Pending Flagged Items ({flaggedItems.length})
                   </h3>
 
                   {flaggedItems.length === 0 ? (
-                    <div className="rounded-3xl border border-emerald-500/15 bg-slate-800/30 p-12 text-center">
+                    <div className="rounded-3xl border border-emerald-500/15 bg-white p-12 text-center">
                       <div className="text-4xl mb-3">🛡️</div>
-                      <p className="text-slate-400 font-bold">All clean! No flagged items found.</p>
+                      <p className="text-slate-600 font-bold">All clean! No flagged items found.</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
                       {flaggedItems.map(item => {
                         const isBanned = app.bannedUsers.includes(item.accusedUser.username) || app.bannedUsers.includes(`@${item.accusedUser.username}`);
                         return (
-                          <div key={item.id} className="rounded-2xl border border-slate-700/80 bg-slate-800/50 p-5 space-y-4 hover:border-red-500/20 transition">
+                          <div key={item.id} className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4 hover:border-red-500/20 transition">
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-2">
                                 <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${item.contentType === 'Chat Message' ? 'bg-amber-500/15 text-amber-400' : 'bg-red-500/15 text-red-400'}`}>{item.contentType}</span>
                                 <span className="text-[10px] text-slate-500 font-bold">{item.reportedAt}</span>
                               </div>
-                              <span className="text-xs text-slate-400 font-bold">
-                                Reported by <span className="text-slate-300 font-extrabold cursor-pointer hover:underline" onClick={() => handleInspectUser(item.reporter)}>{item.reporter}</span>
+                              <span className="text-xs text-slate-600 font-bold">
+                                Reported by <span className="text-slate-700 font-extrabold cursor-pointer hover:underline" onClick={() => handleInspectUser(item.reporter)}>{item.reporter}</span>
                               </span>
                             </div>
 
                             <div className="bg-slate-900/60 rounded-xl p-3 border border-slate-850">
-                              <p className="text-sm text-slate-350 italic">"{item.content}"</p>
+                              <p className="text-sm text-slate-350 italic">&quot;{item.content}&quot;</p>
                             </div>
 
                             <div className="flex items-center justify-between flex-wrap gap-3 pt-2">
                               <div className="flex items-center gap-3">
-                                <img src={item.accusedUser.avatar} alt="" className="w-10 h-10 rounded-xl border border-slate-700 object-cover" />
+                                <img src={item.accusedUser.avatar} alt="" className="w-10 h-10 rounded-xl border border-slate-200 object-cover" />
                                 <div>
                                   <div className="flex items-center gap-1.5">
-                                    <span className="text-sm font-extrabold text-white">@{item.accusedUser.username}</span>
+                                    <span className="text-sm font-extrabold text-brand-text">@{item.accusedUser.username}</span>
                                     {isBanned && (
                                       <span className="px-1.5 py-0.5 rounded bg-red-500/20 text-red-400 text-[8px] font-black uppercase">Banned</span>
                                     )}
@@ -642,14 +658,14 @@ export default function SuperAdminDashboardPage() {
                               </div>
 
                               <div className="flex items-center gap-1.5 flex-wrap">
-                                <button onClick={() => setSelectedUser(item.accusedUser)} className="px-3 py-1.5 bg-slate-700 text-slate-300 text-xs font-bold rounded-lg hover:bg-slate-650 transition">
+                                <button onClick={() => setSelectedUser(item.accusedUser)} className="px-3 py-1.5 bg-slate-700 text-slate-700 text-xs font-bold rounded-lg hover:bg-slate-650 transition">
                                   Inspect User
                                 </button>
                                 <button onClick={() => handleDeletePost(item.id, item.postId)} className="px-3 py-1.5 bg-slate-700/50 text-red-400 text-xs font-bold rounded-lg hover:bg-red-950/30 hover:text-red-300 transition flex items-center gap-1 border border-red-900/30">
                                   <Trash2 className="w-3.5 h-3.5" /> Delete Post
                                 </button>
                                 {!isBanned ? (
-                                  <button onClick={() => handlePermaBan(item.accusedUser.username)} className="px-3 py-1.5 bg-red-500 text-white text-xs font-black rounded-lg hover:bg-red-600 transition">
+                                  <button onClick={() => handlePermaBan(item.accusedUser.username)} className="px-3 py-1.5 bg-red-500 text-brand-text text-xs font-black rounded-lg hover:bg-red-600 transition">
                                     Perma-Ban
                                   </button>
                                 ) : (
@@ -668,11 +684,11 @@ export default function SuperAdminDashboardPage() {
 
                 {/* Right: Unban Manager */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-extrabold text-white flex items-center gap-2">
+                  <h3 className="text-lg font-extrabold text-brand-text flex items-center gap-2">
                     <UserMinus className="w-5 h-5 text-amber-400" /> Unban Manager
                   </h3>
 
-                  <div className="rounded-2xl border border-slate-700/60 bg-slate-800/30 p-5 space-y-4">
+                  <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4">
                     <p className="text-xs text-slate-500 font-bold uppercase tracking-wider">Banned Users ({app.bannedUsers.length})</p>
 
                     {app.bannedUsers.length === 0 ? (
@@ -710,21 +726,21 @@ export default function SuperAdminDashboardPage() {
                     <div className="bg-slate-900 border border-slate-800 w-full max-w-md rounded-3xl p-6 shadow-2xl relative animate-slide-up text-left">
                       <button 
                         onClick={() => setSelectedUser(null)}
-                        className="absolute top-4 right-4 text-slate-400 hover:text-white"
+                        className="absolute top-4 right-4 text-slate-600 hover:text-brand-text"
                       >
                         <X className="w-5 h-5" />
                       </button>
                       
                       <div className="flex items-center gap-4 mb-6">
-                        <img src={selectedUser.avatar} alt="" className="w-16 h-16 rounded-2xl border-2 border-slate-700 object-cover" />
+                        <img src={selectedUser.avatar} alt="" className="w-16 h-16 rounded-2xl border-2 border-slate-200 object-cover" />
                         <div>
-                          <h3 className="font-display font-extrabold text-white text-lg">{selectedUser.fullName}</h3>
+                          <h3 className="font-display font-extrabold text-brand-text text-lg">{selectedUser.fullName}</h3>
                           <p className="text-sm text-brand-grassFresh font-bold">@{selectedUser.username}</p>
                           <div className="flex items-center gap-1.5 mt-1.5">
                             <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${isBanned ? 'bg-red-500/20 text-red-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
                               {isBanned ? 'Banned' : 'Active'}
                             </span>
-                            <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-400 text-[9px] font-bold uppercase">{selectedUser.skillTier} Tier</span>
+                            <span className="px-2 py-0.5 rounded bg-white text-slate-600 text-[9px] font-bold uppercase">{selectedUser.skillTier} Tier</span>
                           </div>
                         </div>
                       </div>
@@ -736,11 +752,11 @@ export default function SuperAdminDashboardPage() {
                         </div>
                         <div className="bg-slate-950/40 border border-slate-800 rounded-2xl p-3 text-center">
                           <p className="text-[9px] text-slate-500 font-bold uppercase">Games Played</p>
-                          <p className="text-lg font-black text-white mt-1">{selectedUser.gamesPlayed}</p>
+                          <p className="text-lg font-black text-brand-text mt-1">{selectedUser.gamesPlayed}</p>
                         </div>
                         <div className="bg-slate-950/40 border border-slate-800 rounded-2xl p-3 text-center">
                           <p className="text-[9px] text-slate-500 font-bold uppercase">Splits Hosted</p>
-                          <p className="text-lg font-black text-white mt-1">{selectedUser.splitsHosted}</p>
+                          <p className="text-lg font-black text-brand-text mt-1">{selectedUser.splitsHosted}</p>
                         </div>
                       </div>
 
@@ -752,7 +768,7 @@ export default function SuperAdminDashboardPage() {
 
                       <div className="flex flex-col gap-2">
                         <div className="flex gap-2">
-                          <button onClick={() => handleResetReliability(selectedUser.username)} className="flex-1 py-3 bg-slate-800 text-slate-300 font-bold rounded-xl text-xs hover:bg-slate-750 transition flex items-center justify-center gap-1.5">
+                          <button onClick={() => handleResetReliability(selectedUser.username)} className="flex-1 py-3 bg-white text-slate-700 font-bold rounded-xl text-xs hover:bg-slate-750 transition flex items-center justify-center gap-1.5">
                             <RefreshCw className="w-3.5 h-3.5" /> Reset Reliability
                           </button>
                           <button onClick={() => handleSuspendUser(selectedUser.username)} className="flex-1 py-3 bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold rounded-xl text-xs hover:bg-amber-500/20 transition flex items-center justify-center gap-1.5">
@@ -760,7 +776,7 @@ export default function SuperAdminDashboardPage() {
                           </button>
                         </div>
                         {!isBanned ? (
-                          <button onClick={() => { handlePermaBan(selectedUser.username); setSelectedUser(null); }} className="w-full py-3 bg-red-500 text-white font-extrabold rounded-xl text-xs hover:bg-red-650 transition uppercase tracking-wider">
+                          <button onClick={() => { handlePermaBan(selectedUser.username); setSelectedUser(null); }} className="w-full py-3 bg-red-500 text-brand-text font-extrabold rounded-xl text-xs hover:bg-red-650 transition uppercase tracking-wider">
                             Perma-Ban User
                           </button>
                         ) : (
@@ -778,32 +794,32 @@ export default function SuperAdminDashboardPage() {
 
           {activeTab === 'settings' && (
             <div className="max-w-2xl mx-auto space-y-6 animate-fade-in">
-              <h2 className="text-2xl font-display font-extrabold text-white">Platform Settings</h2>
-              <div className="rounded-2xl border border-emerald-500/20 bg-slate-800/40 p-6 space-y-5">
-                <div className="flex justify-between items-center py-3 border-b border-slate-700/50">
+              <h2 className="text-2xl font-display font-extrabold text-brand-text">Platform Settings</h2>
+              <div className="rounded-2xl border border-emerald-500/20 bg-white p-6 space-y-5">
+                <div className="flex justify-between items-center py-3 border-b border-slate-200">
                   <div>
-                    <p className="font-bold text-white">Commission Rate</p>
+                    <p className="font-bold text-brand-text">Commission Rate</p>
                     <p className="text-xs text-slate-500 font-bold">Applied to all in-app bookings</p>
                   </div>
                   <span className="text-2xl font-black text-brand-grassFresh">10%</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-slate-700/50">
+                <div className="flex justify-between items-center py-3 border-b border-slate-200">
                   <div>
-                    <p className="font-bold text-white">Settlement Cycle</p>
+                    <p className="font-bold text-brand-text">Settlement Cycle</p>
                     <p className="text-xs text-slate-500 font-bold">Owner payout timing</p>
                   </div>
-                  <span className="text-sm font-bold text-white">T+2 Business Days</span>
+                  <span className="text-sm font-bold text-brand-text">T+2 Business Days</span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-slate-700/50">
+                <div className="flex justify-between items-center py-3 border-b border-slate-200">
                   <div>
-                    <p className="font-bold text-white">Active Regions</p>
+                    <p className="font-bold text-brand-text">Active Regions</p>
                     <p className="text-xs text-slate-500 font-bold">Mumbai Metropolitan</p>
                   </div>
                   <span className="text-sm font-bold text-brand-grassFresh">Live</span>
                 </div>
                 <div className="flex justify-between items-center py-3">
                   <div>
-                    <p className="font-bold text-white">Partner Onboarding</p>
+                    <p className="font-bold text-brand-text">Partner Onboarding</p>
                     <p className="text-xs text-slate-500 font-bold">KYC + bank verification required</p>
                   </div>
                   <span className="dash-pill-live !text-emerald-400">Enabled</span>

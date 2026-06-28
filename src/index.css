@@ -5,17 +5,17 @@
 @tailwind utilities;
 
 :root {
-  --grass: #86EFAC;
-  --grass-light: #BBF7D0;
-  --grass-pale: #DCFCE7;
-  --grass-fresh: #4ADE80;
-  --grass-deep: #22C55E;
-  --grass-ink: #15803D;
-  --bg: #f8fafc;
-  --surface: rgba(255, 255, 255, 0.92);
-  --text: #14532D;
-  --muted: #6B9B7A;
-  --border: rgba(187, 247, 208, 0.85);
+  --grass: #34D399;
+  --grass-light: #A7F3D0;
+  --grass-pale: #D1FAE5;
+  --grass-fresh: #10B981;
+  --grass-deep: #059669;
+  --grass-ink: #047857;
+  --bg: #FFFFFF;
+  --surface: #FFFFFF;
+  --text: #064E3B;
+  --muted: #4B5563;
+  --border: #D1FAE5;
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --smooth: cubic-bezier(0.22, 1, 0.36, 1);
   --font-display: 'Outfit', 'Plus Jakarta Sans', 'Inter', sans-serif;
@@ -465,22 +465,31 @@
   color: #fff;
   border: 1px solid #166534;
   box-shadow: 0 4px 14px rgba(22, 101, 52, 0.28);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, box-shadow;
 }
 .tm-btn-primary:hover {
   background: #15803d;
   box-shadow: 0 6px 18px rgba(22, 101, 52, 0.32);
+  transform: translateY(-1px);
+}
+.tm-btn-primary:active {
+  transform: scale(0.96) translateY(0);
 }
 
 .tm-btn-secondary {
   background: #fff;
   color: #166534;
   border: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
 }
 .tm-btn-secondary:hover {
   border-color: #86efac;
   background: #f0fdf4;
+}
+.tm-btn-secondary:active {
+  transform: scale(0.96);
 }
 
 .tm-nav-primary {
@@ -877,6 +886,19 @@
   background: #f8fafc;
   border-color: rgba(134, 239, 172, 0.5);
 }
+.tm-card-hover {
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, box-shadow;
+}
+
+.tm-card-hover:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 40px -12px rgba(22, 101, 52, 0.15), 0 0 0 1px rgba(167, 243, 208, 0.4);
+}
+
+.tm-card-hover:active {
+  transform: translateY(0) scale(0.98);
+}
 
 .tm-stat {
   background: #fff;
@@ -1024,14 +1046,14 @@
   position: relative;
   border-radius: 26px;
   padding: 6px 8px;
-  background: rgba(255, 255, 255, 0.62);
+  background: rgba(6, 78, 59, 0.85); /* brand-forest dark green */
   backdrop-filter: blur(28px) saturate(200%);
   -webkit-backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.95) inset,
-    0 8px 32px -4px rgba(22, 101, 52, 0.12),
-    0 8px 32px -4px rgba(15, 23, 42, 0.1);
+    0 1px 0 rgba(255, 255, 255, 0.1) inset,
+    0 8px 32px -4px rgba(22, 101, 52, 0.3),
+    0 8px 32px -4px rgba(15, 23, 42, 0.3);
 }
 
 .glass-nav-shell::before {
@@ -1040,7 +1062,7 @@
   inset: 0;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.15) 100%);
+  background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -1058,20 +1080,25 @@
   min-width: 64px;
   padding: 8px 10px;
   border-radius: 18px;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.6); /* white faded */
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, color, background-color;
+}
+
+.glass-nav-item:active {
+  transform: scale(0.92);
 }
 
 .glass-nav-item:hover {
-  color: #166534;
-  background: rgba(255, 255, 255, 0.65);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .glass-nav-item-active,
 .tm-nav-primary {
-  color: #fff !important;
-  background: linear-gradient(135deg, #166534 0%, #15803d 100%);
-  box-shadow: 0 4px 14px rgba(22, 101, 52, 0.35);
+  color: #166534 !important; /* brand-forest for contrast inside active white pill */
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
 }
 
 .glass-nav-fade {
@@ -1121,10 +1148,10 @@
 }
 
 .dash-super-bg {
-  background-color: #0f172a;
+  background-color: #FFFFFF;
   background-image:
-    radial-gradient(at 20% 20%, rgba(74, 222, 128, 0.08) 0, transparent 50%),
-    radial-gradient(at 80% 80%, rgba(134, 239, 172, 0.06) 0, transparent 45%);
+    radial-gradient(at 20% 20%, rgba(16, 185, 129, 0.05) 0, transparent 50%),
+    radial-gradient(at 80% 80%, rgba(5, 150, 105, 0.03) 0, transparent 45%);
 }
 
 .dash-card {

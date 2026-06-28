@@ -148,7 +148,9 @@ app.get('/api/superadmin/metrics', (req, res) => {
   });
 });
 
-app.get('/api/superadmin/turfs', (req, res) => {
+const path = require('path');
+
+app.use('/api/superadmin/turfs', (req, res) => {
   // Mock list of all onboarded turfs
   const turfs = [
     { id: 'T-001', name: 'Virar Super Arena', owner: 'Rahul C', status: 'ACTIVE', revenue: 120000 },
@@ -251,6 +253,12 @@ setInterval(() => {
 
 // --- MODULE 6: WEBSOCKETS (SOCKET.IO) ---
 registerChatSocket(io);
+
+// Serve Static Frontend (Production)
+app.use(express.static(path.join(__dirname, '../dist')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../dist/index.html'));
+});
 
 // Start the server (0.0.0.0 for Railway/Render containers)
 server.listen(PORT, '0.0.0.0', () => {

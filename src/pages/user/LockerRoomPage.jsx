@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Plus, Check, ArrowRight, Megaphone, X, MessageSquare, MapPin, Trophy, Heart, Flame, Camera, CircleDot, Wallet } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
@@ -30,6 +30,8 @@ export default function LockerRoomPage() {
   const lat = app.userProfile.lat || 19.456;
   const lng = app.userProfile.lng || 72.812;
 
+  const now = useMemo(() => Date.now(), [app.announcements]);
+
   const feed = app.announcements.filter((ann) => {
     const hostName = ann.hostName;
     const hasBannedMatch = app.bannedUsers.some(b => {
@@ -39,8 +41,8 @@ export default function LockerRoomPage() {
     });
     if (hasBannedMatch) return false;
 
-    if (ann.expiresAt && Date.now() > ann.expiresAt) return false;
-    if (ann.fundingExpiresAt && Date.now() > ann.fundingExpiresAt) return false;
+    if (ann.expiresAt && now > ann.expiresAt) return false;
+    if (ann.fundingExpiresAt && now > ann.fundingExpiresAt) return false;
 
     const turf = app.turfs.find((t) => t.id === ann.turfId);
     const dist = turf

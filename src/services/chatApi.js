@@ -3,7 +3,8 @@ import { apiFetch } from './apiClient';
 export const chatApi = {
   getInbox: () => apiFetch('/chat/rooms'),
 
-  getRoomHistory: (roomId) => apiFetch(`/chat/rooms/${encodeURIComponent(roomId)}/messages`),
+  getRoomHistory: (roomId, cursor) => 
+    apiFetch(`/chat/rooms/${encodeURIComponent(roomId)}/messages${cursor ? `?beforeId=${cursor}` : ''}`),
 
   markRead: (roomId) =>
     apiFetch(`/chat/rooms/${encodeURIComponent(roomId)}/read`, { method: 'POST', body: '{}' }),

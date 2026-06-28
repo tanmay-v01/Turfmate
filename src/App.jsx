@@ -16,7 +16,7 @@ const PORTAL_VIEWS = new Set(['owner_dashboard', 'super_admin']);
 
 function PortalLoading() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <p className="text-sm font-bold text-brand-muted animate-pulse">loading dashboard…</p>
     </div>
   );
@@ -27,7 +27,7 @@ function AppShell() {
   const isPortal = PORTAL_VIEWS.has(view);
 
   return (
-    <div className="min-h-screen w-full bg-slate-50 text-brand-text antialiased">
+    <div className="min-h-screen w-full bg-white text-brand-text antialiased">
       {!isPortal && import.meta.env.DEV && <DevHeader />}
       {!isPortal && <Toast />}
 
