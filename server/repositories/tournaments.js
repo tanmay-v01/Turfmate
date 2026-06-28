@@ -69,8 +69,22 @@ async function createTournament(data) {
   return getTournament(id);
 }
 
+async function registerTeam(tournamentId) {
+  const sql = `
+    UPDATE tournaments 
+    SET registered_teams = registered_teams + 1 
+    WHERE id = ? AND registered_teams < max_teams
+  `;
+  const result = await db.runAsync(sql, [tournamentId]);
+  if (result.changes === 0) {
+    throw new Error('Tournament is full or not found');
+  }
+  return getTournament(tournamentId);
+}
+
 module.exports = {
   listTournaments,
   getTournament,
-  createTournament
+  createTournament,
+  registerTeam
 };

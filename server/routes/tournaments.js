@@ -26,4 +26,15 @@ router.post('/', requireAuth, async (req, res) => {
   }
 });
 
+// POST /api/tournaments/:id/register
+router.post('/:id/register', requireAuth, async (req, res) => {
+  try {
+    const tournament = await tournamentsRepo.registerTeam(req.params.id);
+    res.json({ tournament });
+  } catch (err) {
+    console.error('Error registering for tournament:', err);
+    res.status(400).json({ error: err.message || 'Failed to register' });
+  }
+});
+
 module.exports = router;

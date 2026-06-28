@@ -1732,6 +1732,33 @@ export function useAppState() {
     }
   };
 
+  const processTournamentPayment = async (tournament) => {
+    setIsProcessingPayment(true);
+    try {
+      const orderBody = {
+        purpose: 'TOURNAMENT_FEE',
+        amount: tournament.entryFee,
+        tournamentId: tournament.id,
+      };
+
+      const result = await fulfillViaPayments(orderBody);
+      if (result?.success || result?.demo) {
+        await tournamentsApi.register(tournament.id, getToken());
+        await refreshTournaments();
+        showToast('Registered for tournament successfully!', 'success');
+        setIsProcessingPayment(false);
+        return true;
+      }
+      setIsProcessingPayment(false);
+      return false;
+    } catch (error) {
+      console.error('Tournament Registration Error:', error);
+      showToast(error.message, 'error', 'Registration failed');
+      setIsProcessingPayment(false);
+      return false;
+    }
+  };
+
   const failSplitFunding = (annId) => {
     const ann = announcements.find((a) => a.id === annId);
     if (!ann || ann.status === 'failed' || ann.status === 'filled') return;
@@ -2356,7 +2383,7 @@ export function useAppState() {
     navigateTo, updateOnboardingData, handleSendOTP, handleVerifyOTP,
     handleUsernameChange, selectSuggestion, handleProfileSubmit, triggerConfetti,
     grantLocation, selectManualLocation, updatePlayerLocation, createLockerPost,
-    processBookingPayment, joinSplitGame,
+    processBookingPayment, processTournamentPayment, joinSplitGame,
     sendMessage, createAdminAnnouncement, toggleAdminSlot, handlePriceChange,
     totalRevenue, pendingSplitRevenue, platformCommission, resetApp, deleteMyAccount,
     getCurrentOwnerId, getOwnerTurfs, getOwnerBookings, getOwnerRevenueMetrics,

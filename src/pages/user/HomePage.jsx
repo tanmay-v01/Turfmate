@@ -9,6 +9,7 @@ import EmptyState from '../../components/ui/EmptyState';
 import TurfImage from '../../components/ui/TurfImage';
 import { IMAGES } from '../../data/images';
 import { SPORT_COLORS, INFO_ACCENTS } from '../../utils/colorAccents';
+import { HomeSkeleton } from '../../components/ui/Skeleton';
 
 const TICKER = [
   '6 slots open tonight in Virar',
@@ -101,6 +102,10 @@ export default function HomePage() {
     const idx = ranked.findIndex((p) => p.isMe);
     return idx >= 0 ? idx + 1 : '—';
   })();
+
+  if (!app.turfs || app.turfs.length === 0) {
+    return <HomeSkeleton />;
+  }
 
   return (
     <div className="w-full pb-10">

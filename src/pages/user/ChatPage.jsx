@@ -155,6 +155,7 @@ export default function ChatPage() {
             description: 'Message friends from Player Radar or My Squad.',
             actionLabel: 'open squad',
             onAction: () => app.setView('squad'),
+            image: '/images/empty_chats.png'
           })}
 
         {activeTab === 'requests' && (

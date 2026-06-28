@@ -18,5 +18,16 @@ export const tournamentsApi = {
     });
     if (!res.ok) throw new Error('Failed to create tournament');
     return res.json();
+  },
+
+  register: async (id, token) => {
+    const res = await fetch(`${env.apiUrl}/api/tournaments/${id}/register`, {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${token}` 
+      }
+    });
+    if (!res.ok) throw new Error('Failed to register for tournament');
+    return res.json();
   }
 };

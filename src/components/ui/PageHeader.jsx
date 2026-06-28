@@ -2,8 +2,8 @@ import { ArrowLeft } from 'lucide-react';
 
 export default function PageHeader({ title, subtitle, onBack, action, badge, icon: Icon }) {
   return (
-    <div className="mb-6 animate-fade-up">
-      <div className="flex items-start justify-between gap-4">
+    <div className="sticky top-0 z-30 pt-4 pb-4 mb-4 bg-white/80 backdrop-blur-md border-b border-slate-100/50 animate-fade-up">
+      <div className="flex items-start justify-between gap-4 px-1">
         <div className="min-w-0 flex-1">
           {onBack && (
             <button

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Trophy, Calendar, MapPin, Users, DollarSign, ArrowRight, ShieldCheck, Play, Award, UserCheck, CheckCircle2, ChevronRight, X } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
-
-
+import { PageTransition } from '../../components/ui/PageTransition';
+import EmptyState from '../../components/ui/EmptyState';
 
 const MOCK_SQUAD_MEMBERS = [
   { id: 'm1', name: 'Sneha Rao', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sneha' },
@@ -60,10 +60,10 @@ export default function TournamentsPage() {
     setRegistrationStep(3);
   };
 
-  const handleConfirmPayment = () => {
+  const handleConfirmPayment = async () => {
     setIsProcessingPay(true);
-    setTimeout(() => {
-      setIsProcessingPay(false);
+    const success = await app.processTournamentPayment(selectedTournament);
+    if (success) {
       setRegistrationStep(4);
       const newReg = {
         tournamentId: selectedTournament.id,
@@ -82,7 +82,9 @@ export default function TournamentsPage() {
       localStorage.setItem('tm_registered_tournaments', JSON.stringify(updatedRegs));
       app.showToast('Team registered successfully!', 'success');
       app.triggerConfetti();
-    }, 2000);
+    } else {
+      setIsProcessingPay(false);
+    }
   };
 
   const isAlreadyRegistered = (tourneyId) => {
@@ -338,21 +340,15 @@ export default function TournamentsPage() {
 
       {/* Registrations List */}
       {activeTab === 'my-registrations' && (
-        <div className="space-y-4">
+        <div className="p-4">
           {myRegistrations.length === 0 ? (
-            <div className="bg-white rounded-3xl p-8 text-center border border-slate-100 space-y-4">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-2xl">🏆</div>
-              <div>
-                <h3 className="font-black text-brand-forest text-base">No active tournament slots</h3>
-                <p className="text-xs text-slate-400 mt-1">Browse championships and register your team squad to get listed here.</p>
-              </div>
-              <button
-                onClick={() => setActiveTab('explore')}
-                className="px-6 py-2.5 tm-btn-primary text-xs font-black rounded-xl hover:bg-slate-800 transition"
-              >
-                Browse Tournaments
-              </button>
-            </div>
+            <EmptyState 
+              image="/images/empty_bookings.png"
+              title="No Registrations Yet"
+              description="You haven't registered your squad for any upcoming tournaments. Find one and claim victory!"
+              actionText="Explore Tournaments"
+              onAction={() => setActiveTab('explore')}
+            />
           ) : (
             myRegistrations.map((reg, idx) => (
               <div key={idx} className="bg-white rounded-3xl overflow-hidden border border-slate-100 p-4 shadow-sm flex gap-4">
