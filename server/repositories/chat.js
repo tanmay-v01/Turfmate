@@ -48,8 +48,8 @@ async function isMember(roomId, userId) {
     await db.run(
       isPg
         ? `INSERT INTO chat_rooms (id, room_type, name, status, created_at) VALUES ($1, 'dm', 'Mock Room', 'ACTIVE', $2) ON CONFLICT (id) DO NOTHING`
-        : `INSERT OR IGNORE INTO chat_rooms (id, room_type, name, status, created_at) VALUES (?, 'dm', 'Mock Room', 'ACTIVE', ?)`,
-      isPg ? [roomId, ts] : [roomId, Date.now()]
+        : `INSERT OR IGNORE INTO chat_rooms (room_id, room_type, room_name, status) VALUES (?, 'dm', 'Mock Room', 'ACTIVE')`,
+      isPg ? [roomId, ts] : [roomId]
     );
     await addMember(roomId, userId);
     return true;
@@ -102,7 +102,7 @@ async function ensureBookingRoom({
 }) {
   const roomId = bookingRoomId(bookingId);
   const existing = await db.getOne(
-    isPg ? 'SELECT id FROM chat_rooms WHERE id = $1' : 'SELECT id FROM chat_rooms WHERE id = ?',
+    isPg ? 'SELECT id FROM chat_rooms WHERE id = $1' : 'SELECT room_id as id FROM chat_rooms WHERE room_id = ?',
     [roomId]
   );
 
@@ -114,11 +114,11 @@ async function ensureBookingRoom({
       isPg
         ? `INSERT INTO chat_rooms (id, room_type, booking_id, name, status, meta, created_at)
            VALUES ($1, 'game', $2, $3, 'ACTIVE', $4::jsonb, $5)`
-        : `INSERT INTO chat_rooms (id, room_type, booking_id, name, status, meta, created_at)
-           VALUES (?, 'game', ?, ?, 'ACTIVE', ?, ?)`,
+        : `INSERT INTO chat_rooms (room_id, room_type, associated_booking_id, room_name, status)
+           VALUES (?, 'game', ?, ?, 'ACTIVE')`,
       isPg
         ? [roomId, bookingId, name, metaJson, ts]
-        : [roomId, bookingId, name, metaJson, Date.now()]
+        : [roomId, bookingId, name]
     );
     if (systemText) {
       await insertMessage({
@@ -142,7 +142,7 @@ async function ensureBookingRoom({
 async function addBookingRoomMember(bookingId, userId) {
   const roomId = bookingRoomId(bookingId);
   const room = await db.getOne(
-    isPg ? 'SELECT id FROM chat_rooms WHERE id = $1' : 'SELECT id FROM chat_rooms WHERE id = ?',
+    isPg ? 'SELECT id FROM chat_rooms WHERE id = $1' : 'SELECT room_id as id FROM chat_rooms WHERE room_id = ?',
     [roomId]
   );
   if (!room) return null;
@@ -215,10 +215,10 @@ async function listUserRooms(userId) {
          JOIN chat_members m ON m.room_id = r.id
          WHERE m.user_id = $1 AND r.status = 'ACTIVE'
          ORDER BY r.created_at DESC`
-      : `SELECT r.* FROM chat_rooms r
-         JOIN chat_members m ON m.room_id = r.id
-         WHERE m.user_id = ? AND r.status = 'ACTIVE'
-         ORDER BY r.created_at DESC`,
+      : `SELECT r.room_id as id, r.room_name as name, r.room_type, r.associated_booking_id as booking_id, '{}' as meta, r.status
+         FROM chat_rooms r
+         JOIN chat_members m ON m.room_id = r.room_id
+         WHERE m.user_id = ? AND r.status = 'ACTIVE'`,
     [userId]
   );
 
