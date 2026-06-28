@@ -37,13 +37,6 @@ router.get('/me/revenue', authRequired, loadUser, requireRole('OWNER'), async (r
   }
 });
 
-router.get('/me/revenue', authRequired, loadUser, requireRole('OWNER'), async (req, res) => {
-  try {
-    const revenue = await ledgerRepo.getOwnerRevenue(req.user.id);
-    res.json(revenue);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+// Removed duplicate route
 
 module.exports = router;

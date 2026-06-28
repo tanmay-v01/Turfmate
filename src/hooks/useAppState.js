@@ -460,13 +460,27 @@ export function useAppState() {
     return () => { cancelled = true; };
   }, [userProfile?.role, userProfile?.isLoggedIn]);
 
-  // Phase 2d: owner revenue from API ledger
+  // Phase 2d: owner revenue and profile from API
   useEffect(() => {
     if (userProfile?.role !== 'OWNER' || !userProfile?.isLoggedIn) return undefined;
     let cancelled = false;
+
+    ownersApi.getMe()
+      .then(({ owner }) => {
+        if (!cancelled && owner) {
+          setOwners((prev) => {
+            const exists = prev.find((o) => o.id === owner.id);
+            if (exists) return prev.map((o) => (o.id === owner.id ? { ...o, ...owner } : o));
+            return [...prev, owner];
+          });
+        }
+      })
+      .catch((err) => console.warn('[owners] profile unavailable:', err.message));
+
     ownersApi.getRevenue()
       .then((data) => { if (!cancelled) setOwnerRevenue(data); })
       .catch((err) => console.warn('[owners] revenue unavailable:', err.message));
+      
     return () => { cancelled = true; };
   }, [userProfile?.role, userProfile?.isLoggedIn]);
 
