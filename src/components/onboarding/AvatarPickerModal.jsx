@@ -35,6 +35,18 @@ export default function AvatarPickerModal() {
         </div>
 
         <AvatarPicker value={app.userProfile.avatar} onChange={handleSave} compact />
+
+        <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col gap-2">
+          <button 
+            onClick={() => {
+              app.setShowAvatarPicker(false);
+              app.logout();
+            }}
+            className="w-full py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition"
+          >
+            Sign Out
+          </button>
+        </div>
       </div>
     </div>
   );

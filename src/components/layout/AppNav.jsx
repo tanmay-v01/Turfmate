@@ -142,6 +142,16 @@ export default function AppNav() {
             Delete account
           </button>
         )}
+        
+        {app.userProfile?.isLoggedIn && (
+          <button
+            type="button"
+            onClick={app.logout}
+            className="mt-1 w-full text-left px-2 py-1.5 text-[11px] text-slate-400 hover:text-brand-forest transition font-bold"
+          >
+            Sign out
+          </button>
+        )}
       </aside>
 
       {/* Mobile — frosted bottom dock */}
