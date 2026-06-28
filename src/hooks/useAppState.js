@@ -26,6 +26,7 @@ import { leaderboardApi } from '../services/leaderboardApi';
 import { broadcastsApi } from '../services/broadcastsApi';
 import { notificationsApi } from '../services/notificationsApi';
 import { getOrCreatePushToken } from '../utils/pushToken';
+import { cryptoService } from '../services/cryptoService';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
 function loadTurfs() {
@@ -146,7 +147,6 @@ export function useAppState() {
     let active = true;
     const ensureE2EEKeys = async () => {
       try {
-        const { cryptoService } = await import('../services/cryptoService');
         const privJwk = localStorage.getItem('tm_chat_privkey');
         
         if (!privJwk) {

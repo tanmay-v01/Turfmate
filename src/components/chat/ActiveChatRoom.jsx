@@ -6,6 +6,7 @@ import ChatInputBar from './ChatInputBar';
 import ChatMembersPanel from './ChatMembersPanel';
 import { socketService } from '../../services/socket';
 import { chatApi } from '../../services/chatApi';
+import { cryptoService, cryptoCache } from '../../services/cryptoService';
 export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
   const app = useApp();
   const liveChat = app.chats.find((c) => c.id === chat.id) || chat;
@@ -31,7 +32,6 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
       const loadHistory = async () => {
         try {
           const { chatApi } = await import('../../services/chatApi');
-          const { cryptoService, cryptoCache } = await import('../../services/cryptoService');
           
           let aesKey = cryptoCache.roomKeys.get(chat.id);
           
@@ -88,7 +88,6 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
   useEffect(() => {
     let active = true;
     const decryptAll = async () => {
-      const { cryptoService, cryptoCache } = await import('../../services/cryptoService');
       const aesKey = cryptoCache.roomKeys.get(chat.id);
       
       const decrypted = [];
@@ -155,7 +154,6 @@ export default function ActiveChatRoom({ chat, onBack, embedded = false }) {
     
     let outText = text;
     try {
-      const { cryptoService, cryptoCache } = await import('../../services/cryptoService');
       const aesKey = cryptoCache.roomKeys.get(chat.id);
       if (aesKey) {
         const { ciphertext, iv } = await cryptoService.encryptMessage(text, aesKey);
