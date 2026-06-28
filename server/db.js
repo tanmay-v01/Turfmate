@@ -17,6 +17,46 @@ function initDb() {
   db.serialize(() => {
     // --- MODULE 3/4 TABLES ---
     db.run(`
+      CREATE TABLE IF NOT EXISTS tournaments (
+        id TEXT PRIMARY KEY,
+        name TEXT,
+        sport TEXT,
+        icon TEXT,
+        date TEXT,
+        location TEXT,
+        entry_fee INTEGER,
+        prize_pool INTEGER,
+        max_teams INTEGER,
+        registered_teams INTEGER,
+        status TEXT,
+        banner TEXT,
+        organizer TEXT,
+        description TEXT,
+        brackets TEXT,
+        created_at INTEGER,
+        updated_at INTEGER
+      )
+    `);
+
+    db.get('SELECT COUNT(*) as count FROM tournaments', [], (err, row) => {
+      if (!err && row && row.count === 0) {
+        db.run(`
+          INSERT INTO tournaments (
+            id, name, sport, icon, date, location, entry_fee, prize_pool, max_teams,
+            registered_teams, status, banner, organizer, description, brackets,
+            created_at, updated_at
+          ) VALUES (
+            't-seed1', 'Monsoon Football Championship', 'football', '⚽', 'June 28-30, 2026',
+            'Green Valley Arena, Virar', 1500, 25000, 16, 11, 'open',
+            'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=600',
+            'Virar Sports Association', 'The ultimate 5v5 football showdown in Virar.',
+            NULL, 1718000000000, 1718000000000
+          )
+        `);
+      }
+    });
+
+    db.run(`
       CREATE TABLE IF NOT EXISTS turf_slots (
         id TEXT PRIMARY KEY,
         turf_id TEXT,

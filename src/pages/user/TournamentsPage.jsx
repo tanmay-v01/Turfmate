@@ -3,101 +3,7 @@ import { Trophy, Calendar, MapPin, Users, DollarSign, ArrowRight, ShieldCheck, P
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
 
-const MOCK_TOURNAMENTS = [
-  {
-    id: 't-1',
-    name: 'Monsoon Football Championship',
-    sport: 'football',
-    icon: '⚽',
-    date: 'June 28-30, 2026',
-    location: 'Green Valley Arena, Virar',
-    entryFee: 1500,
-    prizePool: 25000,
-    maxTeams: 16,
-    registeredTeams: 11,
-    status: 'open', // open, active, completed
-    banner: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=600',
-    organizer: 'Virar Sports Association',
-    description: 'The ultimate 5v5 football showdown in Virar. Winner takes home ₹18,000 + Trophy. Runner up gets ₹7,000. All participants receive customized jerseys and certificates.',
-    brackets: {
-      quarter: [
-        { id: 1, teamA: 'Virar Strikers', scoreA: 3, teamB: 'Vasai Warriors', scoreB: 1, winner: 'Virar Strikers' },
-        { id: 2, teamA: 'Borivali Knights', scoreA: 2, teamB: 'Kicks Academy', scoreB: 4, winner: 'Kicks Academy' },
-        { id: 3, teamA: 'Palghar United', scoreA: 0, teamB: 'Sea View FC', scoreB: 2, winner: 'Sea View FC' },
-        { id: 4, teamA: 'Green Arena FC', scoreA: 1, teamB: 'Spartans', scoreB: 2, winner: 'Spartans' }
-      ],
-      semi: [
-        { id: 5, teamA: 'Virar Strikers', scoreA: null, teamB: 'Kicks Academy', scoreB: null, winner: null },
-        { id: 6, teamA: 'Sea View FC', scoreA: null, teamB: 'Spartans', scoreB: null, winner: null }
-      ],
-      final: [
-        { id: 7, teamA: 'Winner Semi 1', scoreA: null, teamB: 'Winner Semi 2', scoreB: null, winner: null }
-      ]
-    }
-  },
-  {
-    id: 't-2',
-    name: 'Premier Cricket Bash (Box)',
-    sport: 'cricket',
-    icon: '🏏',
-    date: 'July 04-05, 2026',
-    location: 'Yashwant Nagar Turf, Virar',
-    entryFee: 1200,
-    prizePool: 15000,
-    maxTeams: 12,
-    registeredTeams: 12,
-    status: 'active', // in progress
-    banner: 'https://images.unsplash.com/photo-1531415080290-bc98513989f4?auto=format&fit=crop&q=80&w=600',
-    organizer: 'TurfMate Leagues',
-    description: '8-overs box cricket challenge. 6 players per squad. Double elimination bracket. Professional umpires & live scorecard updates on TurfMate.',
-    brackets: {
-      quarter: [
-        { id: 1, teamA: 'Mumbai Gladiators', scoreA: 72, teamB: 'Royal Challengers Virar', scoreB: 68, winner: 'Mumbai Gladiators' },
-        { id: 2, teamA: 'Super Kings 11', scoreA: 84, teamB: 'Nalasopara XI', scoreB: 85, winner: 'Nalasopara XI' },
-        { id: 3, teamA: 'Lions of Vasai', scoreA: 59, teamB: 'Dynamic Blasters', scoreB: 60, winner: 'Dynamic Blasters' },
-        { id: 4, teamA: 'Apex Cricket Club', scoreA: 91, teamB: 'Titans FC', scoreB: 70, winner: 'Apex Cricket Club' }
-      ],
-      semi: [
-        { id: 5, teamA: 'Mumbai Gladiators', scoreA: 82, teamB: 'Nalasopara XI', scoreB: 83, winner: 'Nalasopara XI' },
-        { id: 6, teamA: 'Dynamic Blasters', scoreA: 75, teamB: 'Apex Cricket Club', scoreB: 78, winner: 'Apex Cricket Club' }
-      ],
-      final: [
-        { id: 7, teamA: 'Nalasopara XI', scoreA: null, teamB: 'Apex Cricket Club', scoreB: null, winner: null }
-      ]
-    }
-  },
-  {
-    id: 't-3',
-    name: 'Summer Pickleball Cup',
-    sport: 'pickleball',
-    icon: '🏓',
-    date: 'June 15, 2026',
-    location: 'Green Valley Court 1',
-    entryFee: 800,
-    prizePool: 10000,
-    maxTeams: 16,
-    registeredTeams: 16,
-    status: 'completed',
-    banner: 'https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&q=80&w=600',
-    organizer: 'Pickleball Association India',
-    description: 'Doubles league with pool play followed by single-elimination finals. Prize pool sponsored by TurfMate.',
-    brackets: {
-      quarter: [
-        { id: 1, teamA: 'Rohan/Amit', scoreA: 11, teamB: 'Sneha/Vikram', scoreB: 9, winner: 'Rohan/Amit' },
-        { id: 2, teamA: 'Preeti/Raj', scoreA: 11, teamB: 'Neha/Sid', scoreB: 4, winner: 'Preeti/Raj' },
-        { id: 3, teamA: 'Kabir/Suresh', scoreA: 8, teamB: 'Arjun/Kunal', scoreB: 11, winner: 'Arjun/Kunal' },
-        { id: 4, teamA: 'Divya/Tina', scoreA: 6, teamB: 'Sameer/Nitin', scoreB: 11, winner: 'Sameer/Nitin' }
-      ],
-      semi: [
-        { id: 5, teamA: 'Rohan/Amit', scoreA: 11, teamB: 'Preeti/Raj', scoreB: 12, winner: 'Preeti/Raj' },
-        { id: 6, teamA: 'Arjun/Kunal', scoreA: 11, teamB: 'Sameer/Nitin', scoreB: 7, winner: 'Arjun/Kunal' }
-      ],
-      final: [
-        { id: 7, teamA: 'Preeti/Raj', scoreA: 11, teamB: 'Arjun/Kunal', scoreB: 7, winner: 'Preeti/Raj' }
-      ]
-    }
-  }
-];
+
 
 const MOCK_SQUAD_MEMBERS = [
   { id: 'm1', name: 'Sneha Rao', avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Sneha' },
@@ -115,6 +21,7 @@ export default function TournamentsPage() {
   // Registration Flow
   const [isRegistering, setIsRegistering] = useState(false);
   const [teamName, setTeamName] = useState('');
+  const [selectedSport, setSelectedSport] = useState('all');
   const [selectedSquad, setSelectedSquad] = useState([]);
   const [registrationStep, setRegistrationStep] = useState(1); // 1: team details, 2: select squad, 3: payment, 4: success
   const [isProcessingPay, setIsProcessingPay] = useState(false);
@@ -122,6 +29,8 @@ export default function TournamentsPage() {
     const saved = localStorage.getItem('tm_registered_tournaments');
     return saved ? JSON.parse(saved) : [];
   });
+
+  const filteredTournaments = (app.tournaments || []).filter(t => selectedSport === 'all' || t.sport === selectedSport);
 
   const handleOpenRegister = (tournament) => {
     setSelectedTournament(tournament);

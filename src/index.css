@@ -4,6 +4,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import 'leaflet/dist/leaflet.css';
+
 :root {
   --grass: #34D399;
   --grass-light: #A7F3D0;

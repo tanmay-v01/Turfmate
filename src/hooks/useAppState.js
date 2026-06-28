@@ -23,6 +23,7 @@ import { chatApi } from '../services/chatApi';
 import { mapApiChatRoom, mergeChats } from '../utils/chatMapper';
 import { socialApi } from '../services/socialApi';
 import { leaderboardApi } from '../services/leaderboardApi';
+import { tournamentsApi } from '../services/tournamentsApi';
 import { broadcastsApi } from '../services/broadcastsApi';
 import { notificationsApi } from '../services/notificationsApi';
 import { getOrCreatePushToken } from '../utils/pushToken';
@@ -207,8 +208,8 @@ export function useAppState() {
   const [friendStats, setFriendStats] = useState(() => readJson('tm_friend_stats', []));
 
   const [liveGame, setLiveGame] = useState(() => readJson('tm_live_game', null));
-
   const [gameHistory, setGameHistory] = useState(() => readJson('tm_game_history', []));
+  const [tournaments, setTournaments] = useState([]);
 
   const [notifications, setNotifications] = useState([
     { id: 1, text: "Sneha Rao requested to join your game tonight!", time: "5 mins ago", read: false },
@@ -323,6 +324,16 @@ export function useAppState() {
     }
   }, []);
 
+  const refreshTournaments = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      const { tournaments: list } = await tournamentsApi.list();
+      setTournaments(list || []);
+    } catch (err) {
+      console.warn('[tournaments] refresh failed:', err.message);
+    }
+  }, []);
+
   const refreshSocial = useCallback(async () => {
     if (!getToken()) return;
     try {
@@ -411,8 +422,9 @@ export function useAppState() {
     refreshLeaderboard();
     registerPushToken();
     refreshNotifications();
+    refreshTournaments();
     return undefined;
-  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard, registerPushToken, refreshNotifications]);
+  }, [userProfile?.isLoggedIn, refreshMyBookings, refreshChats, refreshSocial, refreshLeaderboard, registerPushToken, refreshNotifications, refreshTournaments]);
 
   useEffect(() => {
     if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
@@ -1675,6 +1687,7 @@ export function useAppState() {
 
       if (getToken()) {
         await refreshChats();
+        await refreshTournaments();
       } else {
         setChats((prev) => [{
           id: chatId,
@@ -1697,6 +1710,19 @@ export function useAppState() {
       setBookingSuccessData(newBooking);
       setSelectedSlotId(null);
       showToast('Payment done — your slot is booked!', 'success', 'Booking confirmed');
+      
+      // Trigger local push notification if Service Worker is active
+      if ('serviceWorker' in navigator && Notification.permission === 'granted') {
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.showNotification('Booking Confirmed!', {
+            body: `Your slot at ${activeTurf.name} is booked!`,
+            icon: '/icon-192.png',
+            badge: '/badge.png',
+            vibrate: [200, 100, 200]
+          });
+        });
+      }
+
       refreshMyBookings();
       refreshLockerFeed();
     } catch (error) {
@@ -2292,6 +2318,7 @@ export function useAppState() {
     chats, setChats, refreshChats, friendRequests, acceptFriendRequest, declineFriendRequest, notifications, setNotifications,
     toast, showToast, dismissToast,
     friendStats, setFriendStats, refreshLeaderboard, liveGame, setLiveGame, gameHistory, finalizeLiveGame,
+    tournaments,
     turfs, setTurfs, owners, setOwners, suspendedTurfIds, bannedUsers, banUser, unbanUser,
     ownerActiveTurfId, setOwnerActiveTurfId,
     phoneNumber, setPhoneNumber, otpSent, setOtpSent,

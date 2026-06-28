@@ -64,6 +64,19 @@ export default function HomePage() {
     : nearTurfs.filter((t) => t.sports.includes(app.selectedSportFilter));
   const featured = filteredTurfs[0] || nearTurfs[0] || availableTurfs[0];
 
+  useEffect(() => {
+    // Request push notification permissions on home mount if not determined yet
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+    
+    // Smooth scroll if returning from turf details
+    if (app.returnScrollPos > 0) {
+      window.scrollTo(0, app.returnScrollPos);
+      app.setReturnScrollPos(0);
+    }
+  }, [app]);
+
   const openSplits = app.announcements.filter((a) => {
     const turf = availableTurfs.find((t) => t.id === a.turfId);
     if (!turf) return false;
