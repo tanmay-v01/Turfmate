@@ -198,13 +198,13 @@ export function useAppState() {
 
   const [ownerActiveTurfId, setOwnerActiveTurfId] = useState('turf-1');
 
-  const [announcements, setAnnouncements] = useState(() => readJson('tm_announcements', INITIAL_ANNOUNCEMENTS));
+  const [announcements, setAnnouncements] = useState(() => readJson('tm_announcements', []));
 
   const [chats, setChats] = useState(() => readJson('tm_chats', []));
 
-  const [friendRequests, setFriendRequests] = useState(() => readJson('tm_friend_requests', INITIAL_FRIEND_REQUESTS));
+  const [friendRequests, setFriendRequests] = useState(() => readJson('tm_friend_requests', []));
 
-  const [friendStats, setFriendStats] = useState(() => readJson('tm_friend_stats', INITIAL_FRIEND_STATS));
+  const [friendStats, setFriendStats] = useState(() => readJson('tm_friend_stats', []));
 
   const [liveGame, setLiveGame] = useState(() => readJson('tm_live_game', null));
 
