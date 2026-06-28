@@ -14,7 +14,7 @@ module.exports = {
   sqlitePath: process.env.SQLITE_PATH || '',
   jwtSecret: process.env.JWT_SECRET || 'turfmate-dev-jwt-change-in-production',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  demoMode: true, // Forced true for easy testing (OTP is always 1234)
+  demoMode: process.env.DEMO_MODE !== 'false',
   otpTtlMs: 5 * 60 * 1000,
   demoOtp: '1234',
   msg91AuthKey: process.env.MSG91_AUTH_KEY || '',
