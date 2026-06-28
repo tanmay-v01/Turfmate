@@ -1,0 +1,899 @@
+
+> turfmate@0.1.0 lint
+> eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0
+
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\public\sw.js
+  83:5   error  'clients' is not defined  no-undef
+  91:11  error  'clients' is not defined  no-undef
+  92:16  error  'clients' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\data\demoTurfs.js
+  3:1  error  'module' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\data\pilotPartners.js
+   6:19  error  'require' is not defined  no-undef
+  43:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\db.js
+    1:17  error  'require' is not defined    no-undef
+    2:14  error  'require' is not defined    no-undef
+    4:16  error  'process' is not defined    no-undef
+    5:18  error  'process' is not defined    no-undef
+    6:18  error  '__dirname' is not defined  no-undef
+  304:1   error  'module' is not defined     no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\db\index.js
+  1:16  error  'require' is not defined  no-undef
+  4:5   error  'require' is not defined  no-undef
+  5:5   error  'require' is not defined  no-undef
+  7:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\db\postgres.js
+   1:12  error  'require' is not defined    no-undef
+   2:14  error  'require' is not defined    no-undef
+   3:18  error  'require' is not defined    no-undef
+   4:16  error  'require' is not defined    no-undef
+  38:25  error  '__dirname' is not defined  no-undef
+  50:1   error  'module' is not defined     no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\db\sqliteAuth.js
+    1:12  error  'require' is not defined  no-undef
+  394:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\lib\config.js
+   9:1   error  'module' is not defined   no-undef
+  10:16  error  'process' is not defined  no-undef
+  11:12  error  'process' is not defined  no-undef
+  12:15  error  'process' is not defined  no-undef
+  13:16  error  'process' is not defined  no-undef
+  14:15  error  'process' is not defined  no-undef
+  15:14  error  'process' is not defined  no-undef
+  16:17  error  'process' is not defined  no-undef
+  17:13  error  'process' is not defined  no-undef
+  20:17  error  'process' is not defined  no-undef
+  21:20  error  'process' is not defined  no-undef
+  23:19  error  'process' is not defined  no-undef
+  24:16  error  'process' is not defined  no-undef
+  25:21  error  'process' is not defined  no-undef
+  26:18  error  'process' is not defined  no-undef
+  27:22  error  'process' is not defined  no-undef
+  28:26  error  'process' is not defined  no-undef
+  29:12  error  'process' is not defined  no-undef
+  30:17  error  'process' is not defined  no-undef
+  31:13  error  'process' is not defined  no-undef
+  32:20  error  'process' is not defined  no-undef
+  33:13  error  'process' is not defined  no-undef
+  34:13  error  'process' is not defined  no-undef
+  35:13  error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\lib\logger.js
+   6:15  error  'process' is not defined  no-undef
+   6:41  error  'process' is not defined  no-undef
+  23:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\lib\validateProduction.js
+   1:16  error  'require' is not defined  no-undef
+  39:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\middleware\auth.js
+   1:20  error  'require' is not defined  no-undef
+   2:19  error  'require' is not defined  no-undef
+  41:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\middleware\rateLimit.js
+  47:1  error  'module' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\middleware\requestLog.js
+   1:16  error  'require' is not defined  no-undef
+  23:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\middleware\securityHeaders.js
+   9:7  error  'process' is not defined  no-undef
+  15:1  error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\bookings.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:16  error  'require' is not defined  no-undef
+    4:20  error  'require' is not defined  no-undef
+    5:18  error  'require' is not defined  no-undef
+    6:16  error  'require' is not defined  no-undef
+  224:31  error  'require' is not defined  no-undef
+  297:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\broadcasts.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+  208:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\chat.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+  314:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\leaderboard.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+  211:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\ledger.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:28  error  'require' is not defined  no-undef
+  172:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\locker.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+  115:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\notifications.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:21  error  'require' is not defined  no-undef
+    4:20  error  'require' is not defined  no-undef
+  100:28  error  'require' is not defined  no-undef
+  182:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\owners.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:19  error  'require' is not defined  no-undef
+  192:31  error  'require' is not defined  no-undef
+  269:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\payments.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:18  error  'require' is not defined  no-undef
+    4:22  error  'require' is not defined  no-undef
+    5:20  error  'require' is not defined  no-undef
+    6:20  error  'require' is not defined  no-undef
+    7:16  error  'require' is not defined  no-undef
+  241:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\social.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+  244:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\splits.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:22  error  'require' is not defined  no-undef
+    4:20  error  'require' is not defined  no-undef
+    5:18  error  'require' is not defined  no-undef
+    6:27  error  'require' is not defined  no-undef
+    7:16  error  'require' is not defined  no-undef
+  334:24  error  'require' is not defined  no-undef
+  402:24  error  'require' is not defined  no-undef
+  430:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\tournaments.js
+   1:12  error  'require' is not defined  no-undef
+   2:16  error  'require' is not defined  no-undef
+  85:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\turfs.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:40  error  'require' is not defined  no-undef
+  134:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\repositories\users.js
+    1:16  error  'require' is not defined  no-undef
+    2:12  error  'require' is not defined  no-undef
+    3:16  error  'require' is not defined  no-undef
+  247:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\admin.js
+   1:17  error  'require' is not defined  no-undef
+   2:49  error  'require' is not defined  no-undef
+   3:20  error  'require' is not defined  no-undef
+   4:20  error  'require' is not defined  no-undef
+  58:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\auth.js
+    1:17  error  'require' is not defined  no-undef
+    2:16  error  'require' is not defined  no-undef
+    3:20  error  'require' is not defined  no-undef
+    4:20  error  'require' is not defined  no-undef
+    5:19  error  'require' is not defined  no-undef
+    6:20  error  'require' is not defined  no-undef
+    7:42  error  'require' is not defined  no-undef
+    8:29  error  'require' is not defined  no-undef
+    9:27  error  'require' is not defined  no-undef
+  125:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\bookings.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:22  error  'require' is not defined  no-undef
+  65:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\broadcasts.js
+   1:17  error  'require' is not defined  no-undef
+   2:49  error  'require' is not defined  no-undef
+   3:24  error  'require' is not defined  no-undef
+  59:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\chat.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:18  error  'require' is not defined  no-undef
+   4:19  error  'require' is not defined  no-undef
+  94:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\health.js
+   1:17  error  'require' is not defined  no-undef
+   2:29  error  'require' is not defined  no-undef
+  24:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\leaderboard.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:25  error  'require' is not defined  no-undef
+  53:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\locker.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:20  error  'require' is not defined  no-undef
+  36:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\notifications.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:27  error  'require' is not defined  no-undef
+  44:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\owners.js
+   1:17  error  'require' is not defined  no-undef
+   2:49  error  'require' is not defined  no-undef
+   3:20  error  'require' is not defined  no-undef
+   4:20  error  'require' is not defined  no-undef
+  42:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\payments.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:22  error  'require' is not defined  no-undef
+  53:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\social.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:20  error  'require' is not defined  no-undef
+  76:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\splits.js
+    1:17  error  'require' is not defined  no-undef
+    2:36  error  'require' is not defined  no-undef
+    3:20  error  'require' is not defined  no-undef
+   65:31  error  'require' is not defined  no-undef
+   66:20  error  'require' is not defined  no-undef
+   96:24  error  'require' is not defined  no-undef
+  125:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\tournaments.js
+   1:17  error  'require' is not defined  no-undef
+   3:25  error  'require' is not defined  no-undef
+   4:36  error  'require' is not defined  no-undef
+  40:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\turfs.js
+   1:17  error  'require' is not defined  no-undef
+   2:19  error  'require' is not defined  no-undef
+  32:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\routes\users.js
+   1:17  error  'require' is not defined  no-undef
+   2:36  error  'require' is not defined  no-undef
+   3:19  error  'require' is not defined  no-undef
+   4:20  error  'require' is not defined  no-undef
+   5:29  error  'require' is not defined  no-undef
+  86:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\loadTestLocks.js
+   10:1   error  'require' is not defined  no-undef
+   12:16  error  'require' is not defined  no-undef
+   13:12  error  'require' is not defined  no-undef
+   14:20  error  'require' is not defined  no-undef
+   16:19  error  'process' is not defined  no-undef
+   17:28  error  'process' is not defined  no-undef
+   18:17  error  'process' is not defined  no-undef
+   19:17  error  'process' is not defined  no-undef
+   20:20  error  'process' is not defined  no-undef
+  154:5   error  'process' is not defined  no-undef
+  182:5   error  'process' is not defined  no-undef
+  194:3   error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\migrate.js
+   1:1   error  'require' is not defined    no-undef
+   1:34  error  'require' is not defined    no-undef
+   1:55  error  '__dirname' is not defined  no-undef
+   2:12  error  'require' is not defined    no-undef
+   3:27  error  'require' is not defined    no-undef
+   4:23  error  'require' is not defined    no-undef
+  19:3   error  'process' is not defined    no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\pilotSmokeTest.js
+   7:1   error  'require' is not defined  no-undef
+   9:19  error  'process' is not defined  no-undef
+  10:22  error  'process' is not defined  no-undef
+  55:5   error  'process' is not defined  no-undef
+  85:3   error  'process' is not defined  no-undef
+  90:3   error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\securityAudit.js
+   6:1   error  'require' is not defined  no-undef
+   8:19  error  'process' is not defined  no-undef
+  30:5   error  'process' is not defined  no-undef
+  75:3   error  'process' is not defined  no-undef
+  80:3   error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\seedDemoUsers.js
+   1:19  error  'require' is not defined  no-undef
+  43:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\seedPilotPartners.js
+   5:1   error  'require' is not defined  no-undef
+   6:17  error  'require' is not defined  no-undef
+   7:19  error  'require' is not defined  no-undef
+   8:19  error  'require' is not defined  no-undef
+   9:24  error  'require' is not defined  no-undef
+  29:5   error  'require' is not defined  no-undef
+  29:22  error  'module' is not defined   no-undef
+  31:17  error  'process' is not defined  no-undef
+  34:7   error  'process' is not defined  no-undef
+  38:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\seedTurfs.js
+   1:19  error  'require' is not defined  no-undef
+   2:19  error  'require' is not defined  no-undef
+  10:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\testAuth.js
+  1:17  error  'require' is not defined  no-undef
+  2:17  error  'require' is not defined  no-undef
+  3:20  error  'require' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\testKycApi.js
+  51:3  error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\testSmtp.js
+   1:1   error  'require' is not defined  no-undef
+   2:20  error  'require' is not defined  no-undef
+   3:16  error  'require' is not defined  no-undef
+  13:5   error  'process' is not defined  no-undef
+  41:3   error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\scripts\verifyPilotEnv.js
+   6:1   error  'require' is not defined  no-undef
+   7:16  error  'require' is not defined  no-undef
+   9:19  error  'process' is not defined  no-undef
+  28:17  error  'process' is not defined  no-undef
+  32:21  error  'process' is not defined  no-undef
+  38:33  error  'process' is not defined  no-undef
+  38:52  error  'process' is not defined  no-undef
+  76:3   error  'process' is not defined  no-undef
+  81:3   error  'process' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\server.js
+    1:1   error  'require' is not defined    no-undef
+    2:17  error  'require' is not defined    no-undef
+    3:14  error  'require' is not defined    no-undef
+    4:16  error  'require' is not defined    no-undef
+    5:14  error  'require' is not defined    no-undef
+    6:20  error  'require' is not defined    no-undef
+    7:12  error  'require' is not defined    no-undef
+    8:16  error  'require' is not defined    no-undef
+    9:17  error  'require' is not defined    no-undef
+   10:20  error  'require' is not defined    no-undef
+   11:20  error  'require' is not defined    no-undef
+   12:20  error  'require' is not defined    no-undef
+   13:23  error  'require' is not defined    no-undef
+   14:21  error  'require' is not defined    no-undef
+   15:21  error  'require' is not defined    no-undef
+   16:21  error  'require' is not defined    no-undef
+   17:23  error  'require' is not defined    no-undef
+   18:22  error  'require' is not defined    no-undef
+   19:20  error  'require' is not defined    no-undef
+   20:22  error  'require' is not defined    no-undef
+   21:27  error  'require' is not defined    no-undef
+   22:25  error  'require' is not defined    no-undef
+   23:28  error  'require' is not defined    no-undef
+   24:27  error  'require' is not defined    no-undef
+   25:32  error  'require' is not defined    no-undef
+   26:22  error  'require' is not defined    no-undef
+   27:25  error  'require' is not defined    no-undef
+   28:22  error  'require' is not defined    no-undef
+   29:20  error  'require' is not defined    no-undef
+   30:24  error  'require' is not defined    no-undef
+   31:27  error  'require' is not defined    no-undef
+   32:23  error  'require' is not defined    no-undef
+   33:31  error  'require' is not defined    no-undef
+   34:37  error  'require' is not defined    no-undef
+   35:24  error  'require' is not defined    no-undef
+   36:29  error  'require' is not defined    no-undef
+   37:38  error  'require' is not defined    no-undef
+   38:22  error  'require' is not defined    no-undef
+   39:16  error  'require' is not defined    no-undef
+   51:27  error  'require' is not defined    no-undef
+   52:15  error  'require' is not defined    no-undef
+   61:5   error  'process' is not defined    no-undef
+   62:31  error  'process' is not defined    no-undef
+  116:9   error  'process' is not defined    no-undef
+  153:14  error  'require' is not defined    no-undef
+  260:34  error  '__dirname' is not defined  no-undef
+  262:26  error  '__dirname' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\services\emailService.js
+   1:20  error  'require' is not defined  no-undef
+   2:16  error  'require' is not defined  no-undef
+  51:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\services\healthCheck.js
+   1:17  error  'require' is not defined  no-undef
+   2:16  error  'require' is not defined  no-undef
+   3:20  error  'require' is not defined  no-undef
+  21:15  error  'process' is not defined  no-undef
+  27:27  error  'process' is not defined  no-undef
+  57:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\services\jwtService.js
+   1:13  error  'require' is not defined  no-undef
+   2:16  error  'require' is not defined  no-undef
+  20:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\services\otpService.js
+    1:16  error  'require' is not defined  no-undef
+    2:16  error  'require' is not defined  no-undef
+    3:22  error  'require' is not defined  no-undef
+   13:27  error  'require' is not defined  no-undef
+   30:29  error  'require' is not defined  no-undef
+  124:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\services\pushService.js
+   1:16  error  'require' is not defined  no-undef
+   7:21  error  'process' is not defined  no-undef
+  38:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\services\razorpayService.js
+   1:16  error  'require' is not defined  no-undef
+   2:16  error  'require' is not defined  no-undef
+  18:16  error  'Buffer' is not defined   no-undef
+  64:16  error  'Buffer' is not defined   no-undef
+  81:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\socket\chat.js
+   1:18  error  'require' is not defined  no-undef
+  47:1   error  'module' is not defined   no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\utils\commission.js
+  14:1  error  'module' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\utils\geo.js
+  24:1  error  'module' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\utils\phone.js
+  25:1  error  'module' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\server\utils\profileMapper.js
+  76:1  error  'module' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\chat\ActiveChatRoom.jsx
+  85:6  warning  React Hook useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\layout\CheckoutModal.jsx
+  19:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |   React.useEffect(() => {
+  18 |     if (!app.showCheckoutModal || !app.checkoutSlotLockExpiresAt) {
+> 19 |       setLockSecondsLeft(null);
+     |       ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |       return;
+  21 |     }
+  22 |     const tick = () => {  react-hooks/set-state-in-effect
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\layout\InstallPrompt.jsx
+  27:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  25 |   useEffect(() => {
+  26 |     if (!dismissed && isIos() && !isStandalone()) {
+> 27 |       setShowIosHint(true);
+     |       ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |     }
+  29 |   }, [dismissed]);
+  30 |  react-hooks/set-state-in-effect
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\map\MapHelpers.jsx
+  10:6   warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array                                 react-hooks/exhaustive-deps
+  10:7   warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+  10:18  warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\owner\OwnerBroadcast.jsx
+  38:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  36 |
+  37 |   useEffect(() => {
+> 38 |     loadOwnerCampaigns();
+     |     ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |   }, [loadOwnerCampaigns]);
+  40 |
+  41 |   const handlePublish = async (e) => {  react-hooks/set-state-in-effect
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\ui\TurfImage.jsx
+  19:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |
+  18 |   useEffect(() => {
+> 19 |     setCurrent(src || turfImageUrl(turf, fallback));
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |   }, [src, turf?.id, turf?.image, fallback]);
+  21 |
+  22 |   return (  react-hooks/set-state-in-effect
+  20:6  warning  React Hook useEffect has a missing dependency: 'turf'. Either include it or remove the dependency array. If 'setCurrent' needs the current value of 'turf', you can also switch to useReducer instead of useState and read 'turf' in the reducer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\hooks\useAppState.js
+   299:41  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `userProfile.isLoggedIn`, but the source dependencies were [userProfile?.isLoggedIn]. Inferred different dependency than source.
+
+  297 |   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
+  298 |
+> 299 |   const refreshLockerFeed = useCallback(async () => {
+      |                                         ^^^^^^^^^^^^^
+> 300 |     if (!userProfile?.isLoggedIn) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 301 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 313 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 314 |   }, [userProfile?.isLoggedIn]);
+      | ^^^^ Could not preserve existing manual memoization
+  315 |
+  316 |   const refreshChats = useCallback(async () => {
+  317 |     if (!getToken()) return;                                                                                                                                                                                                                                                     react-hooks/preserve-manual-memoization
+   299:41  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setAnnouncements`, but the source dependencies were [userProfile?.isLoggedIn]. Inferred different dependency than source.
+
+  297 |   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
+  298 |
+> 299 |   const refreshLockerFeed = useCallback(async () => {
+      |                                         ^^^^^^^^^^^^^
+> 300 |     if (!userProfile?.isLoggedIn) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 301 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 313 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 314 |   }, [userProfile?.isLoggedIn]);
+      | ^^^^ Could not preserve existing manual memoization
+  315 |
+  316 |   const refreshChats = useCallback(async () => {
+  317 |     if (!getToken()) return;                                                                                                                                                                                                                                                           react-hooks/preserve-manual-memoization
+   316:36  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setChats`, but the source dependencies were []. Inferred dependency not present in source.
+
+  314 |   }, [userProfile?.isLoggedIn]);
+  315 |
+> 316 |   const refreshChats = useCallback(async () => {
+      |                                    ^^^^^^^^^^^^^
+> 317 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 318 |     try {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 319 |       const { rooms = [] } = await chatApi.getInbox();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 320 |       const mapped = rooms.map(mapApiChatRoom);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 321 |       setChats((prev) => mergeChats(mapped, prev));
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 322 |     } catch (err) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 323 |       console.warn('[chat] refresh failed:', err.message);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 324 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 325 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  326 |
+  327 |   const refreshTournaments = useCallback(async () => {
+  328 |     if (!getToken()) return;  react-hooks/preserve-manual-memoization
+   327:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setTournaments`, but the source dependencies were []. Inferred dependency not present in source.
+
+  325 |   }, []);
+  326 |
+> 327 |   const refreshTournaments = useCallback(async () => {
+      |                                          ^^^^^^^^^^^^^
+> 328 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 329 |     try {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 330 |       const { tournaments: list } = await tournamentsApi.list();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 331 |       setTournaments(list || []);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 332 |     } catch (err) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 333 |       console.warn('[tournaments] refresh failed:', err.message);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 334 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 335 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  336 |
+  337 |   const refreshSocial = useCallback(async () => {
+  338 |     if (!getToken()) return;                                                                                                          react-hooks/preserve-manual-memoization
+   337:37  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setFriendRequests`, but the source dependencies were []. Inferred dependency not present in source.
+
+  335 |   }, []);
+  336 |
+> 337 |   const refreshSocial = useCallback(async () => {
+      |                                     ^^^^^^^^^^^^^
+> 338 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 339 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 357 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 358 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  359 |
+  360 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+  361 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/preserve-manual-memoization
+   348:9   error    Error: Cannot access variable before it is declared
+
+`setSquadGroups` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  346 |       }
+  347 |       if (squadRes.squads) {
+> 348 |         setSquadGroups((prev) => {
+      |         ^^^^^^^^^^^^^^ `setSquadGroups` accessed before it is declared
+  349 |           if (!squadRes.squads.length) return prev;
+  350 |           const apiIds = new Set(squadRes.squads.map((s) => s.id));
+  351 |           const localOnly = prev.filter((g) => !apiIds.has(g.id) && String(g.id).startsWith('grp-'));
+
+  534 |   const [splitSuccessAnnId, setSplitSuccessAnnId] = useState(null);
+  535 |   const [checkoutSlotLockExpiresAt, setCheckoutSlotLockExpiresAt] = useState(null);
+> 536 |   const [squadGroups, setSquadGroups] = useState(() => readJson('tm_squad_groups', []));
+      |                       ^^^^^^^^^^^^^^ `setSquadGroups` is declared here
+  537 |   const [sentFriendRequests, setSentFriendRequests] = useState([]);
+  538 |   const [impersonatingOwner, setImpersonatingOwner] = useState(null);
+  539 |   const [checkoutInviteGroupId, setCheckoutInviteGroupId] = useState('');                                                                                                                                                                                                                                                                 react-hooks/immutability
+   360:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `userProfile`, but the source dependencies were [userProfile?.lat, userProfile?.lng, filterRadius]. Inferred less specific property than source.
+
+  358 |   }, []);
+  359 |
+> 360 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+      |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 361 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 362 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 393 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 394 |   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+      | ^^^^ Could not preserve existing manual memoization
+  395 |
+  396 |   const registerPushToken = useCallback(async () => {
+  397 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                              react-hooks/preserve-manual-memoization
+   360:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setFriendStats`, but the source dependencies were [userProfile?.lat, userProfile?.lng, filterRadius]. Inferred different dependency than source.
+
+  358 |   }, []);
+  359 |
+> 360 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+      |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 361 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 362 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 393 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 394 |   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+      | ^^^^ Could not preserve existing manual memoization
+  395 |
+  396 |   const registerPushToken = useCallback(async () => {
+  397 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                             react-hooks/preserve-manual-memoization
+   360:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setGameHistory`, but the source dependencies were [userProfile?.lat, userProfile?.lng, filterRadius]. Inferred different dependency than source.
+
+  358 |   }, []);
+  359 |
+> 360 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+      |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 361 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 362 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 393 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 394 |   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+      | ^^^^ Could not preserve existing manual memoization
+  395 |
+  396 |   const registerPushToken = useCallback(async () => {
+  397 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                             react-hooks/preserve-manual-memoization
+   405:44  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setNotifications`, but the source dependencies were []. Inferred dependency not present in source.
+
+  403 |   }, []);
+  404 |
+> 405 |   const refreshNotifications = useCallback(async () => {
+      |                                            ^^^^^^^^^^^^^
+> 406 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 407 |     try {
+      …
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 414 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 415 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  416 |
+  417 |   useEffect(() => {
+  418 |     if (!userProfile?.isLoggedIn || !getToken()) return undefined;                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/preserve-manual-memoization
+   420:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  418 |     if (!userProfile?.isLoggedIn || !getToken()) return undefined;
+  419 |     refreshMyBookings();
+> 420 |     refreshChats();
+      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  421 |     refreshSocial();
+  422 |     refreshLeaderboard();
+  423 |     registerPushToken();                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/set-state-in-effect
+   431:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  429 |   useEffect(() => {
+  430 |     if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
+> 431 |     refreshLeaderboard('squad');
+      |     ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  432 |     return undefined;
+  433 |   }, [view, userProfile?.isLoggedIn, refreshLeaderboard]);
+  434 |                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/set-state-in-effect
+   437:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  435 |   useEffect(() => {
+  436 |     if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
+> 437 |     refreshChats();
+      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  438 |     const timer = setInterval(refreshChats, 30000);
+  439 |     return () => clearInterval(timer);
+  440 |   }, [view, userProfile?.isLoggedIn, refreshChats]);                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/set-state-in-effect
+   444:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  442 |   useEffect(() => {
+  443 |     if (!userProfile?.isLoggedIn) return undefined;
+> 444 |     refreshLockerFeed();
+      |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  445 |     return undefined;
+  446 |   }, [userProfile?.isLoggedIn, refreshLockerFeed]);
+  447 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/set-state-in-effect
+   450:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  448 |   useEffect(() => {
+  449 |     if (view !== 'locker_room' || !userProfile?.isLoggedIn) return undefined;
+> 450 |     refreshLockerFeed();
+      |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  451 |     const timer = setInterval(refreshLockerFeed, 30000);
+  452 |     return () => clearInterval(timer);
+  453 |   }, [view, userProfile?.isLoggedIn, refreshLockerFeed]);                                                                                                                                                                                                                                                                                                                                                               react-hooks/set-state-in-effect
+   684:16  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  682 |       const annId = decodeURIComponent(match[1]);
+  683 |       const ann = announcements.find((a) => a.id === annId && a.status === 'open' && a.playersNeeded > 0);
+> 684 |       if (ann) setPendingJoinSplitId(annId);
+      |                ^^^^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  685 |       window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  686 |     }
+  687 |   }, [userProfile?.isLoggedIn, userProfile?.role]); // eslint-disable-line react-hooks/exhaustive-deps                                                                                                                                                                                                              react-hooks/set-state-in-effect
+   741:6   warning  React Hook useEffect has missing dependencies: 'chats' and 'userProfile'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+   750:6   warning  React Hook useEffect has missing dependencies: 'chats' and 'userProfile'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+   755:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  753 |   useEffect(() => {
+  754 |     if (activeChatId) {
+> 755 |       setChats((prevChats) =>
+      |       ^^^^^^^^ Avoid calling setState() directly within an effect
+  756 |         prevChats.map((c) => (c.id === activeChatId ? { ...c, unread: 0 } : c))
+  757 |       );
+  758 |       if (getToken() && activeChatId.startsWith('chat-booking-')) {                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/set-state-in-effect
+  1335:25  error    'detectUserLocation' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\pages\admin\SuperAdminDashboardPage.jsx
+  150:6  warning  React Hook React.useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\pages\user\LeaderboardPage.jsx
+  24:6  warning  React Hook useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  50:6  warning  React Hook useMemo has a missing dependency: 'app'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\pages\user\MyBookingsPage.jsx
+  81:6  warning  React Hook useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+✖ 379 problems (368 errors, 11 warnings)
+

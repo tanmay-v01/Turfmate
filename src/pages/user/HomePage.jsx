@@ -1,6 +1,7 @@
 import {
   MapPin, Bell, Search, Star, ArrowRight, Sparkles, Calendar, Trophy, Users, Zap, TrendingUp, ChevronRight, Timer, Navigation, Pencil, UserPlus, LayoutGrid, Medal, Flame, User,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { LEADERBOARD_METRICS, getFriendIds } from '../../data/leaderboardData';
 import { MOCK_PLAYERS, SPORTS } from '../../data/mockData';
 import { useApp } from '../../context/AppContext';

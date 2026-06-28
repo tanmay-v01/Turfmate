@@ -27,6 +27,7 @@ import { tournamentsApi } from '../services/tournamentsApi';
 import { broadcastsApi } from '../services/broadcastsApi';
 import { notificationsApi } from '../services/notificationsApi';
 import { getOrCreatePushToken } from '../utils/pushToken';
+import { detectUserLocation } from '../utils/geolocation';
 import { cryptoService } from '../services/cryptoService';
 
 /** Merge saved turfs with mock data so image/gallery fields stay valid after app updates */
@@ -1017,8 +1018,8 @@ export function useAppState() {
       console.warn('[owners] submit application failed, using local fallback:', err.message);
     }
 
-    const ownerId = userProfile.userId || `owner-${Date.now()}`;
-    const turfId = `turf-${Date.now()}`;
+    const ownerId = userProfile.userId || `owner-${new Date().getTime()}`;
+    const turfId = `turf-${new Date().getTime()}`;
     const template = MOCK_TURFS[0];
     const newTurf = {
       ...template,

@@ -127,7 +127,7 @@ export default function TournamentsPage() {
 
       {activeTab === 'explore' && !selectedTournament && (
         <div className="space-y-6">
-          {MOCK_TOURNAMENTS.map(t => {
+          {filteredTournaments.map(t => {
             const registered = isAlreadyRegistered(t.id);
             return (
               <div key={t.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition duration-200">

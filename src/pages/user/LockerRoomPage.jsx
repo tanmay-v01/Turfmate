@@ -30,7 +30,7 @@ export default function LockerRoomPage() {
   const lat = app.userProfile.lat || 19.456;
   const lng = app.userProfile.lng || 72.812;
 
-  const now = useMemo(() => Date.now(), [app.announcements]);
+  const [now] = useState(() => Date.now());
 
   const feed = app.announcements.filter((ann) => {
     const hostName = ann.hostName;
