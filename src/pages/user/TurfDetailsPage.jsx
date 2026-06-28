@@ -5,24 +5,8 @@ import TurfImage from '../../components/ui/TurfImage';
 import { IMAGES } from '../../data/images';
 
 function resolveSlotStatus(app, slot) {
-  let status = slot.status;
-
-  if (app.selectedPitchId === 'pitch-b') {
-    if (['s1', 's4', 'k1', 'k5', 'd2', 'p1'].includes(slot.id)) status = 'booked';
-    else if (['s7', 'k6', 'd5', 'p4'].includes(slot.id)) status = 'split';
-  } else if (['s8', 'k3', 'd3'].includes(slot.id)) {
-    status = 'split';
-  }
-
-  if ((app.adminBlockedSlots[app.activeTurf.id] || []).includes(slot.id)) {
-    status = 'booked';
-  }
-
-  if (app.bookingDate === 'Day After' || (app.selectedPitchId === 'pitch-b' && app.bookingDate === 'Tomorrow')) {
-    status = 'booked';
-  }
-
-  return status;
+  // Return the real status synced from the backend in useAppState.js
+  return slot.status;
 }
 
 export default function TurfDetailsPage() {
