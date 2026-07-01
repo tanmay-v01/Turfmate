@@ -47,15 +47,15 @@ export default function RoleSelectionPage() {
         <div className="text-center space-y-3 mb-12">
           <div className="flex justify-center mb-4">
             <div className="relative group">
-              <div className="absolute inset-0 bg-lime-400/25 rounded-[18px] blur-md group-hover:blur-xl transition-all duration-300" />
+              <div className="absolute inset-0 bg-emerald-500/25 rounded-[18px] blur-md group-hover:blur-xl transition-all duration-300" />
               <TurfMateLogo size="md" className="animate-float relative z-10" />
             </div>
           </div>
           <span className="tm-info-chip text-[10px] font-black uppercase tracking-widest">
-            <span className="w-1 h-1 rounded-full bg-lime-400 animate-ping" />
+            <span className="w-1 h-1 rounded-full bg-emerald-500 animate-ping" />
             onboarding · step 1 of 4
           </span>
-          <h1 className="text-4xl sm:text-5xl font-display font-black text-white lowercase tracking-tight leading-none mt-2">
+          <h1 className="text-4xl sm:text-5xl font-display font-black text-slate-800 lowercase tracking-tight leading-none mt-2">
             pick your vibe
           </h1>
           <p className="text-sm text-slate-500 font-bold max-w-sm mx-auto leading-relaxed">
@@ -87,21 +87,21 @@ export default function RoleSelectionPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent group-hover:from-slate-950/90 transition-colors duration-500" />
               
               {/* Content Card Info */}
-              <div className="relative m-4 p-5 rounded-[24px] backdrop-blur-md bg-slate-950/60 border border-white/10 text-white z-10 transition-all duration-300 group-hover:bg-slate-950/75 group-hover:border-brand-primary/30 space-y-4">
+              <div className="relative m-4 p-5 rounded-[24px] backdrop-blur-md bg-slate-950/60 border border-slate-200 text-slate-800 z-10 transition-all duration-300 group-hover:bg-slate-950/75 group-hover:border-brand-primary/30 space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-lime-400/25 border border-brand-primary/30 text-[10px] font-black text-brand-primary uppercase tracking-wider shadow-sm">
-                    <span className="w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/25 border border-brand-primary/30 text-[10px] font-black text-brand-primary uppercase tracking-wider shadow-sm">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     {role.emoji} {role.pill}
                   </span>
                   
                   {/* Icon Frame */}
-                  <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-white/80 group-hover:text-brand-primary group-hover:scale-110 transition-all duration-300">
+                  <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-slate-800/80 group-hover:text-brand-primary group-hover:scale-110 transition-all duration-300">
                     <role.icon className="w-3.5 h-3.5" />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <h3 className="text-xl font-display font-black text-white lowercase leading-tight group-hover:text-brand-primary transition-colors duration-300">
+                  <h3 className="text-xl font-display font-black text-slate-800 lowercase leading-tight group-hover:text-brand-primary transition-colors duration-300">
                     {role.title}
                   </h3>
                   <p className="text-xs text-slate-300 font-medium leading-relaxed">
@@ -111,7 +111,7 @@ export default function RoleSelectionPage() {
                 
                 {/* Micro Action Button */}
                 <div className="flex justify-end pt-1">
-                  <div className="w-8 h-8 rounded-full bg-white/15 border border-white/10 flex items-center justify-center text-white transition-all duration-300 group-hover:bg-lime-400 group-hover:border-brand-primary group-hover:text-white group-hover:translate-x-1.5 shadow-md">
+                  <div className="w-8 h-8 rounded-full bg-white/15 border border-slate-200 flex items-center justify-center text-slate-800 transition-all duration-300 group-hover:bg-emerald-500 group-hover:border-brand-primary group-hover:text-slate-800 group-hover:translate-x-1.5 shadow-md">
                     <ChevronRight className="w-4 h-4" />
                   </div>
                 </div>
@@ -152,7 +152,7 @@ export default function RoleSelectionPage() {
               localStorage.setItem('tm_profile', JSON.stringify(profile));
               app.setView('super_admin');
             }}
-            className="text-[10px] font-black text-slate-400 hover:text-white transition uppercase tracking-widest border-b border-dashed border-slate-300 hover:border-brand-forest pb-0.5"
+            className="text-[10px] font-black text-slate-400 hover:text-slate-800 transition uppercase tracking-widest border-b border-dashed border-slate-300 hover:border-brand-forest pb-0.5"
           >
             [ hidden: access super admin god mode ]
           </button>

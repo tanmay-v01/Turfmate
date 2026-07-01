@@ -53,31 +53,31 @@ export default function InstallPrompt() {
 
   return (
     <div className="fixed bottom-[148px] lg:bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:max-w-sm z-40 animate-fade-up">
-      <div className="bg-white/5 border border-brand-grassLight rounded-2xl shadow-lg p-4 flex items-start gap-3">
-        <div className="w-10 h-10 rounded-xl bg-lime-400/10 flex items-center justify-center shrink-0">
+      <div className="bg-white border border-brand-grassLight rounded-2xl shadow-lg p-4 flex items-start gap-3">
+        <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center shrink-0">
           {isAndroidInstall ? (
-            <Download className="w-5 h-5 text-lime-400" />
+            <Download className="w-5 h-5 text-emerald-600" />
           ) : (
-            <Share className="w-5 h-5 text-lime-400" />
+            <Share className="w-5 h-5 text-emerald-600" />
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-extrabold text-white">Install TurfMate</p>
+          <p className="text-sm font-extrabold text-slate-800">Install TurfMate</p>
           {isAndroidInstall ? (
             <>
               <p className="text-xs text-slate-500 mt-0.5">Add to home screen for faster bookings.</p>
               <button
                 type="button"
                 onClick={install}
-                className="mt-2 text-xs font-black text-lime-400 hover:underline"
+                className="mt-2 text-xs font-black text-emerald-600 hover:underline"
               >
                 Install app →
               </button>
             </>
           ) : (
             <p className="text-xs text-slate-500 mt-0.5">
-              Tap <span className="font-bold text-white">Share</span> in Safari, then{' '}
-              <span className="font-bold text-white">Add to Home Screen</span>.
+              Tap <span className="font-bold text-slate-800">Share</span> in Safari, then{' '}
+              <span className="font-bold text-slate-800">Add to Home Screen</span>.
             </p>
           )}
         </div>

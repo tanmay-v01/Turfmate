@@ -30,7 +30,7 @@ export default function LocationPermissionPage() {
           <button
             onClick={() => app.grantLocation(false)}
             disabled={app.isLocating}
-            className="w-full py-3 text-sm font-bold text-slate-500 hover:text-white transition disabled:opacity-50"
+            className="w-full py-3 text-sm font-bold text-slate-500 hover:text-slate-800 transition disabled:opacity-50"
           >
             pick neighborhood manually
           </button>
@@ -40,7 +40,7 @@ export default function LocationPermissionPage() {
       <div className="flex justify-center py-8">
         <div className="relative">
           <div className="w-32 h-32 rounded-full tm-icon-accent-sky border-2 border-sky-200 flex items-center justify-center">
-            <MapPin className="w-14 h-14 text-lime-400 animate-bounce" />
+            <MapPin className="w-14 h-14 text-emerald-600 animate-bounce" />
           </div>
           <div className="absolute inset-0 rounded-full border-2 border-brand-grassFresh/30 animate-ping" />
           <div className="absolute -inset-4 rounded-full border border-dashed border-brand-grassFresh/20" />
@@ -51,7 +51,7 @@ export default function LocationPermissionPage() {
           uses GPS + reverse geocoding for your area name
         </p>
         <p className="text-[10px] text-slate-400">
-          default radius <span className="text-lime-400 font-bold">10 km</span> · refresh anytime on the map tab
+          default radius <span className="text-emerald-600 font-bold">10 km</span> · refresh anytime on the map tab
         </p>
       </div>
     </OnboardingShell>

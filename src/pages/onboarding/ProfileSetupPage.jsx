@@ -88,7 +88,7 @@ export default function ProfileSetupPage() {
             </div>
           )}
           {!app.usernameError && app.onboardingData.username.length > 1 && (
-            <p className="text-xs font-bold text-lime-400 mt-2">✓ username available</p>
+            <p className="text-xs font-bold text-emerald-600 mt-2">✓ username available</p>
           )}
         </div>
       </form>

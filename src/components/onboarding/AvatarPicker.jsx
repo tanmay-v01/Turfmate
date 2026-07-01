@@ -20,8 +20,8 @@ export default function AvatarPicker({ value, onChange, compact = false }) {
             onClick={() => setStyle(s.id)}
             className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold border transition ${
               style === s.id
-                ? 'bg-brand-forest text-white border-brand-forest'
-                : 'bg-white/5 text-slate-500 border-slate-200 hover:border-brand-grassFresh'
+                ? 'bg-brand-forest text-slate-800 border-brand-forest'
+                : 'bg-white text-slate-500 border-slate-200 hover:border-brand-grassFresh'
             }`}
           >
             <span>{s.emoji}</span> {s.label}
@@ -39,12 +39,12 @@ export default function AvatarPicker({ value, onChange, compact = false }) {
               type="button"
               onClick={() => onChange(url)}
               className={`relative aspect-square rounded-2xl overflow-hidden border-2 transition hover:scale-105 ${
-                selected ? 'border-brand-grassFresh ring-2 ring-brand-grassFresh/40 scale-105' : 'border-white/10 hover:border-brand-grassFresh/60'
+                selected ? 'border-brand-grassFresh ring-2 ring-brand-grassFresh/40 scale-105' : 'border-slate-200 hover:border-brand-grassFresh/60'
               }`}
             >
-              <img src={url} alt={seed} className="w-full h-full object-cover bg-lime-400/10" />
+              <img src={url} alt={seed} className="w-full h-full object-cover bg-emerald-50" />
               {selected && (
-                <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-brand-forest text-white text-[10px] font-black flex items-center justify-center">✓</span>
+                <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-brand-forest text-slate-800 text-[10px] font-black flex items-center justify-center">✓</span>
               )}
             </button>
           );
@@ -54,7 +54,7 @@ export default function AvatarPicker({ value, onChange, compact = false }) {
       <button
         type="button"
         onClick={pickRandom}
-        className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-extrabold text-lime-400 bg-lime-400/10 border border-white/10 hover:bg-brand-grassLight transition"
+        className="w-full inline-flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-extrabold text-emerald-600 bg-emerald-50 border border-slate-200 hover:bg-brand-grassLight transition"
       >
         <Shuffle className="w-3.5 h-3.5" /> random avatar
       </button>

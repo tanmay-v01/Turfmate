@@ -73,7 +73,7 @@ export default function PlayRadiusPage() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">search radius</p>
-            <p className="text-2xl font-display font-extrabold text-white tabular-nums">
+            <p className="text-2xl font-display font-extrabold text-slate-800 tabular-nums">
               {radius}<span className="text-base font-bold text-slate-400 ml-0.5">km</span>
             </p>
           </div>
@@ -119,7 +119,7 @@ export default function PlayRadiusPage() {
               <div className={`w-7 h-7 rounded-lg mx-auto mb-1.5 flex items-center justify-center ${stat.accent}`}>
                 <stat.icon className="w-3.5 h-3.5" strokeWidth={2.25} />
               </div>
-              <p className="text-lg font-display font-extrabold text-white tabular-nums leading-none">
+              <p className="text-lg font-display font-extrabold text-slate-800 tabular-nums leading-none">
                 {stat.value}
               </p>
               <p className="text-[9px] font-semibold uppercase tracking-wide text-slate-500 mt-0.5">{stat.label}</p>
@@ -129,10 +129,10 @@ export default function PlayRadiusPage() {
 
         <div className="flex items-center gap-3 pt-1 border-t border-white/60">
           <span className="flex items-center justify-center w-9 h-9 rounded-xl tm-icon-accent-sky shrink-0">
-            <Navigation2 className="w-4 h-4 text-lime-400" strokeWidth={2.25} />
+            <Navigation2 className="w-4 h-4 text-emerald-600" strokeWidth={2.25} />
           </span>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold text-white truncate">
+            <p className="text-sm font-semibold text-slate-800 truncate">
               {app.userProfile.location || 'Your location'}
             </p>
             <p className="text-[11px] text-slate-400 truncate">
@@ -142,7 +142,7 @@ export default function PlayRadiusPage() {
           <button
             type="button"
             onClick={() => app.setView('location_manual')}
-            className="shrink-0 text-[10px] font-bold text-lime-400 uppercase tracking-wide hover:underline"
+            className="shrink-0 text-[10px] font-bold text-emerald-600 uppercase tracking-wide hover:underline"
           >
             edit
           </button>
@@ -183,7 +183,7 @@ export default function PlayRadiusPage() {
         {app.hoveredMapPin && (
           <div className="absolute bottom-3 left-3 right-3 z-[500] glass-panel rounded-2xl p-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <p className="font-bold text-sm text-white truncate">{app.hoveredMapPin.name}</p>
+              <p className="font-bold text-sm text-slate-800 truncate">{app.hoveredMapPin.name}</p>
               <p className="text-xs text-slate-500">
                 {app.hoveredMapPin.pricePerHour
                   ? `₹${app.hoveredMapPin.pricePerHour}/hr · ${app.hoveredMapPin.rating}★`
@@ -217,7 +217,7 @@ export default function PlayRadiusPage() {
         {filteredTurfs.length === 0 ? (
           <div className="glass-card p-6 text-center">
             <Building2 className="w-8 h-8 text-slate-300 mx-auto mb-2" />
-            <p className="text-sm font-semibold text-white">No turfs in this radius</p>
+            <p className="text-sm font-semibold text-slate-800">No turfs in this radius</p>
             <p className="text-xs text-slate-400 mt-1">Try 10km or 15km using the presets above.</p>
           </div>
         ) : (
@@ -231,12 +231,12 @@ export default function PlayRadiusPage() {
               >
                 <TurfImage turf={t} className="w-14 h-14 rounded-xl object-cover shrink-0 ring-1 ring-white/80" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-sm text-white truncate">{t.name}</p>
+                  <p className="font-bold text-sm text-slate-800 truncate">{t.name}</p>
                   <p className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
                     <MapPin className="w-3 h-3 shrink-0" /> {dist} km · {t.city}
                   </p>
                 </div>
-                <span className="text-sm font-bold text-white tabular-nums">₹{t.pricePerHour}</span>
+                <span className="text-sm font-bold text-slate-800 tabular-nums">₹{t.pricePerHour}</span>
               </button>
             );
           })

@@ -76,7 +76,7 @@ export default function OwnerPayoutPage() {
           <input type="text" value={app.onboardingData.accountHolder} onChange={(e) => app.updateOnboardingData({ accountHolder: e.target.value })} placeholder="as per bank records" className="tm-input" />
         </div>
         <div className="tm-card p-4 bg-gradient-to-r from-brand-grassPale to-brand-accent/30">
-          <p className="text-xs font-bold text-lime-400 leading-relaxed">
+          <p className="text-xs font-bold text-emerald-600 leading-relaxed">
             💸 settlements hit your bank T+2 · track every booking in your partner dashboard
           </p>
         </div>

@@ -11,9 +11,9 @@ export default function StatCard({
   className = '',
 }) {
   const variants = {
-    default: 'bg-white/5 border-white/10/60 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-200',
+    default: 'bg-white border-slate-200/60 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-700',
     hero: 'bg-gradient-to-br from-brand-grassPale via-white to-brand-accent/40 border-brand-grassFresh/30 dark:from-brand-forest/40 dark:via-slate-800 dark:to-slate-900',
-    dark: 'bg-slate-800/60 border-slate-700/80 text-white',
+    dark: 'bg-slate-800/60 border-slate-700/80 text-slate-800',
     commission: 'bg-gradient-to-br from-brand-grassFresh/20 to-brand-grassPale border-brand-grassFresh/40 dark:from-brand-grassDeep/40 dark:to-brand-forest/60',
     super: 'bg-gradient-to-br from-slate-800 to-slate-900 border-brand-grassFresh/20',
   };
@@ -31,7 +31,7 @@ export default function StatCard({
           <p className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
             {label}
           </p>
-          <p className={`text-2xl sm:text-3xl font-black truncate ${isDark ? 'text-white' : 'text-white'}`}>
+          <p className={`text-2xl sm:text-3xl font-black truncate ${isDark ? 'text-slate-800' : 'text-slate-800'}`}>
             {value}
           </p>
           {sub && (
@@ -40,14 +40,14 @@ export default function StatCard({
             </p>
           )}
           {trend && (
-            <p className="text-[10px] font-bold text-lime-400 mt-1 flex items-center gap-1">
-              <span className="text-lime-400">↑</span> {trend}
+            <p className="text-[10px] font-bold text-emerald-600 mt-1 flex items-center gap-1">
+              <span className="text-emerald-600">↑</span> {trend}
             </p>
           )}
         </div>
         {Icon && (
           <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
-            isDark ? 'bg-brand-grassFresh/15 text-lime-400' : 'bg-lime-400/10 text-lime-400'
+            isDark ? 'bg-brand-grassFresh/15 text-emerald-600' : 'bg-emerald-50 text-emerald-600'
           }`}>
             <Icon className="w-5 h-5" />
           </div>

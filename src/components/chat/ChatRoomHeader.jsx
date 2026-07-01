@@ -91,12 +91,12 @@ export default function ChatRoomHeader({
                   key={name}
                   src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`}
                   alt=""
-                  className="w-7 h-7 rounded-full border-2 border-brand-forest object-cover bg-white/5"
+                  className="w-7 h-7 rounded-full border-2 border-brand-forest object-cover bg-white"
                   title={name}
                 />
               ))}
               {meta.roster.length > 4 && (
-                <span className="w-7 h-7 rounded-full border-2 border-brand-forest bg-white/20 text-[9px] font-bold text-white flex items-center justify-center">
+                <span className="w-7 h-7 rounded-full border-2 border-brand-forest bg-white/20 text-[9px] font-bold text-slate-800 flex items-center justify-center">
                   +{meta.roster.length - 4}
                 </span>
               )}

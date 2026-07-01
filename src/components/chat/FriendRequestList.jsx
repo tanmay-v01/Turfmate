@@ -5,7 +5,7 @@ export default function FriendRequestList({ requests, onAccept, onDecline }) {
     return (
       <div className="tm-chat-empty-inline">
         <p className="text-2xl mb-2">🤝</p>
-        <p className="font-display font-extrabold text-white lowercase text-sm">no pending requests</p>
+        <p className="font-display font-extrabold text-slate-800 lowercase text-sm">no pending requests</p>
         <p className="text-xs text-slate-500 mt-1">Friend requests from nearby players show up here.</p>
       </div>
     );
@@ -16,11 +16,11 @@ export default function FriendRequestList({ requests, onAccept, onDecline }) {
       {requests.map((req) => (
         <article key={req.id} className="glass-card p-4">
           <div className="flex gap-3">
-            <img src={req.avatar} alt="" className="w-12 h-12 rounded-2xl object-cover border border-white/10 shrink-0" />
+            <img src={req.avatar} alt="" className="w-12 h-12 rounded-2xl object-cover border border-slate-200 shrink-0" />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <p className="font-bold text-sm text-white">{req.name}</p>
+                  <p className="font-bold text-sm text-slate-800">{req.name}</p>
                   <p className="text-[10px] text-slate-400 font-semibold">{req.time} · {req.mutualFriends} mutual</p>
                 </div>
                 <span className="tm-chat-badge tm-chat-badge--lobby shrink-0">{req.sport}</span>
@@ -28,7 +28,7 @@ export default function FriendRequestList({ requests, onAccept, onDecline }) {
               <p className="text-xs text-slate-600 mt-2 leading-relaxed">{req.message}</p>
             </div>
           </div>
-          <div className="flex gap-2 mt-3 pt-3 border-t border-white/10">
+          <div className="flex gap-2 mt-3 pt-3 border-t border-slate-200">
             <button
               type="button"
               onClick={() => onDecline(req.id)}

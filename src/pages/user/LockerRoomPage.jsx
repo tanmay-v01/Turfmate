@@ -119,7 +119,7 @@ export default function LockerRoomPage() {
       </div>
 
       <div className="glass-card p-4 mb-5">
-        <p className="text-sm font-bold text-white flex items-center gap-2">
+        <p className="text-sm font-bold text-slate-800 flex items-center gap-2">
           <span className="w-6 h-6 rounded-lg tm-icon-accent-amber flex items-center justify-center text-xs">💡</span>
           radius-matched feed
         </p>
@@ -131,7 +131,7 @@ export default function LockerRoomPage() {
       {feed.length === 0 ? (
         <div className="glass-card p-10 text-center">
           <p className="text-4xl mb-3">🏟️</p>
-          <p className="font-bold text-white">Nothing here yet</p>
+          <p className="font-bold text-slate-800">Nothing here yet</p>
           <p className="text-sm text-slate-400 mt-1">Try another filter or post something.</p>
         </div>
       ) : (
@@ -158,7 +158,7 @@ export default function LockerRoomPage() {
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                    <span className="absolute bottom-2 left-3 px-2 py-0.5 rounded-full bg-white/90 text-[10px] font-bold text-white">
+                    <span className="absolute bottom-2 left-3 px-2 py-0.5 rounded-full bg-white/90 text-[10px] font-bold text-slate-800">
                       {ann.sportIcon} {ann.sportLabel}
                     </span>
                   </div>
@@ -169,7 +169,7 @@ export default function LockerRoomPage() {
                     <img src={ann.hostAvatar} alt="" className="w-12 h-12 rounded-2xl border-2 border-brand-grassLight/50 object-cover shrink-0" />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-display font-extrabold text-white text-sm">{ann.hostName}</span>
+                        <span className="font-display font-extrabold text-slate-800 text-sm">{ann.hostName}</span>
                         {ann.isAdminAnnouncement ? (
                           <span className="px-2 py-0.5 rounded-full bg-amber-100 text-[10px] font-bold text-amber-800">owner</span>
                         ) : ann.hostLevel ? (
@@ -183,12 +183,12 @@ export default function LockerRoomPage() {
                 </div>
 
                 {ann.isHighlight && ann.highlightScore && (
-                  <div className="mt-4 bg-gradient-to-r from-brand-forest to-brand-grassDeep text-white rounded-2xl p-4 shadow-inner relative overflow-hidden">
+                  <div className="mt-4 bg-gradient-to-r from-brand-forest to-brand-grassDeep text-slate-800 rounded-2xl p-4 shadow-inner relative overflow-hidden">
                     <div className="absolute right-2 top-2 opacity-15">
-                      <Trophy className="w-16 h-16 text-white" />
+                      <Trophy className="w-16 h-16 text-slate-800" />
                     </div>
                     <div className="text-center mb-1">
-                      <span className="text-[8px] font-black uppercase bg-white/20 text-white px-2 py-0.5 rounded-full tracking-wider">
+                      <span className="text-[8px] font-black uppercase bg-white/20 text-slate-800 px-2 py-0.5 rounded-full tracking-wider">
                         {ann.sport === 'cricket' ? '🏏 Box Cricket Result' : '⚽ Football Result'}
                       </span>
                     </div>
@@ -207,7 +207,7 @@ export default function LockerRoomPage() {
                 )}
 
                 {ann.text && (
-                  <p className="mt-4 text-sm text-slate-600 bg-slate-50 rounded-2xl p-3 border border-white/10 leading-relaxed">
+                  <p className="mt-4 text-sm text-slate-600 bg-slate-50 rounded-2xl p-3 border border-slate-200 leading-relaxed">
                     {ann.text}
                   </p>
                 )}
@@ -216,7 +216,7 @@ export default function LockerRoomPage() {
                   <div className="mt-4 grid sm:grid-cols-2 gap-3 text-sm">
                     <div className="glass-card !rounded-2xl p-3 !shadow-none">
                       <p className="text-[10px] font-bold text-slate-400 uppercase">venue</p>
-                      <p className="font-bold text-white mt-0.5 truncate">{ann.sportLabel} @ {ann.turfName}</p>
+                      <p className="font-bold text-slate-800 mt-0.5 truncate">{ann.sportLabel} @ {ann.turfName}</p>
                     </div>
                     <div className="glass-card !rounded-2xl p-3 !shadow-none">
                       <p className="text-[10px] font-bold text-slate-400 uppercase">squad</p>
@@ -225,7 +225,7 @@ export default function LockerRoomPage() {
                           <span className="text-xs text-slate-400 italic">be the first!</span>
                         ) : (
                           ann.roster.map((name) => (
-                            <span key={name} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white/5 border border-slate-200">
+                            <span key={name} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200">
                               {name === app.userProfile.name ? 'you' : name.split(' ')[0]}
                             </span>
                           ))
@@ -250,13 +250,13 @@ export default function LockerRoomPage() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-white/10">
+                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-200">
                   {ann.isAdminAnnouncement ? (
                     <>
                       <p className="text-xs font-bold text-amber-700">Venue offer</p>
                       <button
                         onClick={() => openTurf(ann.turfId)}
-                        className="px-5 py-2 bg-amber-500 text-white rounded-full text-xs font-bold hover:bg-amber-600 transition"
+                        className="px-5 py-2 bg-amber-500 text-slate-800 rounded-full text-xs font-bold hover:bg-amber-600 transition"
                       >
                         book now
                       </button>
@@ -275,7 +275,7 @@ export default function LockerRoomPage() {
                     <>
                       <div>
                         <p className="text-[10px] text-slate-400 uppercase font-bold">split cost</p>
-                        <p className="font-display font-extrabold text-white">₹{ann.costPerHead}/head</p>
+                        <p className="font-display font-extrabold text-slate-800">₹{ann.costPerHead}/head</p>
                       </div>
                       {ann.status === 'filled' ? (
                         <span className="px-4 py-2 rounded-full bg-slate-100 text-slate-500 text-xs font-bold">filled</span>
@@ -295,7 +295,7 @@ export default function LockerRoomPage() {
                   ) : (
                     <>
                       <p className="text-xs text-slate-400 flex items-center gap-1"><MapPin className="w-3 h-3" /> {ann.turfName}</p>
-                      <button onClick={() => openTurf(ann.turfId)} className="text-xs font-bold text-lime-400 hover:underline">
+                      <button onClick={() => openTurf(ann.turfId)} className="text-xs font-bold text-emerald-600 hover:underline">
                         view turf →
                       </button>
                     </>
@@ -317,9 +317,9 @@ export default function LockerRoomPage() {
 
       {showPostModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-end sm:items-center z-50">
-          <div className="bg-white/5 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 pb-8 animate-slide-up">
+          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl p-5 pb-8 animate-slide-up">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-display font-extrabold text-white">create post</h3>
+              <h3 className="font-display font-extrabold text-slate-800">create post</h3>
               <button onClick={() => setShowPostModal(false)} className="text-slate-400 hover:text-slate-600">
                 <X className="w-5 h-5" />
               </button>
@@ -343,7 +343,7 @@ export default function LockerRoomPage() {
               </div>
 
               {postCategory === 'HIGHLIGHT' && (
-                <div className="bg-slate-50 p-4 rounded-2xl border border-white/10 space-y-3">
+                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-[10px] font-bold text-slate-400 uppercase">Select Sport</span>
                     <div className="flex gap-2">
@@ -368,14 +368,14 @@ export default function LockerRoomPage() {
                         placeholder="Team A Name"
                         value={teamA}
                         onChange={(e) => setTeamA(e.target.value)}
-                        className="w-full bg-white/5 border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
+                        className="w-full bg-white border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="Team A Score"
                         value={scoreA}
                         onChange={(e) => setScoreA(e.target.value)}
-                        className="w-full bg-white/5 border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
+                        className="w-full bg-white border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
                       />
                     </div>
                     <div className="space-y-1">
@@ -384,14 +384,14 @@ export default function LockerRoomPage() {
                         placeholder="Team B Name"
                         value={teamB}
                         onChange={(e) => setTeamB(e.target.value)}
-                        className="w-full bg-white/5 border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
+                        className="w-full bg-white border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
                       />
                       <input
                         type="text"
                         placeholder="Team B Score"
                         value={scoreB}
                         onChange={(e) => setScoreB(e.target.value)}
-                        className="w-full bg-white/5 border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
+                        className="w-full bg-white border border-slate-200 rounded-xl p-2 text-xs focus:outline-none"
                       />
                     </div>
                   </div>

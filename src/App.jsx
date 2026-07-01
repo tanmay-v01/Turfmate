@@ -27,7 +27,7 @@ function AppShell() {
   const isPortal = PORTAL_VIEWS.has(view);
 
   return (
-    <div className="min-h-screen w-full bg-[#090D19] text-slate-100 antialiased">
+    <div className="min-h-screen w-full bg-[#FAFBFC] text-slate-800 antialiased">
       {!isPortal && import.meta.env.DEV && <DevHeader />}
       {!isPortal && <Toast />}
 

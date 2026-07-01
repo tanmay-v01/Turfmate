@@ -9,7 +9,7 @@ const ICONS = {
 };
 
 const ACCENTS = {
-  success: 'bg-lime-400',
+  success: 'bg-emerald-500',
   error: 'bg-red-500',
   info: 'bg-sky-500',
 };
@@ -27,16 +27,16 @@ export default function Toast() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-            className="pointer-events-auto bg-slate-800/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/40 rounded-[20px] p-4 flex items-start gap-3 relative overflow-hidden"
+            className="pointer-events-auto bg-white/95 backdrop-blur-xl border border-slate-200 shadow-xl shadow-slate-900/5 rounded-[20px] p-4 flex items-start gap-3 relative overflow-hidden"
           >
             <div className={`absolute inset-y-0 left-0 w-1.5 ${ACCENTS[toast.type] || ACCENTS.info}`} />
             
             <div className="flex-1 min-w-0 pl-1">
-              {toast.title && <p className="font-bold text-sm text-white">{toast.title}</p>}
-              <p className="text-sm text-slate-300 font-medium">{toast.message}</p>
+              {toast.title && <p className="font-bold text-sm text-slate-800">{toast.title}</p>}
+              <p className="text-sm text-slate-600 font-medium">{toast.message}</p>
             </div>
             
-            <button onClick={() => app.dismissToast()} className="text-slate-500 hover:text-white transition shrink-0 p-1 bg-white/5 rounded-full">
+            <button onClick={() => app.dismissToast()} className="text-slate-400 hover:text-slate-600 transition shrink-0 p-1 bg-slate-50 rounded-full">
               <X className="w-4 h-4" />
             </button>
           </motion.div>

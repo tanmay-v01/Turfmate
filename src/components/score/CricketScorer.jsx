@@ -27,26 +27,26 @@ export default function CricketScorer({ game, setGame, onHistoryPush, onUndo, ca
   return (
     <div className="space-y-4">
       {/* Scoreboard */}
-      <div className="bg-white/5 rounded-[24px] border border-white/10 p-5 shadow-sm">
+      <div className="bg-white rounded-[24px] border border-slate-200 p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[10px] font-black uppercase tracking-wider text-lime-400">live innings</span>
+          <span className="text-[10px] font-black uppercase tracking-wider text-emerald-600">live innings</span>
           <span className="text-sm font-mono font-bold text-slate-500">{formatTimer(game.timerSeconds)}</span>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className={`rounded-2xl p-4 border-2 transition ${game.batting === 'A' ? 'border-brand-grassFresh bg-lime-400/10/40' : 'border-white/10 bg-slate-50'}`}>
+          <div className={`rounded-2xl p-4 border-2 transition ${game.batting === 'A' ? 'border-brand-grassFresh bg-emerald-50/40' : 'border-slate-200 bg-slate-50'}`}>
             <p className="text-[10px] font-bold text-slate-400 uppercase">{game.teamA.name}</p>
-            <p className="text-2xl font-display font-extrabold text-white">{game.teamA.runs}/{game.teamA.wickets}</p>
+            <p className="text-2xl font-display font-extrabold text-slate-800">{game.teamA.runs}/{game.teamA.wickets}</p>
             <p className="text-xs text-slate-400">{game.teamA.overs}.{game.teamA.balls} ov</p>
           </div>
-          <div className={`rounded-2xl p-4 border-2 transition ${game.batting === 'B' ? 'border-brand-grassFresh bg-lime-400/10/40' : 'border-white/10 bg-slate-50'}`}>
+          <div className={`rounded-2xl p-4 border-2 transition ${game.batting === 'B' ? 'border-brand-grassFresh bg-emerald-50/40' : 'border-slate-200 bg-slate-50'}`}>
             <p className="text-[10px] font-bold text-slate-400 uppercase">{game.teamB.name}</p>
-            <p className="text-2xl font-display font-extrabold text-white">{game.teamB.runs}/{game.teamB.wickets}</p>
+            <p className="text-2xl font-display font-extrabold text-slate-800">{game.teamB.runs}/{game.teamB.wickets}</p>
             <p className="text-xs text-slate-400">{game.teamB.overs}.{game.teamB.balls} ov</p>
           </div>
         </div>
 
-        <div className="text-center py-3 rounded-2xl bg-brand-forest text-white">
+        <div className="text-center py-3 rounded-2xl bg-brand-forest text-slate-800">
           <p className="text-[10px] font-bold uppercase opacity-80">batting</p>
           <p className="text-4xl font-display font-extrabold">{display.score}</p>
           <p className="text-sm opacity-90">{bat.name} · {display.overs} overs · max {game.maxOvers}</p>
@@ -55,14 +55,14 @@ export default function CricketScorer({ game, setGame, onHistoryPush, onUndo, ca
       </div>
 
       {/* Run pad */}
-      <div className="bg-white/5 rounded-[24px] border border-white/10 p-4 shadow-sm">
+      <div className="bg-white rounded-[24px] border border-slate-200 p-4 shadow-sm">
         <p className="text-xs font-bold text-slate-500 uppercase tracking-wide mb-3">runs</p>
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {RUN_BTNS.map((b) => (
             <button
               key={b.label}
               onClick={() => apply(cricketAddRuns, b.runs)}
-              className="py-4 rounded-2xl bg-lime-400/10 text-white font-display font-extrabold text-lg hover:bg-brand-grassFresh/30 active:scale-95 transition"
+              className="py-4 rounded-2xl bg-emerald-50 text-slate-800 font-display font-extrabold text-lg hover:bg-brand-grassFresh/30 active:scale-95 transition"
             >
               {b.label}
             </button>
@@ -101,7 +101,7 @@ export default function CricketScorer({ game, setGame, onHistoryPush, onUndo, ca
       {game.status === 'innings_break' && (
         <button
           onClick={() => apply(cricketSwitchInnings)}
-          className="w-full py-4 rounded-2xl bg-brand-forest text-white font-bold flex items-center justify-center gap-2 hover:bg-brand-grassInk transition"
+          className="w-full py-4 rounded-2xl bg-brand-forest text-slate-800 font-bold flex items-center justify-center gap-2 hover:bg-brand-grassInk transition"
         >
           <ArrowLeftRight className="w-4 h-4" /> switch innings
         </button>
@@ -109,7 +109,7 @@ export default function CricketScorer({ game, setGame, onHistoryPush, onUndo, ca
 
       {/* Event log */}
       {game.events.length > 0 && (
-        <div className="bg-white/5 rounded-2xl border border-white/10 p-4 max-h-40 overflow-y-auto relative">
+        <div className="bg-white rounded-2xl border border-slate-200 p-4 max-h-40 overflow-y-auto relative">
           <div className="flex items-center justify-between mb-2 sticky top-0 bg-white/90 backdrop-blur-sm pb-1">
             <p className="text-[10px] font-bold text-slate-400 uppercase">ball log</p>
             <CricketUndoButton onUndo={onUndo} disabled={!canUndo} />

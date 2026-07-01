@@ -12,12 +12,12 @@ export default function SplitSuccessModal() {
 
   return (
     <div className="fixed inset-0 z-[70] flex items-center justify-center p-4 bg-brand-forest/60 backdrop-blur-md animate-fade-in">
-      <div className="w-full max-w-sm bg-white/5 rounded-[32px] p-8 text-center shadow-premium animate-slide-up space-y-5">
+      <div className="w-full max-w-sm bg-white rounded-[32px] p-8 text-center shadow-premium animate-slide-up space-y-5">
         <div className="w-20 h-20 tm-icon-accent-green rounded-full flex items-center justify-center mx-auto">
           <Trophy className="w-10 h-10" />
         </div>
         <div>
-          <h2 className="font-display font-extrabold text-2xl text-white lowercase">game on!</h2>
+          <h2 className="font-display font-extrabold text-2xl text-slate-800 lowercase">game on!</h2>
           <p className="text-sm text-slate-500 mt-2 font-medium">
             The split is fully funded. The turf is officially booked.
           </p>
@@ -47,7 +47,7 @@ export default function SplitSuccessModal() {
               app.setShowSplitSuccessModal(false);
               app.setView('split_hub');
             }}
-            className="w-full py-3 text-slate-500 font-bold text-sm hover:text-white transition"
+            className="w-full py-3 text-slate-500 font-bold text-sm hover:text-slate-800 transition"
           >
             view split hub
           </button>

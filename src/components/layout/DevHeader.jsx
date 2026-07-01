@@ -35,10 +35,10 @@ export default function DevHeader() {
         <div className="fixed top-4 left-1/2 -translate-x-1/2 w-[min(360px,92vw)] glass-grass p-4 rounded-[24px] shadow-premium z-[60] flex items-start gap-3 animate-pop">
           <div className="w-10 h-10 rounded-2xl bg-[#25D366] flex items-center justify-center text-lg shrink-0">💬</div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-xs text-lime-400">WhatsApp</p>
-            <p className="text-sm text-white mt-0.5">{app.whatsappNotification}</p>
+            <p className="font-bold text-xs text-emerald-600">WhatsApp</p>
+            <p className="text-sm text-slate-800 mt-0.5">{app.whatsappNotification}</p>
           </div>
-          <button onClick={() => app.setWhatsappNotification(null)} className="text-slate-500 hover:text-white">
+          <button onClick={() => app.setWhatsappNotification(null)} className="text-slate-500 hover:text-slate-800">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -49,14 +49,14 @@ export default function DevHeader() {
           <div className="hidden sm:flex items-center gap-1 glass-grass p-1 rounded-full shadow-soft">
             <button
               onClick={goPlayer}
-              className={`px-3 py-1.5 text-xs font-bold rounded-full transition ${isPlayer && app.view !== 'owner_dashboard' && app.view !== 'super_admin' ? 'bg-grass-btn text-whiteSoft shadow-pill' : 'text-slate-500'}`}
+              className={`px-3 py-1.5 text-xs font-bold rounded-full transition ${isPlayer && app.view !== 'owner_dashboard' && app.view !== 'super_admin' ? 'bg-grass-btn text-slate-800Soft shadow-pill' : 'text-slate-500'}`}
             >
               player
             </button>
             {(isOwner || role === 'OWNER') && (
               <button
                 onClick={goOwner}
-                className={`px-3 py-1.5 text-xs font-bold rounded-full transition ${app.view === 'owner_dashboard' || app.view === 'owner_pending' ? 'bg-grass-btn text-whiteSoft shadow-pill' : 'text-slate-500'}`}
+                className={`px-3 py-1.5 text-xs font-bold rounded-full transition ${app.view === 'owner_dashboard' || app.view === 'owner_pending' ? 'bg-grass-btn text-slate-800Soft shadow-pill' : 'text-slate-500'}`}
               >
                 owner
               </button>
@@ -64,7 +64,7 @@ export default function DevHeader() {
             {(isSuperAdmin || role === 'SUPER_ADMIN') && (
               <button
                 onClick={goSuperAdmin}
-                className={`px-3 py-1.5 text-xs font-bold rounded-full transition ${app.view === 'super_admin' ? 'bg-grass-btn text-whiteSoft shadow-pill' : 'text-slate-500'}`}
+                className={`px-3 py-1.5 text-xs font-bold rounded-full transition ${app.view === 'super_admin' ? 'bg-grass-btn text-slate-800Soft shadow-pill' : 'text-slate-500'}`}
               >
                 super
               </button>

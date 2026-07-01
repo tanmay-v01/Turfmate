@@ -27,7 +27,7 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="dash-pill-live mb-3">Partner Admin · Live</span>
-            <h2 className="text-2xl lg:text-3xl font-display font-extrabold text-white">
+            <h2 className="text-2xl lg:text-3xl font-display font-extrabold text-slate-800">
               {selectedTurf?.name}
             </h2>
             <p className="text-sm font-bold text-slate-500 mt-1">
@@ -35,7 +35,7 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <button onClick={() => onTabChange('slots')} className="px-4 py-2.5 bg-white/80 border border-white/10 rounded-xl text-xs font-bold text-white hover:shadow-soft transition flex items-center gap-1.5">
+            <button onClick={() => onTabChange('slots')} className="px-4 py-2.5 bg-white/80 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 hover:shadow-soft transition flex items-center gap-1.5">
               <Lock className="w-3.5 h-3.5" /> Manage Slots
             </button>
             <button onClick={() => onTabChange('broadcast')} className="tm-btn-grass px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5">
@@ -54,11 +54,11 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
 
       <div className="grid lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 dash-card overflow-hidden">
-          <div className="p-5 border-b border-white/10/50 flex justify-between items-center">
-            <h3 className="font-extrabold text-white flex items-center gap-2">
-              <Clock className="w-4 h-4 text-lime-400" /> Live Schedule
+          <div className="p-5 border-b border-slate-200/50 flex justify-between items-center">
+            <h3 className="font-extrabold text-slate-800 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-emerald-600" /> Live Schedule
             </h3>
-            <span className="text-xs font-bold text-lime-400">{turfBookings.length} today</span>
+            <span className="text-xs font-bold text-emerald-600">{turfBookings.length} today</span>
           </div>
           <div className="divide-y divide-brand-border/30 max-h-[340px] overflow-y-auto">
             {turfBookings.length === 0 ? (
@@ -71,12 +71,12 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
               <div key={b.id} className="dash-activity-item mx-2 my-1">
                 <div className="dash-activity-dot bg-brand-grassFresh" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-white text-sm truncate">
+                  <p className="font-bold text-slate-800 text-sm truncate">
                     {b.roster?.[0]} · {b.type === 'split' ? 'Split Game' : 'Private'}
                   </p>
                   <p className="text-xs text-slate-500 font-bold">{b.slotTime} · {b.date}</p>
                   <div className="flex gap-2 mt-2 flex-wrap">
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-lime-400/10 text-lime-400">
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600">
                       You get ₹{b.ownerPayout || 0}
                     </span>
                     {b.type === 'split' && b.paidAmount < b.totalAmount && (
@@ -91,12 +91,12 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
 
         <div className="lg:col-span-2 dash-card p-5">
           <MiniBarChart data={weekData} label="Bookings this week" />
-          <div className="mt-4 pt-4 border-t border-white/10/40">
+          <div className="mt-4 pt-4 border-t border-slate-200/40">
             <div className="flex justify-between text-xs font-bold mb-2">
               <span className="text-slate-500">Pitch utilization</span>
-              <span className="text-lime-400">{utilization}%</span>
+              <span className="text-emerald-600">{utilization}%</span>
             </div>
-            <div className="h-2.5 bg-lime-400/10 rounded-full overflow-hidden">
+            <div className="h-2.5 bg-emerald-50 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-brand-grass to-brand-grassFresh rounded-full transition-all duration-700" style={{ width: `${utilization}%` }} />
             </div>
           </div>
@@ -111,10 +111,10 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
         ].map(item => (
           <div key={item.label} className="dash-card p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl tm-icon-accent-green flex items-center justify-center shrink-0">
-              <item.icon className="w-5 h-5 text-lime-400" />
+              <item.icon className="w-5 h-5 text-emerald-600" />
             </div>
             <div>
-              <p className="font-bold text-white text-sm">{item.label}</p>
+              <p className="font-bold text-slate-800 text-sm">{item.label}</p>
               <p className="text-[10px] font-bold text-slate-500">{item.desc}</p>
             </div>
           </div>
@@ -168,7 +168,7 @@ export default function OwnerDashboardPage() {
   return (
     <div className="min-h-screen dash-owner-bg flex flex-col md:flex-row font-display">
       {app.impersonatingOwner && (
-        <div className="fixed top-0 inset-x-0 z-[100] bg-rose-600 text-white px-4 py-2 flex items-center justify-between text-xs font-bold shadow-md">
+        <div className="fixed top-0 inset-x-0 z-[100] bg-rose-600 text-slate-800 px-4 py-2 flex items-center justify-between text-xs font-bold shadow-md">
           <span>Viewing as {app.impersonatingOwner.label} — Super Admin impersonation</span>
           <button type="button" onClick={() => app.exitImpersonation()} className="px-3 py-1 bg-white/20 rounded-lg hover:bg-white/30">
             Exit
@@ -176,12 +176,12 @@ export default function OwnerDashboardPage() {
         </div>
       )}
       {/* Mobile top bar */}
-      <div className="md:hidden glass-grass sticky top-0 z-50 p-4 flex items-center justify-between border-b border-white/10/50">
+      <div className="md:hidden glass-grass sticky top-0 z-50 p-4 flex items-center justify-between border-b border-slate-200/50">
         <div>
-          <p className="font-display font-extrabold text-lg text-white">TurfMate<span className="text-lime-400">.</span></p>
+          <p className="font-display font-extrabold text-lg text-slate-800">TurfMate<span className="text-emerald-600">.</span></p>
           <p className="text-[10px] font-bold text-slate-500 uppercase">Partner Admin</p>
         </div>
-        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-xl tm-icon-accent-green text-white">
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-xl tm-icon-accent-green text-slate-800">
           {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
@@ -189,7 +189,7 @@ export default function OwnerDashboardPage() {
       {/* Sidebar */}
       <aside className={`dash-sidebar fixed md:sticky top-0 h-screen w-64 flex flex-col z-40 transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 hidden md:block">
-          <p className="font-display font-extrabold text-2xl text-white">TurfMate<span className="text-lime-400">.</span></p>
+          <p className="font-display font-extrabold text-2xl text-slate-800">TurfMate<span className="text-emerald-600">.</span></p>
           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Partner Admin Panel</p>
         </div>
 
@@ -206,7 +206,7 @@ export default function OwnerDashboardPage() {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-white/10/50 space-y-1">
+        <div className="p-3 border-t border-slate-200/50 space-y-1">
           <button className="dash-nav-item w-full">
             <Settings className="w-4 h-4" /> Settings
           </button>
@@ -222,35 +222,35 @@ export default function OwnerDashboardPage() {
       {isSidebarOpen && <div className="fixed inset-0 bg-black/30 z-30 md:hidden" onClick={() => setIsSidebarOpen(false)} />}
 
       <main className="flex-1 flex flex-col min-w-0 min-h-screen pb-20 md:pb-0">
-        <header className="hidden md:flex glass-grass border-b border-white/10/50 px-6 lg:px-8 py-4 items-center justify-between shrink-0 sticky top-0 z-20">
+        <header className="hidden md:flex glass-grass border-b border-slate-200/50 px-6 lg:px-8 py-4 items-center justify-between shrink-0 sticky top-0 z-20">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-extrabold text-white">{TABS.find(t => t.id === activeTab)?.label}</h1>
+            <h1 className="text-lg font-extrabold text-slate-800">{TABS.find(t => t.id === activeTab)?.label}</h1>
             <div className="relative">
               <button
                 onClick={() => setShowTurfDropdown(!showTurfDropdown)}
-                className="flex items-center gap-2 text-sm font-bold text-white bg-white/70 border border-white/10 px-4 py-2 rounded-xl hover:shadow-soft transition"
+                className="flex items-center gap-2 text-sm font-bold text-slate-800 bg-white/70 border border-slate-200 px-4 py-2 rounded-xl hover:shadow-soft transition"
               >
-                <MapPin className="w-4 h-4 text-lime-400" />
+                <MapPin className="w-4 h-4 text-emerald-600" />
                 {selectedTurf?.name || 'Select turf'}
                 <ChevronDown className="w-4 h-4 text-slate-500" />
               </button>
               {showTurfDropdown && (
                 <div className="absolute top-full left-0 mt-2 w-60 dash-card overflow-hidden z-50 shadow-premium">
-                  <div className="p-3 bg-lime-400/10/50 text-[10px] font-bold text-slate-500 uppercase">Your venues</div>
+                  <div className="p-3 bg-emerald-50/50 text-[10px] font-bold text-slate-500 uppercase">Your venues</div>
                   {ownedTurfs.map(turf => (
                     <button
                       key={turf.id}
                       onClick={() => { app.setOwnerActiveTurfId(turf.id); setShowTurfDropdown(false); }}
-                      className={`w-full text-left px-4 py-3 text-sm font-bold flex items-center justify-between hover:bg-lime-400/10/40 ${selectedTurf?.id === turf.id ? 'text-lime-400 bg-lime-400/10/60' : 'text-white'}`}
+                      className={`w-full text-left px-4 py-3 text-sm font-bold flex items-center justify-between hover:bg-emerald-50/40 ${selectedTurf?.id === turf.id ? 'text-emerald-600 bg-emerald-50/60' : 'text-slate-800'}`}
                     >
                       {turf.name}
                       {selectedTurf?.id === turf.id && <Check className="w-4 h-4" />}
                     </button>
                   ))}
-                  <div className="border-t border-white/10/40 p-2">
+                  <div className="border-t border-slate-200/40 p-2">
                     <button
                       onClick={() => { const n = prompt('New venue name:'); if (n) app.addOwnerTurf(n); setShowTurfDropdown(false); }}
-                      className="w-full py-2 text-xs font-bold text-lime-400 hover:bg-lime-400/10 rounded-xl flex items-center justify-center gap-1"
+                      className="w-full py-2 text-xs font-bold text-emerald-600 hover:bg-emerald-50 rounded-xl flex items-center justify-center gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" /> Add Turf
                     </button>
@@ -260,16 +260,16 @@ export default function OwnerDashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative p-2.5 rounded-xl hover:bg-lime-400/10/50 text-slate-500">
+            <button className="relative p-2.5 rounded-xl hover:bg-emerald-50/50 text-slate-500">
               <Bell className="w-5 h-5" />
               {metrics.pendingSplits > 0 && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />}
             </button>
-            <div className="flex items-center gap-3 pl-3 border-l border-white/10/50">
+            <div className="flex items-center gap-3 pl-3 border-l border-slate-200/50">
               <div className="text-right">
-                <p className="text-sm font-bold text-white">{app.userProfile.name || ownerRecord?.name}</p>
+                <p className="text-sm font-bold text-slate-800">{app.userProfile.name || ownerRecord?.name}</p>
                 <p className="text-[10px] font-bold text-slate-500">{ownedTurfs.length} turf{ownedTurfs.length !== 1 ? 's' : ''}</p>
               </div>
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-grassPale to-brand-grassFresh/40 border-2 border-brand-grassFresh flex items-center justify-center text-white font-black">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-grassPale to-brand-grassFresh/40 border-2 border-brand-grassFresh flex items-center justify-center text-slate-800 font-black">
                 {(app.userProfile.name || 'O').charAt(0)}
               </div>
             </div>

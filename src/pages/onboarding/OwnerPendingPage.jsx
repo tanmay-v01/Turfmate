@@ -22,10 +22,10 @@ export default function OwnerPendingPage() {
             ⏳
           </div>
           <span className="tm-pill mt-6 inline-flex">partner onboarding</span>
-          <h2 className="text-2xl font-display font-extrabold text-white mt-4">Almost there!</h2>
+          <h2 className="text-2xl font-display font-extrabold text-slate-800 mt-4">Almost there!</h2>
           <p className="text-sm text-slate-500 font-bold mt-2 leading-relaxed">
-            Hi <b className="text-white">{app.userProfile.ownerName || app.userProfile.name}</b> —{' '}
-            <b className="text-white">{app.userProfile.businessName}</b> is under review.
+            Hi <b className="text-slate-800">{app.userProfile.ownerName || app.userProfile.name}</b> —{' '}
+            <b className="text-slate-800">{app.userProfile.businessName}</b> is under review.
             TurfMate takes 10% per booking; you keep 90%.
           </p>
         </div>
@@ -36,8 +36,8 @@ export default function OwnerPendingPage() {
           </p>
           {checks.map(c => (
             <div key={c.label} className="flex items-center justify-between text-sm">
-              <span className="font-bold text-white/80">{c.label}</span>
-              {c.status === 'done' && <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-lime-400/10 text-lime-400">✓ Done</span>}
+              <span className="font-bold text-slate-800/80">{c.label}</span>
+              {c.status === 'done' && <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600">✓ Done</span>}
               {c.status === 'skip' && <span className="text-[10px] font-bold text-slate-500 italic">Optional</span>}
               {c.status === 'pending' && <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-amber-100 text-amber-700 animate-pulse flex items-center gap-1"><Clock className="w-3 h-3" /> Pending</span>}
             </div>
@@ -54,7 +54,7 @@ export default function OwnerPendingPage() {
           <p className="text-[10px] text-center text-slate-500 font-bold">In production, TurfMate super admin approves from God Mode panel</p>
           <button
             onClick={() => { localStorage.removeItem('tm_profile'); app.setUserProfile({ isLoggedIn: false }); app.setView('welcome_carousel'); }}
-            className="w-full py-2.5 text-slate-500 font-bold text-xs hover:text-white transition"
+            className="w-full py-2.5 text-slate-500 font-bold text-xs hover:text-slate-800 transition"
           >
             Cancel & restart
           </button>

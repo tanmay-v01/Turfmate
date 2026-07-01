@@ -59,7 +59,7 @@ export default function OwnerMapPage() {
           <span className="text-xl">📍</span>
           <div>
             <p className="text-[10px] font-black uppercase text-slate-500 tracking-wider">pinned location</p>
-            <p className="text-sm font-bold text-white mt-0.5">{loc.address}</p>
+            <p className="text-sm font-bold text-slate-800 mt-0.5">{loc.address}</p>
             <p className="text-[10px] font-mono text-slate-500 mt-1">{loc.lat}, {loc.lng}</p>
           </div>
         </div>

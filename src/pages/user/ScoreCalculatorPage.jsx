@@ -124,12 +124,12 @@ export default function ScoreCalculatorPage() {
               <div className="w-16 h-16 tm-icon-accent-amber rounded-full flex items-center justify-center mx-auto">
                 <Trophy className="w-8 h-8" />
               </div>
-              <h3 className="font-display font-extrabold text-white text-lg lowercase">match recorded successfully</h3>
+              <h3 className="font-display font-extrabold text-slate-800 text-lg lowercase">match recorded successfully</h3>
               <p className="text-xs text-slate-400">your stats have been synced to the squad leaderboard</p>
             </div>
 
             {/* Scorecard Preview */}
-            <div className="bg-gradient-to-r from-brand-forest to-brand-grassDeep text-white rounded-2xl p-5 text-center relative overflow-hidden shadow-md">
+            <div className="bg-gradient-to-r from-brand-forest to-brand-grassDeep text-slate-800 rounded-2xl p-5 text-center relative overflow-hidden shadow-md">
               <span className="text-[9px] font-black uppercase bg-white/25 px-2.5 py-0.5 rounded-full tracking-wider">
                 {isCricket ? '🏏 Cricket scorecard' : '⚽ Football scorecard'}
               </span>
@@ -156,7 +156,7 @@ export default function ScoreCalculatorPage() {
             </div>
 
             {/* MVP Selector Carousel */}
-            <div className="space-y-2 pt-3 border-t border-white/10">
+            <div className="space-y-2 pt-3 border-t border-slate-200">
               <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block text-center">Vote Match MVP 🏆</label>
               <div className="flex items-center justify-between bg-slate-50 border border-slate-150 p-4 rounded-2xl">
                 <button
@@ -168,7 +168,7 @@ export default function ScoreCalculatorPage() {
                 </button>
                 <div className="text-center">
                   <img src={squadPlayers[mvpIdx]?.avatar} alt="" className="w-12 h-12 rounded-full mx-auto border-2 border-brand-primary object-cover" />
-                  <p className="text-xs font-black text-white mt-1.5">{squadPlayers[mvpIdx]?.name}</p>
+                  <p className="text-xs font-black text-slate-800 mt-1.5">{squadPlayers[mvpIdx]?.name}</p>
                   <p className="text-[9px] text-slate-400 font-bold uppercase tracking-wider">MVP Candidate</p>
                 </div>
                 <button
@@ -182,13 +182,13 @@ export default function ScoreCalculatorPage() {
             </div>
 
             {/* Stat Allocation List */}
-            <div className="space-y-2 pt-3 border-t border-white/10">
+            <div className="space-y-2 pt-3 border-t border-slate-200">
               <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Allocate Match {isCricket ? 'Runs' : 'Goals'}</label>
               <div className="grid grid-cols-1 gap-2 max-h-48 overflow-y-auto pr-1">
                 {squadPlayers.map((player) => {
                   const currentAlloc = allocations[player.id] || 0;
                   return (
-                    <div key={player.id} className="flex items-center justify-between bg-slate-50 border border-white/10 p-2.5 rounded-xl">
+                    <div key={player.id} className="flex items-center justify-between bg-slate-50 border border-slate-200 p-2.5 rounded-xl">
                       <div className="flex items-center gap-2">
                         <img src={player.avatar} alt="" className="w-6 h-6 rounded-lg object-cover" />
                         <span className="text-xs font-bold text-slate-700">{player.name}</span>
@@ -204,7 +204,7 @@ export default function ScoreCalculatorPage() {
                         >
                           -
                         </button>
-                        <span className="font-extrabold text-xs text-white w-4 text-center">{currentAlloc}</span>
+                        <span className="font-extrabold text-xs text-slate-800 w-4 text-center">{currentAlloc}</span>
                         <button
                           type="button"
                           onClick={() => setAllocations(prev => ({
@@ -283,11 +283,11 @@ export default function ScoreCalculatorPage() {
                     className={`p-5 rounded-[24px] border text-left transition ${
                       sport === sid
                         ? 'border-brand-grassFresh tm-tint-green shadow-md'
-                        : 'border-white/10 bg-white/5 hover:border-slate-200'
+                        : 'border-slate-200 bg-white hover:border-slate-200'
                     }`}
                   >
                     <span className="text-3xl">{s.icon}</span>
-                    <p className="font-display font-extrabold text-white mt-2 lowercase">{s.name}</p>
+                    <p className="font-display font-extrabold text-slate-800 mt-2 lowercase">{s.name}</p>
                     <p className="text-xs text-slate-400 mt-0.5">
                       {sid === 'cricket' ? 'runs, wickets, wides, extras' : 'goals, timer, halves'}
                     </p>
@@ -297,19 +297,19 @@ export default function ScoreCalculatorPage() {
             </div>
 
             {/* Team names */}
-            <div className="bg-white/5 rounded-[24px] border border-white/10 p-5 shadow-sm space-y-3">
+            <div className="bg-white rounded-[24px] border border-slate-200 p-5 shadow-sm space-y-3">
               <p className="text-xs font-bold text-slate-500 uppercase">team names</p>
               <div className="grid grid-cols-2 gap-3">
                 <input
                   value={teamA}
                   onChange={(e) => setTeamA(e.target.value)}
-                  className="px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold text-white focus:outline-none focus:border-brand-grassFresh"
+                  className="px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-grassFresh"
                   placeholder="Team A"
                 />
                 <input
                   value={teamB}
                   onChange={(e) => setTeamB(e.target.value)}
-                  className="px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold text-white focus:outline-none focus:border-brand-grassFresh"
+                  className="px-4 py-3 rounded-2xl border border-slate-200 text-sm font-bold text-slate-800 focus:outline-none focus:border-brand-grassFresh"
                   placeholder="Team B"
                 />
               </div>
@@ -336,10 +336,10 @@ export default function ScoreCalculatorPage() {
                   {app.gameHistory.slice(0, 5).map((g) => (
                     <div key={g.id} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
                       <div>
-                        <p className="text-sm font-bold text-white capitalize">{g.sport}</p>
+                        <p className="text-sm font-bold text-slate-800 capitalize">{g.sport}</p>
                         <p className="text-xs text-slate-400">{g.summary}</p>
                       </div>
-                      <span className="text-[10px] font-bold text-lime-400 uppercase">saved</span>
+                      <span className="text-[10px] font-bold text-emerald-600 uppercase">saved</span>
                     </div>
                   ))}
                 </div>
@@ -356,7 +356,7 @@ export default function ScoreCalculatorPage() {
                 </div>
                 <div>
                   <p className="text-[10px] font-bold text-slate-400 uppercase">match timer</p>
-                  <p className="text-2xl font-mono font-bold text-white">{formatTimer(liveGame.timerSeconds)}</p>
+                  <p className="text-2xl font-mono font-bold text-slate-800">{formatTimer(liveGame.timerSeconds)}</p>
                 </div>
               </div>
               <div className="flex gap-2">

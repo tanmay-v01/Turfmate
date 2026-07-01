@@ -1,44 +1,100 @@
-import { ArrowLeft, ChevronRight, Sparkles } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { ArrowLeft, RefreshCw, Shield } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import TurfMateLogo from '../../components/ui/TurfMateLogo';
 import GrassBackground from '../../components/ui/GrassBackground';
-import StepProgress from '../../components/onboarding/StepProgress';
-import env from '../../config/env';
-import { openSupportWhatsApp } from '../../utils/support';
 
 export default function OtpVerifyPage() {
   const app = useApp();
+  const [code, setCode] = useState(['', '', '', '']);
+  const inputs = useRef([]);
+  const [localTimer, setLocalTimer] = useState(app.loginTimer || 30);
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  useEffect(() => {
+    let interval;
+    if (localTimer > 0) {
+      interval = setInterval(() => setLocalTimer((prev) => prev - 1), 1000);
+    }
+    return () => clearInterval(interval);
+  }, [localTimer]);
+
+  useEffect(() => {
+    const fullCode = code.join('');
+    if (fullCode.length === 4) {
+      app.setOtpCode(fullCode);
+      setIsVerifying(true);
+      setTimeout(() => {
+        app.handleVerifyOTP().finally(() => setIsVerifying(false));
+      }, 300);
+    }
+  }, [code, app]);
+
+  const handleChange = (index, value) => {
+    if (isVerifying) return;
+    if (!/^[0-9]*$/.test(value)) return;
+    const newCode = [...code];
+    newCode[index] = value;
+    setCode(newCode);
+
+    if (value !== '' && index < 3) {
+      inputs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDown = (index, e) => {
+    if (isVerifying) return;
+    if (e.key === 'Backspace' && !code[index] && index > 0) {
+      inputs.current[index - 1]?.focus();
+    }
+  };
+
+  const handleResend = (whatsapp = false) => {
+    setCode(['', '', '', '']);
+    setLocalTimer(30);
+    inputs.current[0]?.focus();
+    app.handleSendOTP(whatsapp);
+  };
 
   return (
-    <div className="tm-auth-split relative min-h-[100dvh] bg-[#090D19]">
+    <div className="tm-auth-split relative min-h-[100dvh] bg-[#FAFBFC]">
       <GrassBackground />
 
-      {/* LEFT COLUMN: IMMERSIVE VISUAL PANEL */}
-      <div className="tm-auth-visual bg-slate-950 text-white hidden lg:flex">
+      <div className="tm-auth-visual bg-emerald-950 text-white">
         <img
-          src="https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1200"
+          src="https://images.unsplash.com/photo-1518605368461-1ee7c5320c24?auto=format&fit=crop&q=80&w=1200"
           alt=""
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          className="absolute inset-0 w-full h-full object-cover opacity-40 mix-blend-overlay"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-emerald-950 via-emerald-900/60 to-transparent" />
         <div className="relative z-10 p-12 max-w-lg animate-fade-up-slow">
-          <TurfMateLogo size="md" className="mb-8 animate-float" />
+          <TurfMateLogo size="md" className="mb-8" />
           <h2 className="text-4xl font-display font-black text-white leading-tight lowercase">
-            almost<br /><span className="text-lime-400">in the game</span>
+            almost <span className="text-emerald-400">done.</span>
           </h2>
-          <p className="mt-4 text-slate-300 font-semibold leading-relaxed text-sm">
-            4 digits stand between you and your next kickoff.
-          </p>
+          <div className="mt-6 flex items-center gap-3">
+            <Shield className="w-5 h-5 text-emerald-400" />
+            <p className="text-emerald-100/80 font-medium text-sm">secure passwordless entry.</p>
+          </div>
         </div>
       </div>
 
-      {/* Form — compact on mobile */}
-      <div className="tm-auth-form">
-        <div className="w-full max-w-md mx-auto animate-pop flex flex-col min-h-0 lg:justify-center">
-          <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4 lg:hidden">
+      <div className="tm-auth-form bg-white/50 backdrop-blur-sm">
+        <div className="w-full max-w-md mx-auto animate-pop flex flex-col min-h-0 lg:justify-center relative">
+          {isVerifying && (
+            <div className="absolute inset-0 z-10 bg-white/50 backdrop-blur-[2px] rounded-3xl flex items-center justify-center animate-fade-in">
+              <div className="flex flex-col items-center">
+                <RefreshCw className="w-8 h-8 text-emerald-500 animate-spin" />
+                <p className="mt-3 text-sm font-bold text-emerald-600">verifying...</p>
+              </div>
+            </div>
+          )}
+
+          <div className="flex items-center justify-between gap-3 mb-4 sm:mb-6 lg:hidden">
             <button
               onClick={() => app.navigateTo('login')}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-lime-400 shrink-0 transition"
+              disabled={isVerifying}
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-emerald-600 shrink-0 transition"
             >
               <ArrowLeft className="w-4 h-4" /> back
             </button>
@@ -48,88 +104,57 @@ export default function OtpVerifyPage() {
 
           <button
             onClick={() => app.navigateTo('login')}
-            className="hidden lg:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-lime-400 mb-6 transition"
+            disabled={isVerifying}
+            className="hidden lg:flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-emerald-600 mb-6 transition"
           >
             <ArrowLeft className="w-4 h-4" /> back
           </button>
 
-          <StepProgress step={2} totalSteps={3} flow="player" className="mb-4 lg:hidden" />
-          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase bg-lime-400/10 text-lime-400 border border-lime-400/20 w-fit mb-2">verify</span>
-          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-white lowercase leading-tight">
-            enter the code
+          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold uppercase bg-emerald-50 text-emerald-600 border border-emerald-200 w-fit mb-2 sm:mb-3">verification</span>
+          <h1 className="text-2xl sm:text-3xl font-display font-extrabold text-slate-800 lowercase leading-tight">
+            enter code
           </h1>
-          <p className="mt-1 sm:mt-2 text-slate-500 text-xs sm:text-sm">sent to {app.phoneNumber.includes('@') ? '' : '+91 '}{app.phoneNumber}</p>
+          <p className="mt-1 sm:mt-2 text-slate-500 text-xs sm:text-sm">
+            sent to <span className="font-bold text-slate-700">{app.phoneNumber}</span>
+          </p>
 
-          <div className="mt-6 sm:mt-8 flex justify-center gap-2 sm:gap-3">
-            {Array.from({ length: 4 }).map((_, idx) => (
-              <input
-                key={idx}
-                type="text"
-                inputMode="numeric"
-                maxLength="1"
-                value={app.otpCode[idx] || ''}
-                onChange={(e) => {
-                  const val = e.target.value.replace(/\D/g, '');
-                  if (!val) return;
-                  const newOtp = app.otpCode.split('');
-                  newOtp[idx] = val;
-                  app.setOtpCode(newOtp.join(''));
-                  if (idx < 3) e.target.nextSibling?.focus();
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Backspace') {
-                    const newOtp = app.otpCode.split('');
-                    if (!newOtp[idx] && idx > 0) {
-                      newOtp[idx - 1] = '';
-                      app.setOtpCode(newOtp.join(''));
-                      e.target.previousSibling?.focus();
-                    } else {
-                      newOtp[idx] = '';
-                      app.setOtpCode(newOtp.join(''));
-                    }
-                  }
-                }}
-                className="w-12 h-14 sm:w-14 sm:h-16 bg-white/5 border border-white/10 rounded-2xl text-center text-xl sm:text-2xl font-display font-extrabold text-lime-400 focus:outline-none focus:border-lime-400/50 focus:ring-2 focus:ring-lime-400/15 transition-all"
-              />
-            ))}
-          </div>
+          <div className="mt-8 sm:mt-10">
+            <div className="flex justify-center gap-3 sm:gap-4 max-w-[280px] mx-auto">
+              {[0, 1, 2, 3].map((index) => (
+                <input
+                  key={index}
+                  ref={(el) => (inputs.current[index] = el)}
+                  type="tel"
+                  maxLength={1}
+                  value={code[index]}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e)}
+                  disabled={isVerifying}
+                  className="w-14 h-16 sm:w-16 sm:h-20 text-center text-3xl sm:text-4xl font-display font-black bg-white border-2 border-slate-200 text-slate-800 rounded-2xl focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all shadow-sm"
+                  aria-label={`Digit ${index + 1}`}
+                />
+              ))}
+            </div>
 
-          <div className="mt-4 sm:mt-6 flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm">
-            <span className="text-slate-500 font-medium">didn&apos;t get it?</span>
-            {app.loginTimer > 0 ? (
-              <span className="font-bold text-slate-400">resend in {app.loginTimer}s</span>
-            ) : (
-              <div className="flex gap-2">
-                <button onClick={() => app.handleSendOTP(false)} className="font-bold text-lime-400 hover:underline pb-0.5 border-b border-dashed border-lime-400/30">
-                  resend SMS
+            <div className="mt-8 text-center flex flex-col items-center gap-4">
+              <p className="text-xs sm:text-sm text-slate-500 font-medium">
+                didn&apos;t get it?{' '}
+                {localTimer > 0 ? (
+                  <span className="text-slate-400 font-bold">wait {localTimer}s</span>
+                ) : (
+                  <button onClick={() => handleResend(false)} disabled={isVerifying} className="font-bold text-emerald-600 hover:underline pb-0.5 border-b border-dashed border-emerald-600/30">
+                    resend sms
+                  </button>
+                )}
+              </p>
+              
+              {!app.phoneNumber.includes('@') && localTimer === 0 && (
+                <button onClick={() => handleResend(true)} disabled={isVerifying} className="px-3 py-1 rounded-full bg-[#25D366] text-white text-[10px] sm:text-xs font-black shadow-sm hover:scale-[1.02] active:scale-[0.98] transition">
+                  get via whatsapp instead
                 </button>
-                <button onClick={() => app.handleSendOTP(true)} className="px-3 py-1 rounded-full bg-[#25D366] text-white text-[10px] sm:text-xs font-black shadow-sm hover:scale-102 active:scale-98 transition">
-                  whatsapp
-                </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-
-          {!env.demoMode && env.supportWhatsApp && (
-            <p className="mt-3 text-xs text-slate-500">
-              Still stuck?{' '}
-              <button
-                type="button"
-                onClick={() => openSupportWhatsApp('Hi, I am not receiving my TurfMate OTP.')}
-                className="font-bold text-[#25D366] hover:underline"
-              >
-                message support on WhatsApp
-              </button>
-            </p>
-          )}
-
-          <button
-            className="w-full mt-6 sm:mt-8 sm:px-8 sm:py-4 py-3.5 px-6 text-sm sm:text-base font-display font-bold rounded-2xl transition-all duration-300 active:scale-[0.97] disabled:opacity-40 disabled:pointer-events-none bg-lime-400 text-slate-900 shadow-lg shadow-lime-400/25 hover:bg-lime-300 flex items-center justify-center gap-2"
-            disabled={app.otpCode.length !== 4}
-            onClick={app.handleVerifyOTP}
-          >
-            Verify & Go <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
         </div>
       </div>
     </div>

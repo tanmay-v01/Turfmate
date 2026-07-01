@@ -6,11 +6,11 @@ export default function Button({
   ...props
 }) {
   const variants = {
-    grass: 'bg-lime-400 text-slate-900 shadow-lg shadow-lime-400/25 hover:bg-lime-300 active:scale-[0.97]',
-    soft: 'bg-white/5 text-slate-300 border border-white/10 hover:border-lime-400/30 hover:text-lime-400',
-    ghost: 'bg-transparent text-slate-300 hover:bg-white/5 hover:text-lime-400',
-    glass: 'bg-white/5 backdrop-blur-lg border border-white/10 text-slate-200 hover:bg-white/10',
-    dark: 'bg-lime-400 text-slate-900 hover:bg-lime-300 shadow-lg shadow-lime-400/25',
+    grass: 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/20 hover:bg-emerald-600 hover:shadow-emerald-500/30 active:scale-[0.97]',
+    soft: 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 hover:border-emerald-300',
+    ghost: 'bg-transparent text-slate-600 hover:bg-slate-50 hover:text-emerald-600',
+    glass: 'bg-white/80 backdrop-blur-lg border border-slate-200 text-slate-700 hover:bg-white shadow-sm',
+    dark: 'bg-slate-800 text-white hover:bg-slate-700 shadow-lg',
   };
 
   const sizes = {

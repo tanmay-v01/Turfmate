@@ -5,9 +5,9 @@ export default function GoalScorerPicker({ open, teamName, players, onPick, onCl
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-sm bg-white/5 rounded-[24px] p-5 animate-slide-up">
+      <div className="w-full max-w-sm bg-white rounded-[24px] p-5 animate-slide-up">
         <div className="flex justify-between items-center mb-3">
-          <p className="font-bold text-white text-sm">Who scored for {teamName}?</p>
+          <p className="font-bold text-slate-800 text-sm">Who scored for {teamName}?</p>
           <button type="button" onClick={onClose} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400">
             <X className="w-4 h-4" />
           </button>
@@ -18,7 +18,7 @@ export default function GoalScorerPicker({ open, teamName, players, onPick, onCl
               key={p}
               type="button"
               onClick={() => onPick(p)}
-              className="py-3 px-2 rounded-xl border border-slate-200 text-xs font-bold text-white hover:border-brand-grassFresh hover:tm-tint-green transition truncate"
+              className="py-3 px-2 rounded-xl border border-slate-200 text-xs font-bold text-slate-800 hover:border-brand-grassFresh hover:tm-tint-green transition truncate"
             >
               {p}
             </button>

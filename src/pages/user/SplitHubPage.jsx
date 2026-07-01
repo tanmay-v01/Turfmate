@@ -55,7 +55,7 @@ export default function SplitHubPage() {
       <div className="flex flex-col items-center justify-center p-8 min-h-[60vh] space-y-4 bg-slate-50">
         <AlertCircle className="w-12 h-12 text-slate-300" />
         <p className="text-slate-500 font-bold">No active split found</p>
-        <button onClick={() => app.setView('locker_room')} className="text-white font-bold">
+        <button onClick={() => app.setView('locker_room')} className="text-slate-800 font-bold">
           browse locker room →
         </button>
       </div>
@@ -72,33 +72,33 @@ export default function SplitHubPage() {
 
   return (
     <div className="animate-fade-up flex flex-col min-h-screen bg-slate-50 pb-36">
-      <div className="bg-white/5 border-b border-white/10 px-4 py-3 sticky top-0 z-20 flex justify-between items-center shadow-sm">
+      <div className="bg-white border-b border-slate-200 px-4 py-3 sticky top-0 z-20 flex justify-between items-center shadow-sm">
         <div className="flex items-center gap-3">
           <button onClick={() => app.setView('home')} className="p-2 -ml-2 rounded-full hover:bg-slate-100 text-slate-600">
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="font-display font-extrabold text-white leading-tight lowercase">split hub</h1>
+            <h1 className="font-display font-extrabold text-slate-800 leading-tight lowercase">split hub</h1>
             <span className="text-[10px] text-slate-400 font-semibold uppercase">{activeSplit.turfName}</span>
           </div>
         </div>
-        <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-full ${isFilled ? 'tm-tint-green text-white' : 'bg-amber-100 text-amber-800'}`}>
+        <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-full ${isFilled ? 'tm-tint-green text-slate-800' : 'bg-amber-100 text-amber-800'}`}>
           {isFilled ? '🟢 confirmed' : '🟡 pending funding'}
         </span>
       </div>
 
       <div className="p-4 space-y-4 flex-grow overflow-y-auto">
-        <div className="bg-brand-forest rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
+        <div className="bg-brand-forest rounded-3xl p-5 text-slate-800 shadow-md relative overflow-hidden">
           <span className="text-[10px] bg-white/20 px-2 py-0.5 rounded font-bold uppercase">active escrow</span>
           <h2 className="text-xl font-display font-extrabold mt-2">{activeSplit.sportLabel}</h2>
-          <p className="text-xs text-white/80 mt-1">{activeSplit.time}</p>
+          <p className="text-xs text-slate-800/80 mt-1">{activeSplit.time}</p>
           <div className="mt-4 pt-4 border-t border-white/20 flex justify-between items-center">
             <div>
-              <span className="text-[10px] text-white/60 block uppercase font-bold">collected</span>
+              <span className="text-[10px] text-slate-800/60 block uppercase font-bold">collected</span>
               <span className="text-xl font-display font-extrabold">₹{collected} / ₹{totalTarget || collected}</span>
             </div>
             <div className="text-right">
-              <span className="text-[10px] text-white/60 block uppercase font-bold">expires in</span>
+              <span className="text-[10px] text-slate-800/60 block uppercase font-bold">expires in</span>
               <span className="text-sm font-bold font-mono bg-white/10 px-2 py-1 rounded inline-flex items-center gap-1.5 mt-0.5">
                 <Clock className="w-3.5 h-3.5" /> {formatCountdown(secondsLeft)}
               </span>
@@ -106,14 +106,14 @@ export default function SplitHubPage() {
           </div>
         </div>
 
-        <div className="bg-white/5 p-4 rounded-2xl border border-white/10 shadow-sm space-y-3">
+        <div className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3">
           <div className="flex justify-between items-end">
             <div>
-              <span className="text-xs font-bold text-slate-200">funding progress</span>
+              <span className="text-xs font-bold text-slate-700">funding progress</span>
               <span className="text-[10px] text-slate-500 block">{playersJoined}/{totalNeeded} players joined</span>
             </div>
             {!isFilled && (
-              <span className="text-sm font-bold text-white">₹{amountRemaining} remaining</span>
+              <span className="text-sm font-bold text-slate-800">₹{amountRemaining} remaining</span>
             )}
           </div>
           <div className="h-3 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -123,17 +123,17 @@ export default function SplitHubPage() {
 
         <div className="space-y-2">
           <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider ml-1">roster (paid)</h4>
-          <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden divide-y divide-slate-50">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden divide-y divide-slate-50">
             {(activeSplit.roster || []).map((player, idx) => (
               <div key={player} className="p-3 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   <img src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${player}`} alt="" className="w-8 h-8 rounded-full border-2 border-white shadow-sm" />
                   <div>
-                    <span className="text-xs font-bold text-slate-200 block">{player}</span>
+                    <span className="text-xs font-bold text-slate-700 block">{player}</span>
                     <span className="text-[9px] text-slate-400">{idx === 0 ? 'host' : 'joined'}</span>
                   </div>
                 </div>
-                <span className="flex items-center gap-1 text-[10px] font-bold text-white tm-tint-green px-2 py-1 rounded border">
+                <span className="flex items-center gap-1 text-[10px] font-bold text-slate-800 tm-tint-green px-2 py-1 rounded border">
                   <ShieldCheck className="w-3 h-3" /> paid
                 </span>
               </div>
@@ -148,7 +148,7 @@ export default function SplitHubPage() {
         </div>
 
         {isHost && !isFilled && (
-          <div className="pt-2 border-t border-white/10">
+          <div className="pt-2 border-t border-slate-200">
             {!showCancelConfirm ? (
               <button
                 type="button"
@@ -164,11 +164,11 @@ export default function SplitHubPage() {
                   <button
                     type="button"
                     onClick={() => { app.cancelSplitGame(activeSplit.id); setShowCancelConfirm(false); app.setView('home'); }}
-                    className="flex-1 py-2 bg-rose-600 text-white rounded-xl text-xs font-bold"
+                    className="flex-1 py-2 bg-rose-600 text-slate-800 rounded-xl text-xs font-bold"
                   >
                     yes, cancel
                   </button>
-                  <button type="button" onClick={() => setShowCancelConfirm(false)} className="flex-1 py-2 bg-white/5 border border-slate-200 rounded-xl text-xs font-bold text-slate-600">
+                  <button type="button" onClick={() => setShowCancelConfirm(false)} className="flex-1 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-600">
                     keep split
                   </button>
                 </div>
@@ -178,7 +178,7 @@ export default function SplitHubPage() {
         )}
       </div>
 
-      <div className="fixed bottom-20 lg:bottom-4 inset-x-4 bg-white/5 border border-white/10 rounded-2xl p-4 flex gap-3 z-30 shadow-lg">
+      <div className="fixed bottom-20 lg:bottom-4 inset-x-4 bg-white border border-slate-200 rounded-2xl p-4 flex gap-3 z-30 shadow-lg">
         <button
           onClick={handleShare}
           className="flex-1 py-3.5 tm-btn-primary font-bold rounded-xl text-xs flex items-center justify-center gap-2 uppercase tracking-wide"

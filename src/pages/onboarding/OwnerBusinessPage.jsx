@@ -69,7 +69,7 @@ export default function OwnerBusinessPage() {
           {app.kycErrors.email && <p className="text-xs font-bold text-red-500 mt-1">{app.kycErrors.email}</p>}
         </div>
         <div className="tm-card p-4 bg-brand-accent/30 border-brand-lime/30">
-          <p className="text-xs font-bold text-lime-400">
+          <p className="text-xs font-bold text-emerald-600">
             💰 TurfMate takes 10% commission · payouts settle T+2 to your bank
           </p>
         </div>

@@ -31,7 +31,7 @@ const QUICK_ACTIONS = [
     icon: Zap,
     image: IMAGES.night,
     overlay: 'bg-gradient-to-t from-brand-forest via-brand-forest/70 to-transparent',
-    iconClass: 'bg-white/20 text-white border border-white/30',
+    iconClass: 'bg-white/20 text-slate-800 border border-white/30',
     action: (app) => { app.setSearchViewMode('list'); app.setView('search_engine'); },
   },
   {
@@ -125,15 +125,15 @@ export default function HomePage() {
                 <img
                   src={app.userProfile.avatar}
                   alt=""
-                  className="w-11 h-11 rounded-2xl border border-lime-400/30 object-cover shadow-sm ring-2 ring-lime-400/20 group-hover:ring-lime-400/50 transition"
+                  className="w-11 h-11 rounded-2xl border border-emerald-300 object-cover shadow-sm ring-2 ring-lime-400/20 group-hover:ring-lime-400/50 transition"
                 />
-                <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-lime-400 text-slate-900 flex items-center justify-center shadow-md ring-2 ring-[#090D19]">
+                <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-md ring-2 ring-[#090D19]">
                   <Pencil className="w-2 h-2" />
                 </span>
               </button>
               <div>
                 <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{timeGreeting}</p>
-                <p className="font-display font-extrabold lowercase text-lg tracking-tight text-lime-400">{firstName}</p>
+                <p className="font-display font-extrabold lowercase text-lg tracking-tight text-emerald-600">{firstName}</p>
               </div>
             </div>
             <button
@@ -142,7 +142,7 @@ export default function HomePage() {
             >
               <Bell className="w-[18px] h-[18px] text-slate-300" strokeWidth={2} />
               {app.notifications.some((n) => !n.read) && (
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-lime-400 ring-2 ring-[#090D19]" />
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-[#090D19]" />
               )}
             </button>
           </div>
@@ -155,8 +155,8 @@ export default function HomePage() {
               { icon: Users, label: `${openSplits.length} live splits` },
               { icon: Trophy, label: `rank #${myRank}` },
             ].map((chip) => (
-              <span key={chip.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold bg-white/5 border border-white/10 text-slate-300 shrink-0 whitespace-nowrap">
-                <chip.icon className="w-3 h-3 text-lime-400" strokeWidth={2.5} />
+              <span key={chip.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold bg-white border border-slate-200 text-slate-300 shrink-0 whitespace-nowrap">
+                <chip.icon className="w-3 h-3 text-emerald-600" strokeWidth={2.5} />
                 {chip.label}
               </span>
             ))}
@@ -176,11 +176,11 @@ export default function HomePage() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
-                <div className="text-left text-white min-w-0">
+                <div className="text-left text-slate-800 min-w-0">
                   <p className="text-[10px] font-bold uppercase opacity-75">featured turf</p>
                   <p className="font-display font-extrabold text-lg lowercase truncate">{featured?.name || 'nearby pitch'}</p>
                 </div>
-                <span className="shrink-0 px-2.5 py-1 rounded-full bg-lime-400 text-slate-900 text-[10px] font-black uppercase">
+                <span className="shrink-0 px-2.5 py-1 rounded-full bg-emerald-500 text-white text-[10px] font-black uppercase">
                   from ₹{featured?.pricePerHour || '800'}/hr
                 </span>
               </div>
@@ -188,12 +188,12 @@ export default function HomePage() {
 
             <div className="grid md:grid-cols-[1fr,220px]">
               <div className="p-4 sm:p-6 md:p-7">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide mb-4 px-3 py-1.5 rounded-full bg-lime-400/10 border border-lime-400/20 text-lime-400">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide mb-4 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-600">
                   <Sparkles className="w-3 h-3" />
                   {nearTurfs.length} turfs · {openSplits.length} live games
                 </span>
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-white leading-tight lowercase">
-                  ready to play, <span className="text-lime-400">{firstName}</span>?
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-slate-800 leading-tight lowercase">
+                  ready to play, <span className="text-emerald-600">{firstName}</span>?
                 </h1>
                 <p className="mt-2 text-sm text-slate-400 max-w-sm leading-relaxed">
                   book a pitch, join a split, or squad up — all within your play radius.
@@ -206,7 +206,7 @@ export default function HomePage() {
                     onClick={() => app.setView('play_radius')}
                     className="inline-flex items-center gap-2 px-4 py-2.5 tm-btn-secondary rounded-full text-sm font-bold transition hover:scale-[1.02] max-w-full min-w-0"
                   >
-                    <MapPin className="w-4 h-4 text-lime-400 shrink-0" />
+                    <MapPin className="w-4 h-4 text-emerald-600 shrink-0" />
                     <span className="truncate">{app.userProfile.location || 'Set location'}</span>
                   </button>
                   <button
@@ -225,7 +225,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => { if (featured) { app.setActiveTurfId(featured.id); app.setView('turf_details'); } }}
-                className="relative hidden md:block min-h-[200px] bg-lime-400/10"
+                className="relative hidden md:block min-h-[200px] bg-emerald-50"
               >
                 <TurfImage
                   turf={featured}
@@ -237,7 +237,7 @@ export default function HomePage() {
                   <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 backdrop-blur text-[10px] font-bold uppercase shadow-sm">
                     <Flame className="w-3 h-3" /> featured
                   </span>
-                  <p className="mt-2 text-xs font-bold text-white drop-shadow-md truncate max-w-[180px]">{featured?.name}</p>
+                  <p className="mt-2 text-xs font-bold text-slate-800 drop-shadow-md truncate max-w-[180px]">{featured?.name}</p>
                 </div>
               </button>
             </div>
@@ -246,13 +246,13 @@ export default function HomePage() {
           {/* Mobile search */}
           <button
             onClick={goSearch}
-            className="mt-4 w-full flex items-center gap-3 glass-card rounded-2xl px-4 py-3.5 text-left hover:border-lime-400/30 transition lg:hidden"
+            className="mt-4 w-full flex items-center gap-3 glass-card rounded-2xl px-4 py-3.5 text-left hover:border-emerald-300 transition lg:hidden"
           >
-            <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-lime-400/10 border border-lime-400/20 shrink-0">
-              <Search className="w-4 h-4 text-lime-400" strokeWidth={2.5} />
+            <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-emerald-50 border border-emerald-200 shrink-0">
+              <Search className="w-4 h-4 text-emerald-600" strokeWidth={2.5} />
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-slate-200">Search turfs</p>
+              <p className="text-sm font-semibold text-slate-700">Search turfs</p>
               <p className="text-[11px] text-slate-500 truncate">sports, areas, landmarks…</p>
             </div>
             <ChevronRight className="w-4 h-4 text-slate-600 ml-auto shrink-0" />
@@ -342,13 +342,13 @@ export default function HomePage() {
               <Timer className="w-7 h-7" strokeWidth={2} />
             </div>
             <div>
-              <p className="font-display font-extrabold text-white lowercase">live score</p>
+              <p className="font-display font-extrabold text-slate-800 lowercase">live score</p>
               <p className="text-sm text-slate-400">cricket + football calculator</p>
               {app.liveGame && (
                 <span className="inline-flex mt-1 px-2 py-0.5 rounded-full bg-red-100 text-red-600 text-[10px] font-bold uppercase">match in progress</span>
               )}
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-lime-400 transition" />
+            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-emerald-600 transition" />
           </button>
           <button
             onClick={() => app.setView('leaderboard')}
@@ -358,10 +358,10 @@ export default function HomePage() {
               <Trophy className="w-7 h-7" strokeWidth={2} />
             </div>
             <div>
-              <p className="font-display font-extrabold text-white lowercase">friend leaderboard</p>
+              <p className="font-display font-extrabold text-slate-800 lowercase">friend leaderboard</p>
               <p className="text-sm text-slate-400">goals, runs, wickets & more</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-lime-400 transition" />
+            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-emerald-600 transition" />
           </button>
           <button
             onClick={() => app.setView('tournaments')}
@@ -371,10 +371,10 @@ export default function HomePage() {
               <Medal className="w-7 h-7" strokeWidth={2} />
             </div>
             <div>
-              <p className="font-display font-extrabold text-white lowercase">tournaments</p>
+              <p className="font-display font-extrabold text-slate-800 lowercase">tournaments</p>
               <p className="text-sm text-slate-400">compete & win prizes</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-lime-400 transition" />
+            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-emerald-600 transition" />
           </button>
         </div>
 
@@ -386,13 +386,13 @@ export default function HomePage() {
                 <button
                   key={turf.id}
                   onClick={() => { app.setActiveTurfId(turf.id); app.setView('turf_details'); }}
-                  className="relative shrink-0 w-36 h-48 rounded-2xl overflow-hidden border border-white/10 shadow-sm hover:shadow-md transition group"
+                  className="relative shrink-0 w-36 h-48 rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition group"
                 >
                   <TurfImage turf={turf} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                   <div className="absolute bottom-3 left-3 right-3 text-left">
-                    <p className="text-white font-bold text-xs truncate">{turf.name}</p>
-                    <p className="text-white/80 text-[10px] font-bold">₹{turf.pricePerHour}/hr</p>
+                    <p className="text-slate-800 font-bold text-xs truncate">{turf.name}</p>
+                    <p className="text-slate-800/80 text-[10px] font-bold">₹{turf.pricePerHour}/hr</p>
                   </div>
                 </button>
               ))}
@@ -408,8 +408,8 @@ export default function HomePage() {
               onClick={() => app.setSelectedSportFilter('all')}
               className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition border ${
                 app.selectedSportFilter === 'all'
-                  ? 'bg-lime-400 text-slate-900 border-lime-400 shadow-lg shadow-lime-400/25'
-                  : 'bg-white/5 text-slate-400 border-white/10 hover:border-lime-400/30 hover:text-lime-400'
+                  ? 'bg-emerald-500 text-white border-lime-400 shadow-lg shadow-emerald-500/20'
+                  : 'bg-white text-slate-400 border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
               }`}
             >
               all sports
@@ -422,8 +422,8 @@ export default function HomePage() {
                 onClick={() => app.setSelectedSportFilter(s.id)}
                 className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition border ${
                   active
-                    ? 'bg-lime-400 text-slate-900 border-lime-400 shadow-lg shadow-lime-400/25'
-                    : 'bg-white/5 text-slate-400 border-white/10 hover:border-lime-400/30 hover:text-lime-400'
+                    ? 'bg-emerald-500 text-white border-lime-400 shadow-lg shadow-emerald-500/20'
+                    : 'bg-white text-slate-400 border-slate-200 hover:border-emerald-300 hover:text-emerald-600'
                 }`}
               >
                 {s.name}
@@ -437,7 +437,7 @@ export default function HomePage() {
         <div className="grid lg:grid-cols-2 gap-4">
           {nextBooking ? (
             <div className="glass-card p-5 flex gap-4">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-white/10">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-slate-200">
                 <TurfImage
                   turf={availableTurfs.find((t) => t.id === nextBooking.turfId) || featured}
                   src={nextBooking.image}
@@ -445,12 +445,12 @@ export default function HomePage() {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-black uppercase text-lime-400 tracking-wide">up next</span>
-                <h3 className="font-display font-extrabold text-white text-lg lowercase truncate">{nextBooking.turfName}</h3>
+                <span className="text-[10px] font-black uppercase text-emerald-600 tracking-wide">up next</span>
+                <h3 className="font-display font-extrabold text-slate-800 text-lg lowercase truncate">{nextBooking.turfName}</h3>
                 <p className="text-sm text-slate-500 mt-0.5">{nextBooking.date} · {nextBooking.slotTime}</p>
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                  <button onClick={() => app.setView('split_hub')} className="text-[10px] font-bold text-lime-400 uppercase hover:underline">split hub</button>
-                  <span className="font-bold text-white">₹{nextBooking.paidAmount}</span>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-200">
+                  <button onClick={() => app.setView('split_hub')} className="text-[10px] font-bold text-emerald-600 uppercase hover:underline">split hub</button>
+                  <span className="font-bold text-slate-800">₹{nextBooking.paidAmount}</span>
                 </div>
               </div>
             </div>
@@ -471,12 +471,12 @@ export default function HomePage() {
           >
             <TurfImage turf={featured} fallback={HERO_FALLBACK} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-700" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-            <div className="absolute inset-0 p-5 flex flex-col justify-end text-white">
+            <div className="absolute inset-0 p-5 flex flex-col justify-end text-slate-800">
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/20 backdrop-blur text-[10px] font-bold w-fit mb-2">
                 <TrendingUp className="w-3 h-3" /> trending
               </span>
               <h3 className="font-display font-extrabold text-xl lowercase">{featured.name}</h3>
-              <p className="text-sm text-white/85 mt-0.5">from ₹{featured.pricePerHour}/hr · {featured.rating}★</p>
+              <p className="text-sm text-slate-800/85 mt-0.5">from ₹{featured.pricePerHour}/hr · {featured.rating}★</p>
               <span className="inline-flex items-center gap-1 mt-2 text-sm font-bold text-brand-grassLight">
                 view slots <ChevronRight className="w-4 h-4" />
               </span>
@@ -501,10 +501,10 @@ export default function HomePage() {
                 <item.icon className="w-5 h-5" strokeWidth={2} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-display font-extrabold text-white lowercase text-sm">{item.label}</p>
+                <p className="font-display font-extrabold text-slate-800 lowercase text-sm">{item.label}</p>
                 <p className="text-xs text-slate-400">{item.sub}</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-lime-400 group-hover:translate-x-0.5 transition" />
+              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition" />
             </button>
           ))}
         </div>
@@ -513,7 +513,7 @@ export default function HomePage() {
         {/* Section headings */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="tm-section-heading">turfs near you</h2>
-          <button onClick={goSearch} className="flex items-center gap-1 text-sm font-bold text-lime-400 hover:text-lime-300">
+          <button onClick={goSearch} className="flex items-center gap-1 text-sm font-bold text-emerald-600 hover:text-emerald-500">
             see all <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -536,18 +536,18 @@ export default function HomePage() {
                 <article
                   key={turf.id}
                   onClick={() => { app.setActiveTurfId(turf.id); app.setView('turf_details'); }}
-                  className="glass-card overflow-hidden !p-0 cursor-pointer group hover:shadow-lg hover:border-lime-400/20 transition"
+                  className="glass-card overflow-hidden !p-0 cursor-pointer group hover:shadow-lg hover:border-emerald-200 transition"
                 >
                   <div className="relative h-48 overflow-hidden">
                     <TurfImage turf={turf} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
-                    <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur text-xs font-bold text-white shadow-sm">
+                    <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur text-xs font-bold text-slate-800 shadow-sm">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {turf.rating}
                     </span>
                     <div className="absolute bottom-3 left-3 flex gap-1">
                       {turf.sports.slice(0, 2).map((sid) => {
                         const s = SPORTS.find((x) => x.id === sid);
                         return s ? (
-                          <span key={sid} className="px-2 py-0.5 rounded-full bg-lime-400 text-[10px] font-bold text-slate-900 shadow-sm">
+                          <span key={sid} className="px-2 py-0.5 rounded-full bg-emerald-500 text-[10px] font-bold text-white shadow-sm">
                             {s.icon} {s.name}
                           </span>
                         ) : null;
@@ -562,7 +562,7 @@ export default function HomePage() {
                     <p className="text-sm text-slate-500 mt-0.5">{turf.city} · {turf.reviews} reviews</p>
                     <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
                       <span className="text-xs text-slate-500">from</span>
-                      <span className="font-display font-extrabold text-lime-400">₹{turf.pricePerHour}/hr</span>
+                      <span className="font-display font-extrabold text-emerald-600">₹{turf.pricePerHour}/hr</span>
                     </div>
                   </div>
                 </article>
@@ -574,8 +574,8 @@ export default function HomePage() {
         {/* Players nearby */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-display font-extrabold text-white lowercase">players near you</h2>
-            <button onClick={() => app.setView('play_radius')} className="text-sm font-bold text-lime-400 hover:underline">
+            <h2 className="text-lg font-display font-extrabold text-slate-800 lowercase">players near you</h2>
+            <button onClick={() => app.setView('play_radius')} className="text-sm font-bold text-emerald-600 hover:underline">
               open map →
             </button>
           </div>
@@ -593,7 +593,7 @@ export default function HomePage() {
             ) : nearbyPlayers.map((p) => (
               <div key={p.id} className="glass-card shrink-0 w-32 lg:w-full p-3 text-center hover:shadow-md transition !rounded-2xl">
                 <img src={p.avatar} alt={p.name} className="w-12 h-12 rounded-xl mx-auto border border-white/80 object-cover ring-1 ring-brand-grassFresh/20 shadow-sm" />
-                <p className="font-bold text-sm text-white mt-2 truncate">{p.name.split(' ')[0]}</p>
+                <p className="font-bold text-sm text-slate-800 mt-2 truncate">{p.name.split(' ')[0]}</p>
                 <p className="text-[11px] text-slate-400">{p.skillLevel}</p>
               </div>
             ))}
@@ -602,8 +602,8 @@ export default function HomePage() {
         {openSplits.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-display font-extrabold text-white lowercase">open split games</h2>
-              <button onClick={() => app.setView('locker_room')} className="text-sm font-bold text-lime-400 hover:underline">
+              <h2 className="text-lg font-display font-extrabold text-slate-800 lowercase">open split games</h2>
+              <button onClick={() => app.setView('locker_room')} className="text-sm font-bold text-emerald-600 hover:underline">
                 locker room →
               </button>
             </div>
@@ -612,7 +612,7 @@ export default function HomePage() {
                 const turf = availableTurfs.find(t => t.id === ann.turfId);
                 return (
                   <div key={ann.id} className="glass-card p-4 flex items-center gap-3 hover:shadow-md transition !rounded-2xl">
-                    <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-white/10">
+                    <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-slate-200">
                       {turf ? (
                         <TurfImage turf={turf} className="w-full h-full object-cover" />
                       ) : (
@@ -620,9 +620,9 @@ export default function HomePage() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-display font-extrabold text-white truncate lowercase text-sm">{ann.sportLabel}</p>
+                      <p className="font-display font-extrabold text-slate-800 truncate lowercase text-sm">{ann.sportLabel}</p>
                       <p className="text-xs text-slate-400 truncate">{ann.turfName}</p>
-                      <p className="text-[11px] font-bold text-lime-400 mt-0.5">{ann.playersNeeded} spots · ₹{ann.costPerHead}/head</p>
+                      <p className="text-[11px] font-bold text-emerald-600 mt-0.5">{ann.playersNeeded} spots · ₹{ann.costPerHead}/head</p>
                     </div>
                     <button
                       onClick={() => app.joinSplitGame(ann.id)}

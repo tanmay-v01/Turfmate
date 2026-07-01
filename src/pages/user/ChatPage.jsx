@@ -128,7 +128,7 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={() => setShowPastGames(!showPastGames)}
-                className="mt-4 flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-lime-400 transition"
+                className="mt-4 flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-emerald-600 transition"
               >
                 <History className="w-4 h-4" /> {showPastGames ? 'hide' : 'show'} archived games ({pastGames.length})
               </button>
@@ -178,10 +178,10 @@ export default function ChatPage() {
   ) : (
     <div className="tm-chat-room-placeholder hidden lg:flex">
       <div className="text-center max-w-xs px-6">
-        <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4">
-          <MessageCircle className="w-7 h-7 text-indigo-400" />
+        <div className="w-14 h-14 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center mx-auto mb-4">
+          <MessageCircle className="w-7 h-7 text-indigo-500" />
         </div>
-        <p className="font-display font-extrabold text-white lowercase text-lg">pick a conversation</p>
+        <p className="font-display font-extrabold text-slate-800 lowercase text-lg">pick a conversation</p>
         <p className="text-sm text-slate-500 mt-2">
           Game rooms, community lobbies, and DMs with your squad — all in one place.
         </p>
