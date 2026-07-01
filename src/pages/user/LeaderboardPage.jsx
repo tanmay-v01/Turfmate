@@ -3,13 +3,15 @@ import { Trophy, Medal, TrendingUp } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
 import { LEADERBOARD_METRICS, getFriendIds } from '../../data/leaderboardData';
-import { MOCK_PLAYERS } from '../../data/mockData';
+
 
 const RANK_STYLES = [
   'bg-amber-100 text-amber-700 border-amber-200',
   'bg-slate-100 text-slate-600 border-slate-200',
   'bg-orange-50 text-orange-700 border-orange-200',
 ];
+
+const MOCK_PLAYERS = [];
 
 export default function LeaderboardPage() {
   const app = useApp();
@@ -21,6 +23,7 @@ export default function LeaderboardPage() {
     if (app.userProfile?.isLoggedIn && app.refreshLeaderboard) {
       app.refreshLeaderboard(scope === 'virar' ? 'area' : 'squad');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scope, app.userProfile?.isLoggedIn, app.refreshLeaderboard]);
 
   const metric = LEADERBOARD_METRICS[sport];
@@ -47,6 +50,7 @@ export default function LeaderboardPage() {
       }))
       .sort((a, b) => b.value - a.value);
     return entries;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [app.friendStats, scope, sport, friendIds, metric.primary.key, app.filterRadius, app.userProfile.lat, app.userProfile.lng]);
 
   const myRank = ranked.findIndex((p) => p.isMe) + 1;

@@ -2,8 +2,9 @@ import {
   MapPin, Bell, Search, Star, ArrowRight, Sparkles, Calendar, Trophy, Users, Zap, TrendingUp, ChevronRight, Timer, Navigation, Pencil, UserPlus, LayoutGrid, Medal, Flame, User,
 } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { LEADERBOARD_METRICS, getFriendIds } from '../../data/leaderboardData';
-import { MOCK_PLAYERS, SPORTS } from '../../data/mockData';
+import { SPORTS } from '../../constants/sports';
 import { useApp } from '../../context/AppContext';
 import LiveTicker from '../../components/ui/LiveTicker';
 import EmptyState from '../../components/ui/EmptyState';
@@ -85,7 +86,7 @@ export default function HomePage() {
     return app.getDistance(app.userProfile.lat || 19.456, app.userProfile.lng || 72.812, turf.lat, turf.lng) <= app.filterRadius && a.status === 'open';
   });
 
-  const nearbyPlayers = MOCK_PLAYERS.filter((p) => parseFloat(p.distance) <= app.filterRadius + 2).slice(0, 6);
+  const nearbyPlayers = [];
   const nextBooking = app.bookings[0];
   const firstName = app.userProfile.name?.split(' ')[0] || 'player';
   const hour = new Date().getHours();
@@ -274,11 +275,14 @@ export default function HomePage() {
                 ? `${openSplits.length} live`
                 : null;
               return (
-                <button
+                <motion.button
                   key={item.label}
                   type="button"
                   onClick={() => item.action(app)}
                   className="tm-action-card group"
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   aria-label={`${item.label}: ${item.desc}`}
                 >
                   <img src={item.image} alt="" className="tm-action-card__img" loading="lazy" decoding="async" />
@@ -294,7 +298,7 @@ export default function HomePage() {
                     <span className="tm-action-card__desc">{item.desc}</span>
                   </div>
                   <ChevronRight className="tm-action-card__arrow" aria-hidden />
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -307,13 +311,18 @@ export default function HomePage() {
             { icon: Users, label: 'live splits', value: openSplits.length, sub: 'joinable now', stripe: 'tm-stripe-amber', accent: INFO_ACCENTS.amber, action: () => app.setView('locker_room') },
             { icon: Trophy, label: 'squad ranks', value: `#${myRank}`, sub: 'tap to view', stripe: 'tm-stripe-violet', accent: INFO_ACCENTS.violet, action: () => app.setView('leaderboard') },
             { icon: MapPin, label: 'play radius', value: `${app.filterRadius}km`, sub: 'search zone', stripe: 'tm-stripe-green', accent: INFO_ACCENTS.green, action: () => app.setView('play_radius') },
-          ].map((stat) => (
-            <button
+          ].map((stat, idx) => (
+            <motion.button
               key={stat.label}
               type="button"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.05 + 0.1 }}
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={stat.action || undefined}
               disabled={!stat.action}
-              className={`tm-stat-card glass-card tm-card-color ${stat.stripe} transition hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] ${
+              className={`tm-stat-card glass-card tm-card-color ${stat.stripe} transition-colors ${
                 stat.action ? 'cursor-pointer' : ''
               }`}
             >
@@ -323,7 +332,7 @@ export default function HomePage() {
               <p className="tm-stat-value">{stat.value}</p>
               <p className="tm-stat-label">{stat.label}</p>
               <p className="tm-stat-sub">{stat.sub}</p>
-            </button>
+            </motion.button>
           ))}
         </div>
 

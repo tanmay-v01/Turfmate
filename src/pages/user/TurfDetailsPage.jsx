@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { MapPin, Calendar, Users, Shield, Check, Star, Share2, Lock, Clock, User, AlertTriangle, ArrowLeft, MessageSquare, X } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useApp } from '../../context/AppContext';
 import TurfImage from '../../components/ui/TurfImage';
 import { IMAGES } from '../../data/images';
@@ -14,12 +15,52 @@ export default function TurfDetailsPage() {
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewText, setReviewText] = useState('');
+  const [reviews, setReviews] = useState([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
 
-  const submitReview = () => {
-    app.showToast('Review submitted successfully!', 'success');
-    setShowReviewModal(false);
-    setReviewText('');
-    setReviewRating(5);
+  React.useEffect(() => {
+    if (app.activeTurf?.id) {
+      setLoadingReviews(true);
+      fetch(`/api/turfs/${app.activeTurf.id}/reviews`)
+        .then(res => res.json())
+        .then(data => {
+          setReviews(data.reviews || []);
+          setLoadingReviews(false);
+        })
+        .catch(() => setLoadingReviews(false));
+    }
+  }, [app.activeTurf?.id]);
+
+  const submitReview = async () => {
+    try {
+      const res = await fetch(`/api/turfs/${app.activeTurf.id}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${app.token}`
+        },
+        body: JSON.stringify({ rating: reviewRating, comment: reviewText })
+      });
+      if (!res.ok) throw new Error('Failed to submit review');
+      const newReview = await res.json();
+      
+      app.showToast('Review submitted successfully!', 'success');
+      setShowReviewModal(false);
+      setReviewText('');
+      setReviewRating(5);
+      
+      // Update local state
+      setReviews(prev => [{
+        id: newReview.id,
+        userId: newReview.userId,
+        userName: app.userProfile?.name || 'You',
+        rating: newReview.rating,
+        comment: newReview.comment,
+        createdAt: Date.now()
+      }, ...prev]);
+    } catch (err) {
+      app.showToast('Failed to submit review', 'error');
+    }
   };
 
   return (
@@ -103,7 +144,7 @@ export default function TurfDetailsPage() {
                               <div className="flex items-center gap-3 mt-1.5 text-xs text-slate-300">
                                 <span className="flex items-center gap-1 font-bold"><Star className="w-3.5 h-3.5 fill-amber-400 stroke-amber-400" /> {app.activeTurf.rating}</span>
                                 <span>•</span>
-                                <span>{app.activeTurf.reviews} Reviews</span>
+                                <span>{reviews.length || app.activeTurf.reviews} Reviews</span>
                                 <span>•</span>
                                 <span>📍 {app.activeTurf.distance} away</span>
                               </div>
@@ -189,7 +230,8 @@ export default function TurfDetailsPage() {
                                 {getNext7Days().map(d => {
                                   const isSelected = app.bookingDate === d.key;
                                   return (
-                                    <button
+                                    <motion.button
+                                      whileTap={{ scale: 0.95 }}
                                       key={d.key}
                                       onClick={() => {
                                         app.setBookingDate(d.key);
@@ -197,13 +239,13 @@ export default function TurfDetailsPage() {
                                       }}
                                       className={`px-4 py-2 rounded-xl border flex flex-col items-center min-w-[72px] transition-all duration-200 ${
                                         isSelected 
-                                          ? 'tm-chip-green scale-105' 
-                                          : 'bg-white border-slate-200 text-slate-500 hover:border-slate-300'
+                                          ? 'border-brand-grassFresh bg-brand-grassDeep/10 text-brand-forest shadow-sm' 
+                                          : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'
                                       }`}
                                     >
-                                      <span className="text-[8px] font-bold uppercase tracking-wider opacity-85">{d.label}</span>
-                                      <span className="text-[11px] font-extrabold mt-0.5">{d.dateStr}</span>
-                                    </button>
+                                      <span className="text-[10px] font-extrabold uppercase">{d.label}</span>
+                                      <span className={`text-[9px] font-bold ${isSelected ? 'text-brand-grassDeep' : 'text-slate-400'}`}>{d.dateStr}</span>
+                                    </motion.button>
                                   );
                                 })}
                               </div>
@@ -211,146 +253,78 @@ export default function TurfDetailsPage() {
                           })()}
                         </div>
     
-                        {/* Pitch Selector Tab Bar */}
-                        <div className="space-y-2 text-left">
-                          <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Select Arena / Pitch</h4>
-                          {(() => {
-                            const getPitchesForTurf = (turf) => {
-                              if (turf.id === 'turf-1') {
-                                return [
-                                  { id: 'pitch-a', name: 'Pitch A (5v5 Football)', type: '5v5' },
-                                  { id: 'pitch-b', name: 'Pitch B (7v7 Football)', type: '7v7' }
-                                ];
-                              } else if (turf.id === 'turf-2') {
-                                return [
-                                  { id: 'pitch-a', name: 'Main Arena (7v7)', type: '7v7' },
-                                  { id: 'pitch-b', name: 'Cricket Cage (Box)', type: '5v5' }
-                                ];
-                              } else if (turf.id === 'turf-3') {
-                                return [
-                                  { id: 'pitch-a', name: 'Court 1 (Badminton)', type: 'Singles' },
-                                  { id: 'pitch-b', name: 'Court 2 (5v5)', type: '5v5' }
-                                ];
-                              } else {
-                                return [
-                                  { id: 'pitch-a', name: 'Pickle Court 1', type: 'Singles' },
-                                  { id: 'pitch-b', name: 'Pickle Court 2', type: 'Doubles' }
-                                ];
-                              }
-                            };
-    
-                            const pitches = getPitchesForTurf(app.activeTurf);
-    
-                            return (
-                              <div className="flex bg-slate-100 p-1 rounded-xl">
-                                {pitches.map(p => (
-                                  <button
-                                    key={p.id}
-                                    onClick={() => {
-                                      app.setSelectedPitchId(p.id);
-                                      app.setSelectedSlotId(null);
-                                    }}
-                                    className={`flex-grow py-2 text-center rounded-lg text-xs font-bold transition-all ${
-                                      app.selectedPitchId === p.id 
-                                        ? 'bg-white text-brand-forest shadow-xs font-extrabold' 
-                                        : 'text-slate-500 hover:text-slate-700'
-                                    }`}
-                                  >
-                                    {p.name}
-                                  </button>
-                                ))}
-                              </div>
-                            );
-                          })()}
-                        </div>
-    
-                        {/* Booking Slots Grid & Fully Booked Check */}
+                        {/* Live Slot Engine */}
                         {(() => {
-                          const currentSlots = app.activeTurf.slots.map((s) => ({
-                            ...s,
-                            status: resolveSlotStatus(app, s),
-                          }));
-    
-                          const isSoldOut = currentSlots.every(s => s.status === 'booked');
-    
-                          if (isSoldOut) {
+                          const currentSlots = app.activeTurf.slots || [];
+                          if (currentSlots.length === 0) {
                             return (
-                              <div className="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl flex items-start gap-2.5 animate-pulse">
-                                <span className="text-lg">⚠️</span>
-                                <div className="text-left space-y-1">
-                                  <span className="font-extrabold text-xs text-amber-800 block">Completely Sold Out!</span>
-                                  <span className="text-[10px] text-amber-700 block leading-normal">This arena has no open slots left for {app.bookingDate}. Check tomorrow&apos;s slots or choose a different pitch!</span>
-                                </div>
+                              <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center justify-center text-center">
+                                <AlertTriangle className="w-6 h-6 text-slate-400 mb-2" />
+                                <p className="text-sm font-bold text-slate-600">No Slots Available</p>
+                                <p className="text-[10px] text-slate-400">Try selecting a different date.</p>
                               </div>
                             );
                           }
-    
                           return (
-                            <div className="space-y-2 text-left">
-                              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Available Time Slots</h4>
-                              
-                              {/* Slot legend */}
-                              <div className="flex gap-3 text-[8px] font-extrabold text-slate-400 mb-1">
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-white border border-slate-200"></span> Available</span>
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-amber-50 border border-amber-500"></span> Active Split</span>
-                                <span className="flex items-center gap-1"><span className="w-2 h-2 rounded bg-slate-100"></span> Booked</span>
-                              </div>
-    
+                            <div className="space-y-2 mt-4">
+                              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex justify-between">
+                                <span>Select Time Slot</span>
+                                <span className="text-brand-grassDeep">₹{app.activeTurf.pricePerHour}/hr</span>
+                              </h4>
                               <div className="grid grid-cols-2 gap-2">
-                                {currentSlots.map(s => {
-                                  const isBlocked = s.status === 'booked';
-                                  const isSplit = s.status === 'split';
-                                  const isSelected = app.selectedSlotId === s.id;
+                                {currentSlots.map(slot => {
+                                  const isSelected = app.selectedSlotId === slot.id;
+                                  const rStatus = resolveSlotStatus(app, slot);
                                   
-                                  const priceOverride = app.adminSlotPrices[s.id] || s.surgePrice || app.activeTurf.pricePerHour;
-                                  const hasSurge = !!s.surgePrice || !!app.adminSlotPrices[s.id];
-    
-                                  // Find details of active split announcement
-                                  const matchedSplit = isSplit && app.announcements.find(a => a.turfId === app.activeTurf.id && a.slotId === s.id && a.status === 'open');
-    
+                                  const isLocked = rStatus === 'booked' || rStatus === 'locked';
+                                  const isSplit = rStatus === 'split';
+                                  
                                   return (
                                     <button
-                                      key={s.id}
-                                      disabled={isBlocked}
-                                      onClick={() => app.setSelectedSlotId(s.id)}
-                                      className={`p-2.5 rounded-xl border text-left transition duration-200 relative flex flex-col justify-between ${
-                                        isBlocked 
-                                          ? 'bg-slate-100 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed line-through'
+                                      key={slot.id}
+                                      onClick={() => {
+                                        if (isLocked) return;
+                                        app.setSelectedSlotId(slot.id);
+                                        app.setCheckoutOption(isSplit ? 'split' : 'private');
+                                        if (!isSplit) {
+                                          app.setSplitPlayersCount(10);
+                                          app.setCheckoutInviteGroupId('');
+                                        }
+                                      }}
+                                      className={`p-3 rounded-2xl border text-left transition-all duration-200 relative overflow-hidden flex flex-col justify-center min-h-[64px] ${
+                                        isLocked
+                                          ? 'border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed'
                                           : isSelected
-                                            ? isSplit
-                                              ? 'bg-amber-500/20 border-amber-500 text-amber-900 shadow-glow'
-                                              : 'bg-brand-primary/20 border-brand-primary text-brand-forest shadow-glow'
+                                            ? 'border-brand-grassFresh tm-tint-green shadow-sm scale-[1.02]'
                                             : isSplit
-                                              ? 'bg-amber-50/50 border-amber-500/60 text-amber-800'
-                                              : 'bg-white border-slate-200 hover:border-brand-primary'
+                                              ? 'border-amber-200 bg-amber-50/50 hover:border-amber-300'
+                                              : 'border-slate-200 bg-white hover:border-slate-300'
                                       }`}
                                     >
-                                      <div className="flex justify-between items-center w-full">
-                                        <span className="text-[10px] font-bold">{s.time.split(' - ')[0]}</span>
-                                        {isBlocked ? (
-                                          <span className="text-[8px] font-extrabold uppercase bg-slate-200 text-slate-500 px-1.5 py-0.5 rounded">Sold Out</span>
-                                        ) : isSplit ? (
-                                          <span className="text-[8px] font-extrabold uppercase bg-amber-500 text-white px-1.5 py-0.5 rounded">Split Lobby</span>
-                                        ) : (
-                                          <span className="text-[9px] font-extrabold text-brand-forest">₹{priceOverride}</span>
-                                        )}
+                                      {isLocked && <Lock className="absolute right-2 top-2 w-3.5 h-3.5 text-slate-300" />}
+                                      {isSelected && <Check className="absolute right-2 top-2 w-3.5 h-3.5 text-brand-grassDeep" />}
+                                      
+                                      <div className="flex items-center justify-between mb-1">
+                                        <span className={`text-[11px] font-black ${isSelected ? 'text-brand-forest' : isLocked ? 'text-slate-400' : 'text-slate-700'}`}>
+                                          {slot.time.split(' - ')[0]}
+                                        </span>
+                                        <span className={`text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                                          isSelected ? 'bg-brand-grassDeep text-white' 
+                                          : isSplit ? 'bg-amber-100 text-amber-700' 
+                                          : isLocked ? 'bg-slate-200 text-slate-500' 
+                                          : 'bg-slate-100 text-slate-500'
+                                        }`}>
+                                          {rStatus === 'booked' ? 'sold out' : rStatus === 'locked' ? 'in cart' : rStatus}
+                                        </span>
                                       </div>
                                       
-                                      {isSplit && !isBlocked && matchedSplit && (
-                                        <div className="mt-1 flex justify-between items-center w-full">
-                                          <span className="text-[7.5px] text-amber-600 font-extrabold uppercase">👥 {matchedSplit.playersNeeded} spots left</span>
-                                          <span className="text-[8.5px] font-black text-amber-700">₹{matchedSplit.costPerHead}</span>
-                                        </div>
-                                      )}
-    
-                                      {!isSplit && hasSurge && !isBlocked && (
+                                      {slot.surgePrice && !isLocked && (
                                         <span className="text-[7px] text-amber-600 font-extrabold uppercase mt-1">🔥 Surge Hour Pricing</span>
                                       )}
                                     </button>
                                   );
                                 })}
                               </div>
-
                               {(() => {
                                 if (!app.selectedSlotId) return null;
                                 const slot = currentSlots.find((s) => s.id === app.selectedSlotId);
@@ -437,24 +411,27 @@ export default function TurfDetailsPage() {
                             </button>
                           </div>
 
-                          {/* Dummy Reviews */}
-                          <div className="space-y-3 mt-2">
-                            <div className="border-b border-slate-100 pb-2">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold text-xs text-brand-forest">Rahul C.</span>
-                                <span className="flex text-amber-400"><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /></span>
-                                <span className="text-[8px] text-slate-400 ml-auto">2 days ago</span>
-                              </div>
-                              <p className="text-[10px] text-slate-600">Great turf quality. The 7v7 pitch is very spacious and lighting is perfect for night matches.</p>
-                            </div>
-                            <div className="pb-1">
-                              <div className="flex items-center gap-2 mb-1">
-                                <span className="font-bold text-xs text-brand-forest">Amit S.</span>
-                                <span className="flex text-amber-400"><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3 fill-amber-400" /><Star className="w-3 h-3" /></span>
-                                <span className="text-[8px] text-slate-400 ml-auto">1 week ago</span>
-                              </div>
-                              <p className="text-[10px] text-slate-600">Good place but parking was a bit crowded. Pitch itself is fantastic.</p>
-                            </div>
+                          <div className="space-y-3 mt-2 max-h-64 overflow-y-auto pr-1 no-scrollbar">
+                            {loadingReviews ? (
+                              <p className="text-xs text-slate-400 text-center py-4">Loading reviews...</p>
+                            ) : reviews.length === 0 ? (
+                              <p className="text-xs text-slate-400 text-center py-4 italic">No reviews yet. Be the first!</p>
+                            ) : (
+                              reviews.map(r => (
+                                <div key={r.id} className="border-b border-slate-100 pb-2">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className="font-bold text-xs text-brand-forest">{r.userName}</span>
+                                    <span className="flex text-amber-400">
+                                      {Array(5).fill(0).map((_, i) => (
+                                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'fill-amber-400' : 'text-slate-200'}`} />
+                                      ))}
+                                    </span>
+                                    <span className="text-[8px] text-slate-400 ml-auto">{new Date(r.createdAt).toLocaleDateString()}</span>
+                                  </div>
+                                  <p className="text-[10px] text-slate-600">{r.comment}</p>
+                                </div>
+                              ))
+                            )}
                           </div>
                         </div>
                       </div>

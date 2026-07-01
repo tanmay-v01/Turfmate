@@ -1,5 +1,5 @@
 import { ChevronRight } from 'lucide-react';
-import { SPORTS } from '../../data/mockData';
+import { SPORTS } from '../../constants/sports';
 import { useApp } from '../../context/AppContext';
 import OnboardingShell from '../../components/onboarding/OnboardingShell';
 import Button from '../../components/ui/Button';

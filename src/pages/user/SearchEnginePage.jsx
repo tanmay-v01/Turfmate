@@ -6,6 +6,7 @@ import TurfMapBase from '../../components/map/TurfMapBase';
 import { createUserIcon, createTurfIcon } from '../../components/map/mapIcons';
 import { filterTurfs } from '../../utils/turfMapFilters';
 import EmptyState from '../../components/ui/EmptyState';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function SearchEnginePage() {
   const app = useApp();
@@ -81,34 +82,40 @@ export default function SearchEnginePage() {
               className="my-10 border border-slate-100"
             />
           ) : (
-            filteredList.map((turf) => {
-              const dist = app.getDistance(lat1, lng1, turf.lat, turf.lng).toFixed(1);
-              return (
-                <div
-                  key={turf.id}
-                  onClick={() => {
-                    app.setActiveTurfId(turf.id);
-                    app.setView('turf_details');
-                  }}
-                  className="glass-card tm-card-hover overflow-hidden flex cursor-pointer shrink-0 group !p-0"
-                >
-                  <TurfImage turf={turf} className="w-28 h-24 self-stretch object-cover group-hover:scale-105 transition-transform duration-500 rounded-l-2xl" />
-                  <div className="p-3 text-left flex-grow">
-                    <span className="tm-pill text-[8px] py-0.5 px-2">{turf.city}</span>
-                    <h4 className="font-extrabold text-sm text-brand-forest mt-1.5 truncate">{turf.name}</h4>
-                    <div className="flex items-center gap-1.5 mt-1.5 text-[9px] text-slate-400 font-bold">
-                      <span>⭐ {turf.rating}</span>
-                      <span>•</span>
-                      <span>📍 {dist} km away</span>
+            <AnimatePresence>
+              {filteredList.map((turf, index) => {
+                const dist = app.getDistance(lat1, lng1, turf.lat, turf.lng).toFixed(1);
+                return (
+                  <motion.div
+                    key={turf.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    onClick={() => {
+                      app.setActiveTurfId(turf.id);
+                      app.setView('turf_details');
+                    }}
+                    className="glass-card tm-card-hover overflow-hidden flex cursor-pointer shrink-0 group !p-0"
+                  >
+                    <TurfImage turf={turf} className="w-28 h-24 self-stretch object-cover group-hover:scale-105 transition-transform duration-500 rounded-l-2xl" />
+                    <div className="p-3 text-left flex-grow">
+                      <span className="tm-pill text-[8px] py-0.5 px-2">{turf.city}</span>
+                      <h4 className="font-extrabold text-sm text-brand-forest dark:text-brand-grassLight mt-1.5 truncate">{turf.name}</h4>
+                      <div className="flex items-center gap-1.5 mt-1.5 text-[9px] text-slate-400 dark:text-slate-500 font-bold">
+                        <span>⭐ {turf.rating}</span>
+                        <span>•</span>
+                        <span>📍 {dist} km away</span>
+                      </div>
+                      <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-50 dark:border-slate-700/50">
+                        <span className="text-[8px] text-slate-400 dark:text-slate-500 font-semibold">Hourly Booking</span>
+                        <span className="text-xs font-extrabold text-brand-forest dark:text-brand-grassLight">₹{turf.pricePerHour}</span>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-50">
-                      <span className="text-[8px] text-slate-400 font-semibold">Hourly Booking</span>
-                      <span className="text-xs font-extrabold text-brand-forest">₹{turf.pricePerHour}</span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
           )}
         </div>
 

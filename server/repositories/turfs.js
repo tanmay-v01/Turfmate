@@ -131,4 +131,62 @@ async function upsertTurf(demo, ownerUserId = null) {
   return id;
 }
 
-module.exports = { listTurfs, getTurfByLegacyId, upsertTurf, rowToClient };
+async function addReview({ turfId, userId, rating, comment }) {
+  const id = crypto.randomUUID();
+  const now = Date.now();
+  await db.run(
+    isPg
+      ? `INSERT INTO turf_reviews (id, turf_id, user_id, rating, comment, created_at) VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT (turf_id, user_id) DO UPDATE SET rating=$4, comment=$5, created_at=$6`
+      : `INSERT INTO turf_reviews (id, turf_id, user_id, rating, comment, created_at) VALUES (?,?,?,?,?,?) ON CONFLICT (turf_id, user_id) DO UPDATE SET rating=?, comment=?, created_at=?`,
+    isPg
+      ? [id, turfId, userId, rating, comment, now]
+      : [id, turfId, userId, rating, comment, now, rating, comment, now]
+  );
+  
+  // Recalculate average rating
+  const stats = await db.getOne(
+    isPg ? `SELECT AVG(rating) as avg, COUNT(*) as cnt FROM turf_reviews WHERE turf_id = $1` : `SELECT AVG(rating) as avg, COUNT(*) as cnt FROM turf_reviews WHERE turf_id = ?`,
+    [turfId]
+  );
+  
+  const avg = stats.avg ? Number(stats.avg).toFixed(1) : 0;
+  
+  // Update turf rating
+  await db.run(
+    isPg ? `UPDATE turfs SET rating = $1 WHERE id = $2` : `UPDATE turfs SET rating = ? WHERE id = ?`,
+    [avg, turfId]
+  );
+  
+  // Also update meta.reviews (using a simple select then update since sqlite json update is tricky across both DBs)
+  const turf = await db.getOne(isPg ? `SELECT meta FROM turfs WHERE id = $1` : `SELECT meta FROM turfs WHERE id = ?`, [turfId]);
+  if (turf) {
+    const meta = parseJson(turf.meta, {});
+    meta.reviews = stats.cnt;
+    await db.run(
+      isPg ? `UPDATE turfs SET meta = $1::jsonb WHERE id = $2` : `UPDATE turfs SET meta = ? WHERE id = ?`,
+      [JSON.stringify(meta), turfId]
+    );
+  }
+  
+  return { id, turfId, userId, rating, comment, avg };
+}
+
+async function getReviews(turfId) {
+  const rows = await db.getAll(
+    isPg
+      ? `SELECT r.*, p.full_name as user_name, p.avatar_url FROM turf_reviews r LEFT JOIN player_profiles p ON r.user_id = p.user_id WHERE r.turf_id = $1 ORDER BY r.created_at DESC`
+      : `SELECT r.*, p.full_name as user_name, p.avatar_url FROM turf_reviews r LEFT JOIN player_profiles p ON r.user_id = p.user_id WHERE r.turf_id = ? ORDER BY r.created_at DESC`,
+    [turfId]
+  );
+  return rows.map(r => ({
+    id: r.id,
+    userId: r.user_id,
+    userName: r.user_name || 'Anonymous',
+    userAvatar: r.avatar_url,
+    rating: r.rating,
+    comment: r.comment,
+    createdAt: r.created_at
+  }));
+}
+
+module.exports = { listTurfs, getTurfByLegacyId, upsertTurf, rowToClient, addReview, getReviews };

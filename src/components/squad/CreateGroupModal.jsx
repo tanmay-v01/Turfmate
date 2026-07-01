@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { X, Check } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { MOCK_PLAYERS } from '../../data/mockData';
+
 
 export default function CreateGroupModal({ open, onClose }) {
   const app = useApp();
@@ -10,7 +10,7 @@ export default function CreateGroupModal({ open, onClose }) {
 
   if (!open) return null;
 
-  const friends = MOCK_PLAYERS.filter((p) => p.isFriend);
+  const friends = [];
 
   const toggle = (friendName) => {
     setSelected((prev) =>

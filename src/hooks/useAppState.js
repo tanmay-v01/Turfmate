@@ -1,8 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { SPORTS, MOCK_TURFS, INITIAL_ANNOUNCEMENTS, INITIAL_CHATS } from '../data/mockData';
-import { INITIAL_FRIEND_STATS } from '../data/leaderboardData';
 import { extractPlayerDeltas, applyStatDelta } from '../utils/scoreEngine';
-import { INITIAL_OWNERS, SUPER_ADMIN_PHONE } from '../data/ownersData';
 import { enrichBookingPayment, calcCommission } from '../constants/commission';
 import { bookingApi } from '../services/api';
 import { authApi } from '../services/authApi';
@@ -12,7 +9,6 @@ import { adminApi } from '../services/adminApi';
 import { paymentsApi } from '../services/paymentsApi';
 import { openRazorpayCheckout } from '../utils/razorpayCheckout';
 import { socketService } from '../services/socket';
-import { INITIAL_FRIEND_REQUESTS } from '../data/chatData';
 import env from '../config/env';
 import { readJson } from '../utils/safeStorage';
 import { getToken } from '../services/apiClient';
@@ -82,36 +78,7 @@ export function useAppState() {
       username: '@rahul_cricket'
     }));
 
-  const [bookings, setBookings] = useState(() => {
-    const raw = readJson('tm_bookings', [
-      {
-        id: 'B-7891',
-        turfId: 'turf-1',
-        turfName: 'Green Valley Arena',
-        slotTime: '08:00 PM - 09:00 PM',
-        date: 'Today',
-        type: 'split',
-        paidAmount: 400,
-        totalAmount: 1200,
-        status: 'Confirmed (Split Active)',
-        qrCode: 'TMT-SPLIT-B-7891-GRN-VALY',
-        roster: ['Rahul Mehta', 'Sneha Rao', 'Vikram Singh'],
-        ownerId: 'owner-1',
-        image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=400',
-        grossAmount: 1200,
-        commissionAmount: 40,
-        ownerPayout: 360,
-        source: 'app',
-        bookedAt: '2026-06-19T18:00:00.000Z',
-      },
-    ]);
-    return raw.map((b) => {
-      if (b.commissionAmount != null) return b;
-      const turf = MOCK_TURFS.find((t) => t.id === b.turfId);
-      const collected = b.paidAmount || 0;
-      return enrichBookingPayment(b, turf, collected, b.totalAmount || collected);
-    });
-  });
+  const [bookings, setBookings] = useState(() => readJson('tm_bookings', []));
 
   const [turfs, setTurfs] = useState(loadTurfs);
   const turfsRef = useRef(turfs);
@@ -172,7 +139,7 @@ export function useAppState() {
     return () => { active = false; };
   }, [userProfile?.isLoggedIn]);
 
-  const [owners, setOwners] = useState(() => readJson('tm_owners', INITIAL_OWNERS));
+  const [owners, setOwners] = useState(() => readJson('tm_owners', []));
 
   const [ownerRevenue, setOwnerRevenue] = useState(null);
   const [platformLedger, setPlatformLedger] = useState(null);
@@ -212,10 +179,7 @@ export function useAppState() {
   const [gameHistory, setGameHistory] = useState(() => readJson('tm_game_history', []));
   const [tournaments, setTournaments] = useState([]);
 
-  const [notifications, setNotifications] = useState([
-    { id: 1, text: "Sneha Rao requested to join your game tonight!", time: "5 mins ago", read: false },
-    { id: 2, text: "Slot booking B-7891 confirmed for 8 PM.", time: "1 hour ago", read: true }
-  ]);
+  const [notifications, setNotifications] = useState(() => readJson('tm_notifications', []));
 
   const [toast, setToast] = useState(null);
 
@@ -988,7 +952,11 @@ export function useAppState() {
 
     try {
       const { owner, turf, profile } = await ownersApi.submitApplication(payload);
-      const template = MOCK_TURFS[0];
+      const template = {
+        sports: ['football'], price_per_hour: 1000,
+        slots: [{id: 's1', time: '18:00'}, {id: 's2', time: '19:00'}],
+        image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55'
+      };
       const newTurf = {
         ...template,
         id: turf.id,
@@ -1020,7 +988,11 @@ export function useAppState() {
 
     const ownerId = userProfile.userId || `owner-${new Date().getTime()}`;
     const turfId = `turf-${new Date().getTime()}`;
-    const template = MOCK_TURFS[0];
+    const template = {
+      sports: ['football'], price_per_hour: 1000,
+      slots: [{id: 's1', time: '18:00'}, {id: 's2', time: '19:00'}],
+      image: 'https://images.unsplash.com/photo-1579952363873-27f3bade9f55'
+    };
     const newTurf = {
       ...template,
       id: turfId,
@@ -1079,7 +1051,11 @@ export function useAppState() {
     const ownerId = getCurrentOwnerId();
     if (!ownerId) return;
     const turfId = `turf-${Date.now()}`;
-    const template = MOCK_TURFS[1];
+    const template = {
+      sports: ['football'], price_per_hour: 1000,
+      slots: [{id: 's1', time: '18:00'}, {id: 's2', time: '19:00'}],
+      image: 'https://images.unsplash.com/photo-1518605368461-1e122b554e20'
+    };
     const newTurf = {
       ...template,
       id: turfId,
@@ -2287,28 +2263,17 @@ export function useAppState() {
     });
     setUserProfile({
       isLoggedIn: false,
-      name: 'Rahul Mehta',
-      avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Rahul',
-      favoriteSports: ['football', 'cricket'],
-      position: 'Midfielder',
-      skillLevel: 'Intermediate',
-      location: 'Virar',
-      radius: 10,
-      lat: 19.456,
-      lng: 72.812,
-      phone: '9876543210',
-      username: '@rahul_cricket'
     });
     setPhoneNumber('');
     setOtpSent(false);
     setOtpCode('');
     setIsAdminMode(false);
-    setTurfs(MOCK_TURFS);
-    setOwners(INITIAL_OWNERS);
+    setTurfs([]);
+    setOwners([]);
     setSuspendedTurfIds([]);
     setBannedUsers([]);
     setOwnerActiveTurfId('turf-1');
-    setFriendStats(INITIAL_FRIEND_STATS);
+    setFriendStats([]);
     setLiveGame(null);
     setGameHistory([]);
     setSquadGroups([]);

@@ -4,7 +4,7 @@ import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
 import CreateGroupModal from '../../components/squad/CreateGroupModal';
 import { LEADERBOARD_METRICS, getFriendIds } from '../../data/leaderboardData';
-import { MOCK_PLAYERS } from '../../data/mockData';
+
 
 const SQUADS = [
   { id: 's1', name: 'Sunday Football Crew', memberCount: 12, image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?auto=format&fit=crop&q=80&w=400' },
@@ -18,7 +18,7 @@ export default function MySquadPage() {
   const [query, setQuery] = useState('');
   const [showGroupModal, setShowGroupModal] = useState(false);
 
-  const friends = MOCK_PLAYERS.filter((p) => p.isFriend);
+  const friends = [];
   const filteredFriends = friends.filter((f) => f.name.toLowerCase().includes(query.toLowerCase()));
 
   const metric = LEADERBOARD_METRICS[rankSport];

@@ -1,3 +1,5 @@
+import { motion } from 'framer-motion';
+
 /** Reusable stat card for owner & super-admin dashboards */
 export default function StatCard({
   label,
@@ -9,17 +11,21 @@ export default function StatCard({
   className = '',
 }) {
   const variants = {
-    default: 'bg-white border-brand-border/60',
-    hero: 'bg-gradient-to-br from-brand-grassPale via-white to-brand-accent/40 border-brand-grassFresh/30',
+    default: 'bg-white border-brand-border/60 dark:bg-slate-800/80 dark:border-slate-700 dark:text-slate-200',
+    hero: 'bg-gradient-to-br from-brand-grassPale via-white to-brand-accent/40 border-brand-grassFresh/30 dark:from-brand-forest/40 dark:via-slate-800 dark:to-slate-900',
     dark: 'bg-slate-800/60 border-slate-700/80 text-white',
-    commission: 'bg-gradient-to-br from-brand-grassFresh/20 to-brand-grassPale border-brand-grassFresh/40',
+    commission: 'bg-gradient-to-br from-brand-grassFresh/20 to-brand-grassPale border-brand-grassFresh/40 dark:from-brand-grassDeep/40 dark:to-brand-forest/60',
     super: 'bg-gradient-to-br from-slate-800 to-slate-900 border-brand-grassFresh/20',
   };
 
   const isDark = variant === 'dark' || variant === 'super';
 
   return (
-    <div className={`dash-stat-card ${variants[variant]} ${className}`}>
+    <motion.div 
+      whileHover={{ y: -4, scale: 1.02 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      className={`dash-stat-card ${variants[variant]} ${className}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
           <p className={`text-[10px] font-bold uppercase tracking-wider mb-2 ${isDark ? 'text-slate-400' : 'text-brand-muted'}`}>
@@ -47,6 +53,6 @@ export default function StatCard({
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

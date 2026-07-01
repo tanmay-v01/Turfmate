@@ -301,6 +301,17 @@ async function migrate() {
       created_at INTEGER NOT NULL,
       FOREIGN KEY(user_id) REFERENCES users(id)
     )`,
+    `CREATE TABLE IF NOT EXISTS turf_reviews (
+      id TEXT PRIMARY KEY,
+      turf_id TEXT NOT NULL,
+      user_id TEXT NOT NULL,
+      rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
+      comment TEXT,
+      created_at INTEGER NOT NULL,
+      FOREIGN KEY(turf_id) REFERENCES turfs(id),
+      FOREIGN KEY(user_id) REFERENCES users(id),
+      UNIQUE(turf_id, user_id)
+    )`,
   ];
   for (const sql of statements) {
     await run(sql);

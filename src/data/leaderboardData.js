@@ -1,4 +1,4 @@
-import { MOCK_PLAYERS } from './mockData';
+
 
 /** Primary + secondary stats shown per sport on the friends leaderboard */
 export const LEADERBOARD_METRICS = {
@@ -132,7 +132,7 @@ export const INITIAL_FRIEND_STATS = [
 
 /** Friends = current user + MOCK_PLAYERS where isFriend (dedupe self) */
 export function getFriendIds() {
-  const friendIds = MOCK_PLAYERS.filter((p) => p.isFriend && p.id !== 'p-1').map((p) => p.id);
+  const friendIds = [];
   return ['me', ...friendIds];
 }
 

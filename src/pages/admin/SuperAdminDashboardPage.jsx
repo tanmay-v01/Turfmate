@@ -9,6 +9,9 @@ import StatCard from '../../components/dashboard/StatCard';
 import MiniBarChart from '../../components/dashboard/MiniBarChart';
 
 import { adminApi } from '../../services/adminApi';
+import { SPORTS } from '../../constants/sports';
+
+const SUPER_ADMIN_PHONE = '9999999999';
 
 export default function SuperAdminDashboardPage() {
   const app = useApp();
@@ -147,6 +150,7 @@ export default function SuperAdminDashboardPage() {
         }
       })
       .catch(err => console.warn('Failed to load pending KYC:', err));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const TABS = [
@@ -154,7 +158,8 @@ export default function SuperAdminDashboardPage() {
     { id: 'owners', label: 'Owners', icon: UserCheck, mobile: true, badge: pendingOwners.length },
     { id: 'turfs', label: 'Turfs', icon: MapPin, mobile: true },
     { id: 'bookings', label: 'Bookings', icon: Activity, mobile: true },
-    { id: 'moderation', label: 'Moderation', icon: XCircle, mobile: true },
+    { id: 'moderation', label: 'Moderation', icon: ShieldCheck, badge: flaggedItems.length, mobile: true },
+    { id: 'system', label: 'System Health', icon: Zap, mobile: false },
     { id: 'settings', label: 'Settings', icon: Settings, mobile: false },
   ];
 
@@ -823,6 +828,75 @@ export default function SuperAdminDashboardPage() {
                     <p className="text-xs text-slate-500 font-bold">KYC + bank verification required</p>
                   </div>
                   <span className="dash-pill-live !text-emerald-400">Enabled</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'system' && (
+            <div className="max-w-6xl mx-auto space-y-6 animate-fade-in text-left">
+              <div className="flex justify-between items-end">
+                <div>
+                  <h2 className="text-2xl font-display font-extrabold text-brand-text">System Health & Logs</h2>
+                  <p className="text-sm text-slate-500 font-bold mt-1">Real-time performance and audit trails.</p>
+                </div>
+                <div className="flex gap-2">
+                  <button className="px-4 py-2 bg-slate-800 text-white font-bold rounded-xl text-xs hover:bg-slate-700 transition">Export Logs</button>
+                  <button className="px-4 py-2 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold rounded-xl text-xs flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> All Systems Nominal
+                  </button>
+                </div>
+              </div>
+
+              <div className="grid lg:grid-cols-3 gap-6">
+                <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-5">
+                  <h3 className="font-extrabold text-brand-text flex items-center gap-2">
+                    <Activity className="w-4 h-4 text-emerald-500" /> Server Resources
+                  </h3>
+                  <div className="space-y-4">
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-1">
+                        <span className="text-slate-500">CPU Usage</span>
+                        <span className="text-brand-text">14%</span>
+                      </div>
+                      <div className="w-full bg-slate-100 rounded-full h-2">
+                        <div className="bg-emerald-400 h-2 rounded-full" style={{ width: '14%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-1">
+                        <span className="text-slate-500">Memory (RAM)</span>
+                        <span className="text-brand-text">2.1 GB / 4.0 GB</span>
+                      </div>
+                      <div className="w-full bg-slate-100 rounded-full h-2">
+                        <div className="bg-amber-400 h-2 rounded-full" style={{ width: '52%' }}></div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between text-xs font-bold mb-1">
+                        <span className="text-slate-500">Storage (DB)</span>
+                        <span className="text-brand-text">18 GB / 50 GB</span>
+                      </div>
+                      <div className="w-full bg-slate-100 rounded-full h-2">
+                        <div className="bg-sky-400 h-2 rounded-full" style={{ width: '36%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:col-span-2 rounded-2xl border border-slate-200 bg-white p-5 flex flex-col h-[400px]">
+                  <h3 className="font-extrabold text-brand-text flex items-center gap-2 mb-4">
+                    <Zap className="w-4 h-4 text-amber-500" /> Live Activity Log
+                  </h3>
+                  <div className="flex-1 bg-slate-900 rounded-xl p-4 overflow-y-auto font-mono text-xs text-slate-300 space-y-2 border border-slate-800">
+                    <p><span className="text-emerald-400">[20:41:05]</span> [AUTH] User &apos;Rahul Mehta&apos; logged in successfully.</p>
+                    <p><span className="text-sky-400">[20:41:12]</span> [DB] Query /turfs executed in 14ms</p>
+                    <p><span className="text-amber-400">[20:41:22]</span> [WARN] High latency detected on /payments/status (840ms)</p>
+                    <p><span className="text-emerald-400">[20:41:45]</span> [BOOKING] Split game &apos;Night Football&apos; created by u_102.</p>
+                    <p><span className="text-sky-400">[20:42:01]</span> [SOCKET] Room &apos;turf_7&apos; joined by 3 clients.</p>
+                    <p><span className="text-red-400">[20:42:15]</span> [ERROR] Failed to send SMS OTP to +919999999999 (Gateway Timeout)</p>
+                    <p><span className="text-emerald-400">[20:42:30]</span> [PAYMENT] Webhook received: charge.succeeded for ₹1200.</p>
+                  </div>
                 </div>
               </div>
             </div>

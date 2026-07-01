@@ -1,8 +1,14 @@
 import { groupMessagesWithDates, isOwnMessage } from '../../utils/chatHelpers';
+import { motion } from 'framer-motion';
 
 function MessageBubble({ msg, own, showSender, chat }) {
   return (
-    <div className={`flex flex-col ${own ? 'items-end' : 'items-start'}`}>
+    <motion.div 
+      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.2 }}
+      className={`flex flex-col ${own ? 'items-end' : 'items-start'}`}
+    >
       {!own && showSender && (
         <span className="tm-chat-msg__sender">{msg.sender}</span>
       )}
@@ -15,7 +21,7 @@ function MessageBubble({ msg, own, showSender, chat }) {
           )}
         </span>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

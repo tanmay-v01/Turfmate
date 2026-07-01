@@ -12,7 +12,10 @@ class SocketService {
   connect(userId) {
     this.userId = userId;
     if (!this.socket) {
-      this.socket = io(SOCKET_URL);
+      const token = localStorage.getItem('tm_token');
+      this.socket = io(SOCKET_URL, {
+        auth: { token }
+      });
 
       this.socket.on('connect', () => {
         console.log('Connected to socket server with ID:', this.socket.id);

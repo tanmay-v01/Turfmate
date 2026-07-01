@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: 'class',
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -29,6 +30,12 @@ export default {
           forestMid: '#065F46',
           forestLight: '#059669',
           card: '#FFFFFF',
+          // Dark mode additions
+          darkBase: '#0F172A', // Slate 900
+          darkSurface: '#1E293B', // Slate 800
+          darkText: '#F8FAFC',
+          darkMuted: '#94A3B8',
+          darkBorder: '#334155',
         }
       },
       fontFamily: {
@@ -42,12 +49,15 @@ export default {
         glow: '0 0 48px rgba(134, 239, 172, 0.55)',
         nav: '0 -8px 32px rgba(21, 128, 61, 0.08)',
         pill: '0 4px 14px rgba(74, 222, 128, 0.35)',
+        'dark-soft': '0 4px 20px -2px rgba(0, 0, 0, 0.4)',
+        'dark-glow': '0 0 48px rgba(16, 185, 129, 0.3)',
       },
       backgroundImage: {
         'grass-mesh': 'radial-gradient(at 40% 20%, #BBF7D0 0px, transparent 50%), radial-gradient(at 80% 0%, #DCFCE7 0px, transparent 50%), radial-gradient(at 0% 50%, #ECFCCB 0px, transparent 50%), radial-gradient(at 80% 50%, #F0FDF4 0px, transparent 50%)',
         'grass-hero': 'linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 40%, #86EFAC 100%)',
         'grass-btn': 'linear-gradient(135deg, #86EFAC 0%, #4ADE80 50%, #22C55E 100%)',
         'grass-shine': 'linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.5) 50%, transparent 60%)',
+        'dark-mesh': 'radial-gradient(at 40% 20%, #1E293B 0px, transparent 50%), radial-gradient(at 80% 0%, #0F172A 0px, transparent 50%), radial-gradient(at 0% 50%, #022C22 0px, transparent 50%), radial-gradient(at 80% 50%, #064E3B 0px, transparent 50%)',
       },
       animation: {
         'fade-up': 'fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards',

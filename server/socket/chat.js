@@ -1,6 +1,20 @@
 const chatRepo = require('../repositories/chat');
+const jwtService = require('../services/jwtService');
 
 function registerChatSocket(io) {
+  io.use((socket, next) => {
+    const token = socket.handshake.auth?.token;
+    if (!token) {
+      return next(new Error('Authentication error: Token required'));
+    }
+    const decoded = jwtService.verify(token);
+    if (!decoded) {
+      return next(new Error('Authentication error: Invalid token'));
+    }
+    socket.user = decoded;
+    next();
+  });
+
   io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
 

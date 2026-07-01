@@ -1,0 +1,561 @@
+﻿
+> turfmate@0.1.0 lint
+> eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0
+
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\android\app\src\main\assets\public\assets\LeaderboardPage-D2_r4xQU.js
+  1:832  error  'MOCK_PLAYERS' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\android\app\src\main\assets\public\assets\SuperAdminDashboardPage-DX52HpmV.js
+  31:2917  error  React Hook "W.useEffect" is called in function "ve" that is neither a React function component nor a custom React Hook function. React component names must start with an uppercase letter. React Hook names must start with the word "use"  react-hooks/rules-of-hooks
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\android\app\src\main\assets\public\assets\index-ujFBeOmH.js
+   10:376     error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   10:14773   error  'n' is already defined                                                     no-redeclare
+   10:15303   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   10:15939   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   10:18669   error  Empty block statement                                                      no-empty
+   10:19756   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   10:19830   error  Empty block statement                                                      no-empty
+   10:19928   error  Empty block statement                                                      no-empty
+   10:19974   error  Empty block statement                                                      no-empty
+   10:20820   error  Empty block statement                                                      no-empty
+   10:21134   error  'attachEvent' is not defined                                               no-undef
+   10:21330   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   10:21741   error  Empty block statement                                                      no-empty
+   10:21832   error  Empty block statement                                                      no-empty
+   10:22882   error  Empty block statement                                                      no-empty
+   10:23470   error  'WebTransport' is not defined                                              no-undef
+   10:24495   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24506   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24548   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24564   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24619   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24658   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24668   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:24696   error  Unnecessary escape character: \/                                           no-useless-escape
+   10:28878   error  Unexpected lexical declaration in case block                               no-case-declarations
+   10:40922   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   10:43942   error  Unexpected lexical declaration in case block                               no-case-declarations
+   10:52695   error  Empty block statement                                                      no-empty
+   10:71816   error  'INITIAL_OWNERS' is not defined                                            no-undef
+   10:83607   error  'SUPER_ADMIN_PHONE' is not defined                                         no-undef
+   10:83764   error  'SUPER_ADMIN_PHONE' is not defined                                         no-undef
+   10:90231   error  'SPORTS' is not defined                                                    no-undef
+   10:99254   error  'SPORTS' is not defined                                                    no-undef
+  205:5874    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  205:26473   error  Empty block statement                                                      no-empty
+  205:36696   error  Unexpected comma in middle of array                                        no-sparse-arrays
+  205:38151   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  205:65692   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  213:3924    error  'require' is not defined                                                   no-undef
+  213:3972    error  Empty block statement                                                      no-empty
+  213:126792  error  Empty block statement                                                      no-empty
+  213:149734  error  Empty block statement                                                      no-empty
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\android\app\src\main\assets\public\assets\maps-2y5_guVy.js
+   1:84      error  'global' is not defined                                                    no-undef
+   9:1588    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+   9:4646    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  17:917     error  'setImmediate' is not defined                                              no-undef
+  25:597     error  Unexpected combined character in character class                           no-misleading-character-class
+  25:3024    error  Unnecessary escape character: \-                                           no-useless-escape
+  25:4913    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:202     error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  29:1216    error  Empty block statement                                                      no-empty
+  29:2389    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:3869    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:3910    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:4077    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:4104    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:4695    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:6032    error  'MSApp' is not defined                                                     no-undef
+  29:6080    error  'MSApp' is not defined                                                     no-undef
+  29:7460    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:7553    error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:8636    error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  29:9657    error  Expected to return a value in method 'get'                                 getter-return
+  29:11890   error  Empty block statement                                                      no-empty
+  29:19777   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:20120   error  Invalid typeof comparison value                                            valid-typeof
+  29:20294   error  Invalid typeof comparison value                                            valid-typeof
+  29:22166   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  29:27711   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  29:29177   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  29:33278   error  Expected a 'break' statement before 'case'                                 no-fallthrough
+  29:33465   error  Expected a 'break' statement before 'case'                                 no-fallthrough
+  29:34584   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  29:36037   error  Expected a 'break' statement before 'case'                                 no-fallthrough
+  29:37467   error  Unexpected control character(s) in regular expression: \x00                no-control-regex
+  30:1506    error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  30:1606    error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  30:14699   error  Expected a 'break' statement before 'case'                                 no-fallthrough
+  30:15156   error  Unexpected constant condition                                              no-constant-condition
+  30:15750   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  30:22322   error  Empty block statement                                                      no-empty
+  30:22331   error  Empty block statement                                                      no-empty
+  30:25707   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  30:26570   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  32:3968    error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  32:5090    error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  32:12874   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:12895   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:12965   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:13147   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:13249   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:13329   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:13353   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:13405   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:13760   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:15957   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:16236   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:16683   error  Unnecessary escape character: \/                                           no-useless-escape
+  32:17565   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:17874   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:25899   error  Empty block statement                                                      no-empty
+  32:25934   error  Expected a 'break' statement before 'case'                                 no-fallthrough
+  32:30012   error  Do not access Object.prototype method 'hasOwnProperty' from target object  no-prototype-builtins
+  32:34714   error  Unexpected constant condition                                              no-constant-condition
+  32:39236   error  Unexpected constant condition                                              no-constant-condition
+  32:39526   error  Unexpected constant condition                                              no-constant-condition
+  32:42527   error  Empty block statement                                                      no-empty
+  32:43625   error  Component definition is missing display name                               react/display-name
+  32:52948   error  Expected a conditional expression and instead saw an assignment            no-cond-assign
+  32:54353   error  'Yf' is a function                                                         no-func-assign
+  32:54359   error  'Xf' is a function                                                         no-func-assign
+  32:55277   error  '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                            no-undef
+  32:55376   error  Empty block statement                                                      no-empty
+  32:57409   error  '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                            no-undef
+  32:57466   error  '__REACT_DEVTOOLS_GLOBAL_HOOK__' is not defined                            no-undef
+  35:3763    error  'L' is not defined                                                         no-undef
+  35:3767    error  'L' is not defined                                                         no-undef
+  35:3824    error  'L' is not defined                                                         no-undef
+  35:16733   error  Expected to return a value in method 'get'                                 getter-return
+  35:16874   error  Empty block statement                                                      no-empty
+  35:130437  error  Empty block statement                                                      no-empty
+  35:151249  error  'rl' is a function                                                         no-func-assign
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\android\app\src\main\assets\public\sw.js
+  83:5   error  'clients' is not defined  no-undef
+  91:11  error  'clients' is not defined  no-undef
+  92:16  error  'clients' is not defined  no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\chat\ActiveChatRoom.jsx
+  85:6  warning  React Hook useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\layout\CheckoutModal.jsx
+  19:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |   React.useEffect(() => {
+  18 |     if (!app.showCheckoutModal || !app.checkoutSlotLockExpiresAt) {
+> 19 |       setLockSecondsLeft(null);
+     |       ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |       return;
+  21 |     }
+  22 |     const tick = () => {  react-hooks/set-state-in-effect
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\layout\InstallPrompt.jsx
+  27:7  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  25 |   useEffect(() => {
+  26 |     if (!dismissed && isIos() && !isStandalone()) {
+> 27 |       setShowIosHint(true);
+     |       ^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  28 |     }
+  29 |   }, [dismissed]);
+  30 |  react-hooks/set-state-in-effect
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\map\MapHelpers.jsx
+  10:6   warning  React Hook useEffect has a missing dependency: 'center'. Either include it or remove the dependency array                                 react-hooks/exhaustive-deps
+  10:7   warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+  10:18  warning  React Hook useEffect has a complex expression in the dependency array. Extract it to a separate variable so it can be statically checked  react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\owner\OwnerBroadcast.jsx
+  38:5  error  Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  36 |
+  37 |   useEffect(() => {
+> 38 |     loadOwnerCampaigns();
+     |     ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  39 |   }, [loadOwnerCampaigns]);
+  40 |
+  41 |   const handlePublish = async (e) => {  react-hooks/set-state-in-effect
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\components\ui\TurfImage.jsx
+  19:5  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  17 |
+  18 |   useEffect(() => {
+> 19 |     setCurrent(src || turfImageUrl(turf, fallback));
+     |     ^^^^^^^^^^ Avoid calling setState() directly within an effect
+  20 |   }, [src, turf?.id, turf?.image, fallback]);
+  21 |
+  22 |   return (  react-hooks/set-state-in-effect
+  20:6  warning  React Hook useEffect has a missing dependency: 'turf'. Either include it or remove the dependency array. If 'setCurrent' needs the current value of 'turf', you can also switch to useReducer instead of useState and read 'turf' in the reducer                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\hooks\useAppState.js
+   264:41  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `userProfile.isLoggedIn`, but the source dependencies were [userProfile?.isLoggedIn]. Inferred different dependency than source.
+
+  262 |   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
+  263 |
+> 264 |   const refreshLockerFeed = useCallback(async () => {
+      |                                         ^^^^^^^^^^^^^
+> 265 |     if (!userProfile?.isLoggedIn) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 266 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 278 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 279 |   }, [userProfile?.isLoggedIn]);
+      | ^^^^ Could not preserve existing manual memoization
+  280 |
+  281 |   const refreshChats = useCallback(async () => {
+  282 |     if (!getToken()) return;                                                                                                                                                                                                                                                     react-hooks/preserve-manual-memoization
+   264:41  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setAnnouncements`, but the source dependencies were [userProfile?.isLoggedIn]. Inferred different dependency than source.
+
+  262 |   }, [userProfile?.isLoggedIn, userProfile?.lat, userProfile?.lng, userProfile?.radius, filterRadius, selectedSportFilter]);
+  263 |
+> 264 |   const refreshLockerFeed = useCallback(async () => {
+      |                                         ^^^^^^^^^^^^^
+> 265 |     if (!userProfile?.isLoggedIn) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 266 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 278 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 279 |   }, [userProfile?.isLoggedIn]);
+      | ^^^^ Could not preserve existing manual memoization
+  280 |
+  281 |   const refreshChats = useCallback(async () => {
+  282 |     if (!getToken()) return;                                                                                                                                                                                                                                                           react-hooks/preserve-manual-memoization
+   281:36  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setChats`, but the source dependencies were []. Inferred dependency not present in source.
+
+  279 |   }, [userProfile?.isLoggedIn]);
+  280 |
+> 281 |   const refreshChats = useCallback(async () => {
+      |                                    ^^^^^^^^^^^^^
+> 282 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 283 |     try {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 284 |       const { rooms = [] } = await chatApi.getInbox();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 285 |       const mapped = rooms.map(mapApiChatRoom);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 286 |       setChats((prev) => mergeChats(mapped, prev));
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 287 |     } catch (err) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 288 |       console.warn('[chat] refresh failed:', err.message);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 289 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 290 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  291 |
+  292 |   const refreshTournaments = useCallback(async () => {
+  293 |     if (!getToken()) return;  react-hooks/preserve-manual-memoization
+   292:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setTournaments`, but the source dependencies were []. Inferred dependency not present in source.
+
+  290 |   }, []);
+  291 |
+> 292 |   const refreshTournaments = useCallback(async () => {
+      |                                          ^^^^^^^^^^^^^
+> 293 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 294 |     try {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 295 |       const { tournaments: list } = await tournamentsApi.list();
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 296 |       setTournaments(list || []);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 297 |     } catch (err) {
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 298 |       console.warn('[tournaments] refresh failed:', err.message);
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 299 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 300 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  301 |
+  302 |   const refreshSocial = useCallback(async () => {
+  303 |     if (!getToken()) return;                                                                                                          react-hooks/preserve-manual-memoization
+   302:37  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setFriendRequests`, but the source dependencies were []. Inferred dependency not present in source.
+
+  300 |   }, []);
+  301 |
+> 302 |   const refreshSocial = useCallback(async () => {
+      |                                     ^^^^^^^^^^^^^
+> 303 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 304 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 322 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 323 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  324 |
+  325 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+  326 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                                                                                                                                                  react-hooks/preserve-manual-memoization
+   313:9   error    Error: Cannot access variable before it is declared
+
+`setSquadGroups` is accessed before it is declared, which prevents the earlier access from updating when this value changes over time.
+
+  311 |       }
+  312 |       if (squadRes.squads) {
+> 313 |         setSquadGroups((prev) => {
+      |         ^^^^^^^^^^^^^^ `setSquadGroups` accessed before it is declared
+  314 |           if (!squadRes.squads.length) return prev;
+  315 |           const apiIds = new Set(squadRes.squads.map((s) => s.id));
+  316 |           const localOnly = prev.filter((g) => !apiIds.has(g.id) && String(g.id).startsWith('grp-'));
+
+  499 |   const [splitSuccessAnnId, setSplitSuccessAnnId] = useState(null);
+  500 |   const [checkoutSlotLockExpiresAt, setCheckoutSlotLockExpiresAt] = useState(null);
+> 501 |   const [squadGroups, setSquadGroups] = useState(() => readJson('tm_squad_groups', []));
+      |                       ^^^^^^^^^^^^^^ `setSquadGroups` is declared here
+  502 |   const [sentFriendRequests, setSentFriendRequests] = useState([]);
+  503 |   const [impersonatingOwner, setImpersonatingOwner] = useState(null);
+  504 |   const [checkoutInviteGroupId, setCheckoutInviteGroupId] = useState('');                                                                                                                                                                                                                                                                 react-hooks/immutability
+   325:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `userProfile`, but the source dependencies were [userProfile?.lat, userProfile?.lng, filterRadius]. Inferred less specific property than source.
+
+  323 |   }, []);
+  324 |
+> 325 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+      |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 326 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 327 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 358 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 359 |   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+      | ^^^^ Could not preserve existing manual memoization
+  360 |
+  361 |   const registerPushToken = useCallback(async () => {
+  362 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                              react-hooks/preserve-manual-memoization
+   325:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setFriendStats`, but the source dependencies were [userProfile?.lat, userProfile?.lng, filterRadius]. Inferred different dependency than source.
+
+  323 |   }, []);
+  324 |
+> 325 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+      |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 326 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 327 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 358 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 359 |   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+      | ^^^^ Could not preserve existing manual memoization
+  360 |
+  361 |   const registerPushToken = useCallback(async () => {
+  362 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                             react-hooks/preserve-manual-memoization
+   325:42  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setGameHistory`, but the source dependencies were [userProfile?.lat, userProfile?.lng, filterRadius]. Inferred different dependency than source.
+
+  323 |   }, []);
+  324 |
+> 325 |   const refreshLeaderboard = useCallback(async (scope = 'squad') => {
+      |                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 326 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 327 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 358 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 359 |   }, [userProfile?.lat, userProfile?.lng, filterRadius]);
+      | ^^^^ Could not preserve existing manual memoization
+  360 |
+  361 |   const registerPushToken = useCallback(async () => {
+  362 |     if (!getToken()) return;                                                                                                                                                                                                                                                                                                                                             react-hooks/preserve-manual-memoization
+   370:44  error    Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. The inferred dependencies did not match the manually specified dependencies, which could cause the value to change more or less frequently than expected. The inferred dependency was `setNotifications`, but the source dependencies were []. Inferred dependency not present in source.
+
+  368 |   }, []);
+  369 |
+> 370 |   const refreshNotifications = useCallback(async () => {
+      |                                            ^^^^^^^^^^^^^
+> 371 |     if (!getToken()) return;
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 372 |     try {
+      ΓÇª
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 379 |     }
+      | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 380 |   }, []);
+      | ^^^^ Could not preserve existing manual memoization
+  381 |
+  382 |   useEffect(() => {
+  383 |     if (!userProfile?.isLoggedIn || !getToken()) return undefined;                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/preserve-manual-memoization
+   385:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  383 |     if (!userProfile?.isLoggedIn || !getToken()) return undefined;
+  384 |     refreshMyBookings();
+> 385 |     refreshChats();
+      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  386 |     refreshSocial();
+  387 |     refreshLeaderboard();
+  388 |     registerPushToken();                                                                                                                                                                                                                                                                                                                                                                                                                                                                 react-hooks/set-state-in-effect
+   396:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  394 |   useEffect(() => {
+  395 |     if (view !== 'leaderboard' || !userProfile?.isLoggedIn) return undefined;
+> 396 |     refreshLeaderboard('squad');
+      |     ^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  397 |     return undefined;
+  398 |   }, [view, userProfile?.isLoggedIn, refreshLeaderboard]);
+  399 |                                                                                                                                                                                                                                                                                                                                                                                                                               react-hooks/set-state-in-effect
+   402:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  400 |   useEffect(() => {
+  401 |     if (view !== 'chat' || !userProfile?.isLoggedIn) return undefined;
+> 402 |     refreshChats();
+      |     ^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  403 |     const timer = setInterval(refreshChats, 30000);
+  404 |     return () => clearInterval(timer);
+  405 |   }, [view, userProfile?.isLoggedIn, refreshChats]);                                                                                                                                                                                                                                                                                                                                                                                          react-hooks/set-state-in-effect
+   409:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  407 |   useEffect(() => {
+  408 |     if (!userProfile?.isLoggedIn) return undefined;
+> 409 |     refreshLockerFeed();
+      |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  410 |     return undefined;
+  411 |   }, [userProfile?.isLoggedIn, refreshLockerFeed]);
+  412 |                                                                                                                                                                                                                                                                                                                                                                                                                                                                         react-hooks/set-state-in-effect
+   415:5   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  413 |   useEffect(() => {
+  414 |     if (view !== 'locker_room' || !userProfile?.isLoggedIn) return undefined;
+> 415 |     refreshLockerFeed();
+      |     ^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  416 |     const timer = setInterval(refreshLockerFeed, 30000);
+  417 |     return () => clearInterval(timer);
+  418 |   }, [view, userProfile?.isLoggedIn, refreshLockerFeed]);                                                                                                                                                                                                                                                                                                                                                               react-hooks/set-state-in-effect
+   575:29  error    'INITIAL_OWNERS' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        no-undef
+   649:16  error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  647 |       const annId = decodeURIComponent(match[1]);
+  648 |       const ann = announcements.find((a) => a.id === annId && a.status === 'open' && a.playersNeeded > 0);
+> 649 |       if (ann) setPendingJoinSplitId(annId);
+      |                ^^^^^^^^^^^^^^^^^^^^^ Avoid calling setState() directly within an effect
+  650 |       window.history.replaceState(null, '', window.location.pathname + window.location.search);
+  651 |     }
+  652 |   }, [userProfile?.isLoggedIn, userProfile?.role]); // eslint-disable-line react-hooks/exhaustive-deps                                                                                                                                                                                                              react-hooks/set-state-in-effect
+   706:6   warning  React Hook useEffect has missing dependencies: 'chats' and 'userProfile'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+   715:6   warning  React Hook useEffect has missing dependencies: 'chats' and 'userProfile'. Either include them or remove the dependency array                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           react-hooks/exhaustive-deps
+   720:7   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+
+Effects are intended to synchronize state between React and external systems such as manually updating the DOM, state management libraries, or other platform APIs. In general, the body of an effect should do one or both of the following:
+* Update external systems with the latest state from React.
+* Subscribe for updates from some external system, calling setState in a callback function when external state changes.
+
+Calling setState synchronously within an effect body causes cascading renders that can hurt performance, and is not recommended. (https://react.dev/learn/you-might-not-need-an-effect).
+
+  718 |   useEffect(() => {
+  719 |     if (activeChatId) {
+> 720 |       setChats((prevChats) =>
+      |       ^^^^^^^^ Avoid calling setState() directly within an effect
+  721 |         prevChats.map((c) => (c.id === activeChatId ? { ...c, unread: 0 } : c))
+  722 |       );
+  723 |       if (getToken() && activeChatId.startsWith('chat-booking-')) {                                                                                                                                                                                                                                                                                                                                                                                                                    react-hooks/set-state-in-effect
+  1195:34  error    'SUPER_ADMIN_PHONE' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-undef
+  1201:18  error    'SUPER_ADMIN_PHONE' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     no-undef
+  1624:22  error    'SPORTS' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-undef
+  2151:18  error    'SPORTS' is not defined                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                no-undef
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\pages\admin\SuperAdminDashboardPage.jsx
+  150:6  warning  React Hook React.useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\pages\user\LeaderboardPage.jsx
+  24:6   warning  React Hook useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  36:20  error    'MOCK_PLAYERS' is not defined                                                                           no-undef
+  50:6   warning  React Hook useMemo has a missing dependency: 'app'. Either include it or remove the dependency array    react-hooks/exhaustive-deps
+
+C:\Users\ADMIN\.gemini\antigravity-ide\scratch\turfmate\src\pages\user\MyBookingsPage.jsx
+  81:6  warning  React Hook useEffect has a missing dependency: 'app'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+Γ£û 165 problems (154 errors, 11 warnings)
+

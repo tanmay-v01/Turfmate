@@ -13,6 +13,8 @@ export default function CheckoutModal() {
   const [cashConfirmed, setCashConfirmed] = React.useState(false);
   const [inviteGroupId, setInviteGroupId] = React.useState('');
   const [lockSecondsLeft, setLockSecondsLeft] = React.useState(null);
+  const [loadingStep, setLoadingStep] = React.useState(0);
+  const loadingMessages = ['initializing secure gateway...', 'awaiting payment confirmation...', 'verifying transaction...', 'almost there...'];
 
   React.useEffect(() => {
     if (!app.showCheckoutModal || !app.checkoutSlotLockExpiresAt) {
@@ -27,6 +29,17 @@ export default function CheckoutModal() {
     const id = setInterval(tick, 1000);
     return () => clearInterval(id);
   }, [app.showCheckoutModal, app.checkoutSlotLockExpiresAt]);
+
+  React.useEffect(() => {
+    if (!app.isProcessingPayment) {
+      setLoadingStep(0);
+      return;
+    }
+    const id = setInterval(() => {
+      setLoadingStep(s => Math.min(s + 1, loadingMessages.length - 1));
+    }, 1500);
+    return () => clearInterval(id);
+  }, [app.isProcessingPayment]);
 
   if (!app.showCheckoutModal) return null;
 
@@ -171,9 +184,16 @@ export default function CheckoutModal() {
           )}
 
           {app.isProcessingPayment ? (
-            <div className="flex flex-col items-center py-8 gap-3">
-              <div className="w-12 h-12 rounded-full border-4 border-brand-grassPale border-t-brand-grassFresh animate-spin" />
-              <p className="text-sm font-bold text-brand-forest">processing...</p>
+            <div className="flex flex-col items-center py-10 gap-4 animate-fade-in">
+              <div className="relative w-16 h-16">
+                <div className="absolute inset-0 rounded-full border-4 border-brand-grassPale" />
+                <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-brand-grassFresh animate-spin" />
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Lock className="w-5 h-5 text-brand-grassFresh animate-pulse" />
+                </div>
+              </div>
+              <p className="text-xs font-bold text-brand-forest animate-pulse uppercase tracking-wider">{loadingMessages[loadingStep]}</p>
+              <p className="text-[10px] text-slate-400 font-bold max-w-[200px] text-center">Please do not close this window or hit back.</p>
             </div>
           ) : (
             <Button 

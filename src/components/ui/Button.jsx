@@ -6,11 +6,11 @@ export default function Button({
   ...props
 }) {
   const variants = {
-    grass: 'tm-btn-grass text-brand-forestSoft',
-    soft: 'bg-brand-grassPale text-brand-grassInk border border-brand-border hover:bg-brand-grassLight hover:border-brand-grassFresh shadow-soft',
-    ghost: 'bg-transparent text-brand-forest hover:bg-brand-grassPale/80',
-    glass: 'glass-grass text-brand-forest hover:bg-white/90',
-    dark: 'bg-brand-forest text-white hover:bg-brand-grassInk shadow-card',
+    grass: 'tm-btn-grass text-brand-forestSoft dark:text-brand-forest',
+    soft: 'bg-brand-grassPale text-brand-grassInk border border-brand-border hover:bg-brand-grassLight hover:border-brand-grassFresh shadow-soft dark:bg-brand-darkSurface dark:text-brand-grassPale dark:border-brand-darkBorder dark:hover:border-brand-grass',
+    ghost: 'bg-transparent text-brand-forest hover:bg-brand-grassPale/80 dark:text-brand-grassLight dark:hover:bg-brand-darkSurface/80',
+    glass: 'glass-grass text-brand-forest hover:bg-white/90 dark:text-brand-grassLight dark:bg-brand-darkSurface/50 dark:hover:bg-brand-darkSurface',
+    dark: 'bg-brand-forest text-white hover:bg-brand-grassInk shadow-card dark:bg-brand-grass dark:text-brand-darkBase dark:hover:bg-brand-grassLight',
   };
 
   const sizes = {

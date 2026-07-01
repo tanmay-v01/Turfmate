@@ -34,11 +34,17 @@ const { seedPilotPartners } = require('./scripts/seedPilotPartners');
 const { authLimiter, apiLimiter } = require('./middleware/rateLimit');
 const { requestLog } = require('./middleware/requestLog');
 const { securityHeaders } = require('./middleware/securityHeaders');
+const { notFoundHandler, globalErrorHandler } = require('./middleware/errorHandler');
 const { validateProductionConfig } = require('./lib/validateProduction');
 const healthRoutes = require('./routes/health');
+const matchEngine = require('./services/matchEngine');
+const reliabilityEngine = require('./services/reliabilityEngine');
 const logger = require('./lib/logger');
 
 validateProductionConfig(config);
+
+matchEngine.start();
+reliabilityEngine.start();
 
 const app = express();
 const server = http.createServer(app);
@@ -255,6 +261,10 @@ setInterval(() => {
 
 // --- MODULE 6: WEBSOCKETS (SOCKET.IO) ---
 registerChatSocket(io);
+
+// Catch-all API 404 and Global Error Handler
+app.use('/api', notFoundHandler);
+app.use(globalErrorHandler);
 
 // Serve Static Frontend (Production)
 app.use(express.static(path.join(__dirname, '../dist')));

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Megaphone, Send, Sparkles, Check, Smartphone, Flame, Trophy } from 'lucide-react';
-import { SPORTS } from '../../data/mockData';
+import { SPORTS } from '../../constants/sports';
 import { useApp } from '../../context/AppContext';
 import { broadcastsApi } from '../../services/broadcastsApi';
 

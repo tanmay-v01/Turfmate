@@ -6,7 +6,7 @@ import CricketScorer, { CricketUndoButton } from '../../components/score/Cricket
 import FootballScorer from '../../components/score/FootballScorer';
 import { useGameTimer } from '../../hooks/useGameTimer';
 import { createCricketGame, createFootballGame, formatTimer } from '../../utils/scoreEngine';
-import { SPORTS } from '../../data/mockData';
+import { SPORTS } from '../../constants/sports';
 
 const SCORER_SPORTS = ['football', 'cricket'];
 

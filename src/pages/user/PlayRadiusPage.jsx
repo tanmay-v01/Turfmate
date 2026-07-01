@@ -1,5 +1,5 @@
 import { MapPin, Radar, Crosshair, Map, Users, Building2, Navigation2 } from 'lucide-react';
-import { MOCK_PLAYERS } from '../../data/mockData';
+
 import { useApp } from '../../context/AppContext';
 import PageHeader from '../../components/ui/PageHeader';
 import TurfImage from '../../components/ui/TurfImage';
@@ -26,7 +26,7 @@ export default function PlayRadiusPage() {
     suspendedIds: app.suspendedTurfIds,
   });
 
-  const playersInRange = MOCK_PLAYERS.filter((p) => app.getDistance(lat, lng, p.lat, p.lng) <= radius);
+  const playersInRange = [];
 
   const sendFriendRequest = (name) => {
     app.showToast(`Friend request sent to ${name}`, 'success');
