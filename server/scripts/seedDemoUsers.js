@@ -19,11 +19,37 @@ const DEMO_SEEDS = [
     },
   },
   {
+    phone: '9876543211',
+    role: 'PLAYER',
+    profile: {
+      fullName: 'Amit Patel',
+      username: '@amit_patel',
+      avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Amit',
+      locationLabel: 'Bandra',
+      locationLat: 19.059,
+      locationLng: 72.829,
+      filterRadiusKm: 10,
+      sportsDna: [
+        { sport: 'football', skill_level: 'Intermediate', preferred_position: 'Defender' },
+        { sport: 'badminton', skill_level: 'Advanced', preferred_position: 'Singles' },
+      ],
+    },
+  },
+  {
     phone: '1111111111',
     role: 'OWNER',
     profile: {
       businessName: 'Green Valley Sports Group',
       ownerName: 'Manager Singh',
+      kycStatus: 'APPROVED',
+    },
+  },
+  {
+    phone: '1111111112',
+    role: 'OWNER',
+    profile: {
+      businessName: 'Kadam Sports Academy',
+      ownerName: 'Coach Kadam',
       kycStatus: 'APPROVED',
     },
   },

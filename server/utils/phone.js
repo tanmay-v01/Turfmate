@@ -12,7 +12,7 @@ function normalizePhone(raw) {
   return digits.slice(-10);
 }
 
-const DEMO_PHONES = new Set(['9876543210', '1111111111', '9999999999', 'demo@turfmate.com', 'owner@turfmate.com', 'admin@turfmate.com']);
+const DEMO_PHONES = new Set(['9876543210', '9876543211', '1111111111', '1111111112', '9999999999', 'demo@turfmate.com', 'owner@turfmate.com', 'admin@turfmate.com']);
 
 function isValidPhone(phone) {
   if (DEMO_PHONES.has(phone)) return true;
