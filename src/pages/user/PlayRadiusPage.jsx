@@ -127,7 +127,7 @@ export default function PlayRadiusPage() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3 pt-1 border-t border-white/60">
+        <div className="flex items-center gap-3 pt-1 border-t border-slate-200">
           <span className="flex items-center justify-center w-9 h-9 rounded-xl tm-icon-accent-sky shrink-0">
             <Navigation2 className="w-4 h-4 text-emerald-600" strokeWidth={2.25} />
           </span>

@@ -556,11 +556,11 @@ export default function HomePage() {
                   </div>
                   <div className="p-4">
                     <div className="flex justify-between items-start gap-2">
-                      <h3 className="font-display font-extrabold text-slate-100 lowercase">{turf.name}</h3>
+                      <h3 className="font-display font-extrabold text-slate-800 lowercase">{turf.name}</h3>
                       <span className="text-xs font-bold text-slate-500 shrink-0">{dist} km</span>
                     </div>
                     <p className="text-sm text-slate-500 mt-0.5">{turf.city} · {turf.reviews} reviews</p>
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-200">
                       <span className="text-xs text-slate-500">from</span>
                       <span className="font-display font-extrabold text-emerald-600">₹{turf.pricePerHour}/hr</span>
                     </div>
@@ -592,7 +592,7 @@ export default function HomePage() {
               </div>
             ) : nearbyPlayers.map((p) => (
               <div key={p.id} className="glass-card shrink-0 w-32 lg:w-full p-3 text-center hover:shadow-md transition !rounded-2xl">
-                <img src={p.avatar} alt={p.name} className="w-12 h-12 rounded-xl mx-auto border border-white/80 object-cover ring-1 ring-brand-grassFresh/20 shadow-sm" />
+                <img src={p.avatar} alt={p.name} className="w-12 h-12 rounded-xl mx-auto border border-slate-200 object-cover ring-1 ring-emerald-500/20 shadow-sm" />
                 <p className="font-bold text-sm text-slate-800 mt-2 truncate">{p.name.split(' ')[0]}</p>
                 <p className="text-[11px] text-slate-400">{p.skillLevel}</p>
               </div>
