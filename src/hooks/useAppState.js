@@ -81,16 +81,18 @@ export function useAppState() {
   const [bookings, setBookings] = useState(() => readJson('tm_bookings', []));
 
   const [turfs, setTurfs] = useState(loadTurfs);
+  const [isTurfsLoading, setIsTurfsLoading] = useState(true);
   const turfsRef = useRef(turfs);
   useEffect(() => { turfsRef.current = turfs; }, [turfs]);
 
   useEffect(() => {
     turfsApi.list().then(({ turfs: apiTurfs }) => {
-      if (apiTurfs && apiTurfs.length > 0) {
+      if (apiTurfs) {
         setTurfs(apiTurfs);
         localStorage.setItem('tm_turfs', JSON.stringify(apiTurfs));
       }
-    }).catch(err => console.warn('Failed to load turfs:', err));
+    }).catch(err => console.warn('Failed to load turfs:', err))
+      .finally(() => setIsTurfsLoading(false));
   }, []);
 
   const refreshMyBookings = useCallback(async () => {
@@ -2254,7 +2256,7 @@ export function useAppState() {
     toast, showToast, dismissToast,
     friendStats, setFriendStats, refreshLeaderboard, liveGame, setLiveGame, gameHistory, finalizeLiveGame,
     tournaments,
-    turfs, setTurfs, owners, setOwners, suspendedTurfIds, bannedUsers, banUser, unbanUser,
+    turfs, setTurfs, isTurfsLoading, owners, setOwners, suspendedTurfIds, bannedUsers, banUser, unbanUser,
     ownerActiveTurfId, setOwnerActiveTurfId,
     phoneNumber, setPhoneNumber, otpSent, setOtpSent,
     otpCode, setOtpCode, loginTimer, setLoginTimer,

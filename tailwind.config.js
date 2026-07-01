@@ -9,27 +9,27 @@ export default {
     extend: {
       colors: {
         brand: {
-          grass: '#34D399', // Emerald 400
-          grassLight: '#A7F3D0', // Emerald 200
-          grassPale: '#D1FAE5', // Emerald 100
-          grassFresh: '#10B981', // Emerald 500
-          grassDeep: '#059669', // Emerald 600
-          grassInk: '#047857', // Emerald 700
-          forest: '#064E3B', // Emerald 900
-          forestSoft: '#065F46', // Emerald 800
-          background: '#FFFFFF', // White
-          surface: '#FFFFFF',
-          text: '#064E3B',
-          muted: '#4B5563', // Gray 600
-          border: '#D1FAE5',
-          accent: '#ECFDF5',
-          lime: '#34D399',
+          grass: '#A3E635', // Lime 400
+          grassLight: '#D9F99D', // Lime 200
+          grassPale: '#1E293B', // Slate 800 (used for soft card bg)
+          grassFresh: '#84CC16', // Lime 500
+          grassDeep: '#65A30D', // Lime 600
+          grassInk: '#020617', // Slate 950
+          forest: '#F8FAFC', // Slate 50 (Used as primary text now)
+          forestSoft: '#E2E8F0', // Slate 200
+          background: '#0F172A', // Slate 900
+          surface: '#1E293B', // Slate 800
+          text: '#F8FAFC', // Slate 50
+          muted: '#94A3B8', // Slate 400
+          border: '#334155', // Slate 700
+          accent: '#1E293B',
+          lime: '#A3E635',
           // legacy aliases
-          primary: '#10B981',
-          primaryDark: '#059669',
-          forestMid: '#065F46',
-          forestLight: '#059669',
-          card: '#FFFFFF',
+          primary: '#A3E635',
+          primaryDark: '#84CC16',
+          forestMid: '#CBD5E1',
+          forestLight: '#F1F5F9',
+          card: '#1E293B',
           // Dark mode additions
           darkBase: '#0F172A', // Slate 900
           darkSurface: '#1E293B', // Slate 800

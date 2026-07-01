@@ -105,7 +105,7 @@ export default function HomePage() {
     return idx >= 0 ? idx + 1 : '—';
   })();
 
-  if (!app.turfs || app.turfs.length === 0) {
+  if (app.isTurfsLoading) {
     return <HomeSkeleton />;
   }
 
@@ -125,24 +125,24 @@ export default function HomePage() {
                 <img
                   src={app.userProfile.avatar}
                   alt=""
-                  className="w-11 h-11 rounded-2xl border border-white/80 object-cover shadow-sm ring-2 ring-brand-grassFresh/25 group-hover:ring-brand-grassFresh/50 transition"
+                  className="w-11 h-11 rounded-2xl border border-lime-400/30 object-cover shadow-sm ring-2 ring-lime-400/20 group-hover:ring-lime-400/50 transition"
                 />
-                <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-brand-forest text-white flex items-center justify-center shadow-md ring-2 ring-white">
+                <span className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-lime-400 text-slate-900 flex items-center justify-center shadow-md ring-2 ring-[#090D19]">
                   <Pencil className="w-2 h-2" />
                 </span>
               </button>
               <div>
-                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">{timeGreeting}</p>
-                <p className="font-display font-extrabold lowercase text-lg tracking-tight text-brand-forest">{firstName}</p>
+                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-wider">{timeGreeting}</p>
+                <p className="font-display font-extrabold lowercase text-lg tracking-tight text-lime-400">{firstName}</p>
               </div>
             </div>
             <button
               onClick={() => app.setShowNotifications(!app.showNotifications)}
               className="glass-card !rounded-2xl w-11 h-11 flex items-center justify-center relative hover:shadow-md transition"
             >
-              <Bell className="w-[18px] h-[18px] text-brand-forest" strokeWidth={2} />
+              <Bell className="w-[18px] h-[18px] text-slate-300" strokeWidth={2} />
               {app.notifications.some((n) => !n.read) && (
-                <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-red-500 ring-2 ring-white" />
+                <span className="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-lime-400 ring-2 ring-[#090D19]" />
               )}
             </button>
           </div>
@@ -150,15 +150,13 @@ export default function HomePage() {
           {/* Live status strip */}
           <div className="flex gap-2 overflow-x-auto no-scrollbar mb-4">
             {[
-              { icon: MapPin, label: `${app.filterRadius} km radius`, accent: INFO_ACCENTS.sky },
-              { icon: Sparkles, label: `${nearTurfs.length} turfs nearby`, accent: INFO_ACCENTS.green },
-              { icon: Users, label: `${openSplits.length} live splits`, accent: INFO_ACCENTS.amber },
-              { icon: Trophy, label: `rank #${myRank}`, accent: INFO_ACCENTS.violet },
+              { icon: MapPin, label: `${app.filterRadius} km radius` },
+              { icon: Sparkles, label: `${nearTurfs.length} turfs nearby` },
+              { icon: Users, label: `${openSplits.length} live splits` },
+              { icon: Trophy, label: `rank #${myRank}` },
             ].map((chip) => (
-              <span key={chip.label} className="tm-info-chip shrink-0">
-                <span className={`flex items-center justify-center w-5 h-5 rounded-md ${chip.accent}`}>
-                  <chip.icon className="w-3 h-3" strokeWidth={2.5} />
-                </span>
+              <span key={chip.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-semibold bg-white/5 border border-white/10 text-slate-300 shrink-0 whitespace-nowrap">
+                <chip.icon className="w-3 h-3 text-lime-400" strokeWidth={2.5} />
                 {chip.label}
               </span>
             ))}
@@ -169,20 +167,20 @@ export default function HomePage() {
             <button
               type="button"
               onClick={() => { if (featured) { app.setActiveTurfId(featured.id); app.setView('turf_details'); } }}
-              className="relative block w-full h-40 md:hidden overflow-hidden"
+              className="relative block w-full h-44 md:hidden overflow-hidden"
             >
               <TurfImage
                 turf={featured}
                 fallback={HERO_FALLBACK}
                 className="absolute inset-0 w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between gap-2">
                 <div className="text-left text-white min-w-0">
-                  <p className="text-[10px] font-bold uppercase opacity-90">featured turf</p>
+                  <p className="text-[10px] font-bold uppercase opacity-75">featured turf</p>
                   <p className="font-display font-extrabold text-lg lowercase truncate">{featured?.name || 'nearby pitch'}</p>
                 </div>
-                <span className="shrink-0 px-2.5 py-1 rounded-full bg-white/95 text-[10px] font-black text-brand-forest uppercase">
+                <span className="shrink-0 px-2.5 py-1 rounded-full bg-lime-400 text-slate-900 text-[10px] font-black uppercase">
                   from ₹{featured?.pricePerHour || '800'}/hr
                 </span>
               </div>
@@ -190,16 +188,14 @@ export default function HomePage() {
 
             <div className="grid md:grid-cols-[1fr,220px]">
               <div className="p-4 sm:p-6 md:p-7">
-                <span className="tm-info-chip inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide mb-4">
-                  <span className="w-5 h-5 rounded-md tm-icon-accent-green flex items-center justify-center shrink-0">
-                    <Sparkles className="w-3 h-3" />
-                  </span>
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide mb-4 px-3 py-1.5 rounded-full bg-lime-400/10 border border-lime-400/20 text-lime-400">
+                  <Sparkles className="w-3 h-3" />
                   {nearTurfs.length} turfs · {openSplits.length} live games
                 </span>
-                <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-brand-forest leading-tight lowercase">
-                  ready to play, {firstName}?
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-display font-extrabold text-white leading-tight lowercase">
+                  ready to play, <span className="text-lime-400">{firstName}</span>?
                 </h1>
-                <p className="mt-2 text-sm text-slate-500 max-w-sm leading-relaxed">
+                <p className="mt-2 text-sm text-slate-400 max-w-sm leading-relaxed">
                   book a pitch, join a split, or squad up — all within your play radius.
                 </p>
                 <div className="mt-5 flex flex-wrap gap-2">
@@ -250,16 +246,16 @@ export default function HomePage() {
           {/* Mobile search */}
           <button
             onClick={goSearch}
-            className="mt-4 w-full flex items-center gap-3 glass-card rounded-2xl px-4 py-3.5 text-left hover:shadow-md transition lg:hidden"
+            className="mt-4 w-full flex items-center gap-3 glass-card rounded-2xl px-4 py-3.5 text-left hover:border-lime-400/30 transition lg:hidden"
           >
-            <span className="flex items-center justify-center w-9 h-9 rounded-xl tm-icon-accent-green shrink-0">
-              <Search className="w-4 h-4 text-brand-forest" strokeWidth={2.5} />
+            <span className="flex items-center justify-center w-9 h-9 rounded-xl bg-lime-400/10 border border-lime-400/20 shrink-0">
+              <Search className="w-4 h-4 text-lime-400" strokeWidth={2.5} />
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-brand-forest">Search turfs</p>
-              <p className="text-[11px] text-slate-400 truncate">sports, areas, landmarks…</p>
+              <p className="text-sm font-semibold text-slate-200">Search turfs</p>
+              <p className="text-[11px] text-slate-500 truncate">sports, areas, landmarks…</p>
             </div>
-            <ChevronRight className="w-4 h-4 text-slate-300 ml-auto shrink-0" />
+            <ChevronRight className="w-4 h-4 text-slate-600 ml-auto shrink-0" />
           </button>
         </div>
       </section>
@@ -405,23 +401,30 @@ export default function HomePage() {
         )}
 
         {/* Sport filters */}
-        <section>
+        <section aria-label="pick your sport">
           <h2 className="tm-section-heading mb-3">pick your sport</h2>
           <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
             <button
               onClick={() => app.setSelectedSportFilter('all')}
-              className={`tm-chip shrink-0 ${app.selectedSportFilter === 'all' ? SPORT_COLORS.all.active : SPORT_COLORS.all.chip}`}
+              className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition border ${
+                app.selectedSportFilter === 'all'
+                  ? 'bg-lime-400 text-slate-900 border-lime-400 shadow-lg shadow-lime-400/25'
+                  : 'bg-white/5 text-slate-400 border-white/10 hover:border-lime-400/30 hover:text-lime-400'
+              }`}
             >
               all sports
             </button>
             {SPORTS.map((s) => {
-              const colors = SPORT_COLORS[s.id] || SPORT_COLORS.all;
               const active = app.selectedSportFilter === s.id;
               return (
               <button
                 key={s.id}
                 onClick={() => app.setSelectedSportFilter(s.id)}
-                className={`tm-chip shrink-0 ${active ? colors.active : colors.chip}`}
+                className={`shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition border ${
+                  active
+                    ? 'bg-lime-400 text-slate-900 border-lime-400 shadow-lg shadow-lime-400/25'
+                    : 'bg-white/5 text-slate-400 border-white/10 hover:border-lime-400/30 hover:text-lime-400'
+                }`}
               >
                 {s.name}
               </button>
@@ -507,14 +510,15 @@ export default function HomePage() {
         </div>
 
         {/* Turfs grid */}
-        <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="tm-section-heading">turfs near you</h2>
-            <button onClick={goSearch} className="flex items-center gap-1 text-sm font-bold text-brand-grassDeep hover:underline">
-              see all <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+        {/* Section headings */}
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="tm-section-heading">turfs near you</h2>
+          <button onClick={goSearch} className="flex items-center gap-1 text-sm font-bold text-lime-400 hover:text-lime-300">
+            see all <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
 
+          <section>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
             {filteredTurfs.length === 0 ? (
               <div className="col-span-full">
@@ -532,40 +536,40 @@ export default function HomePage() {
                 <article
                   key={turf.id}
                   onClick={() => { app.setActiveTurfId(turf.id); app.setView('turf_details'); }}
-                  className="glass-card overflow-hidden !p-0 cursor-pointer group hover:shadow-lg transition"
+                  className="glass-card overflow-hidden !p-0 cursor-pointer group hover:shadow-lg hover:border-lime-400/20 transition"
                 >
                   <div className="relative h-48 overflow-hidden">
                     <TurfImage turf={turf} className="w-full h-full object-cover group-hover:scale-105 transition duration-700" />
-                    <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/95 text-xs font-bold shadow-sm">
+                    <span className="absolute top-3 right-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur text-xs font-bold text-white shadow-sm">
                       <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" /> {turf.rating}
                     </span>
                     <div className="absolute bottom-3 left-3 flex gap-1">
                       {turf.sports.slice(0, 2).map((sid) => {
                         const s = SPORTS.find((x) => x.id === sid);
                         return s ? (
-                          <span key={sid} className="px-2 py-0.5 rounded-full bg-white/95 text-[10px] font-bold text-brand-forest shadow-sm">
+                          <span key={sid} className="px-2 py-0.5 rounded-full bg-lime-400 text-[10px] font-bold text-slate-900 shadow-sm">
                             {s.icon} {s.name}
                           </span>
                         ) : null;
                       })}
                     </div>
                   </div>
-                  <div className="p-4 bg-white/40 backdrop-blur-sm">
+                  <div className="p-4">
                     <div className="flex justify-between items-start gap-2">
-                      <h3 className="font-display font-extrabold text-brand-forest lowercase">{turf.name}</h3>
-                      <span className="text-xs font-bold text-slate-400 shrink-0">{dist} km</span>
+                      <h3 className="font-display font-extrabold text-slate-100 lowercase">{turf.name}</h3>
+                      <span className="text-xs font-bold text-slate-500 shrink-0">{dist} km</span>
                     </div>
-                    <p className="text-sm text-slate-400 mt-0.5">{turf.city} · {turf.reviews} reviews</p>
-                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-                      <span className="text-xs text-slate-400">from</span>
-                      <span className="font-display font-extrabold text-brand-forest">₹{turf.pricePerHour}/hr</span>
+                    <p className="text-sm text-slate-500 mt-0.5">{turf.city} · {turf.reviews} reviews</p>
+                    <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5">
+                      <span className="text-xs text-slate-500">from</span>
+                      <span className="font-display font-extrabold text-lime-400">₹{turf.pricePerHour}/hr</span>
                     </div>
                   </div>
                 </article>
               );
             })}
           </div>
-        </section>
+          </section>
 
         {/* Players nearby */}
         <section>
