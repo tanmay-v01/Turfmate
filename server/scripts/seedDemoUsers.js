@@ -6,7 +6,7 @@ const DEMO_SEEDS = [
     role: 'PLAYER',
     profile: {
       fullName: 'Rahul Mehta',
-      username: '@rahul_cricket',
+      username: '@rahul_mehta',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Rahul',
       locationLabel: 'Virar',
       locationLat: 19.456,

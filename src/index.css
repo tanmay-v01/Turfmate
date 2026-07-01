@@ -5,28 +5,28 @@
 @tailwind utilities;
 
 :root {
-  --grass: #34D399;
-  --grass-light: #A7F3D0;
-  --grass-pale: #D1FAE5;
-  --grass-fresh: #10B981;
-  --grass-deep: #059669;
-  --grass-ink: #047857;
-  --bg: #FFFFFF;
-  --surface: #FFFFFF;
-  --text: #064E3B;
-  --muted: #4B5563;
-  --border: #D1FAE5;
+  --grass: hsl(142, 69%, 58%);
+  --grass-light: hsl(142, 72%, 29%);
+  --grass-pale: hsl(142, 76%, 95%);
+  --grass-fresh: hsl(142, 76%, 45%);
+  --grass-deep: hsl(142, 76%, 36%);
+  --grass-ink: hsl(142, 86%, 17%);
+  --bg: hsl(220, 25%, 97%);
+  --surface: hsl(0, 0%, 100%);
+  --text: hsl(224, 60%, 12%);
+  --muted: hsl(220, 12%, 46%);
+  --border: hsl(220, 14%, 90%);
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --smooth: cubic-bezier(0.22, 1, 0.36, 1);
   --font-display: 'Outfit', 'Plus Jakarta Sans', 'Inter', sans-serif;
 }
 
 .dark {
-  --bg: #0F172A;
-  --surface: #1E293B;
-  --text: #F8FAFC;
-  --muted: #94A3B8;
-  --border: #334155;
+  --bg: hsl(224, 64%, 6%);
+  --surface: hsl(224, 47%, 11%);
+  --text: hsl(210, 40%, 98%);
+  --muted: hsl(215, 16%, 57%);
+  --border: hsl(224, 47%, 18%);
 }
 
 @layer base {

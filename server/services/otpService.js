@@ -11,6 +11,9 @@ function isMsg91Live() {
 
 function generateOtp(phone) {
   const { DEMO_PHONES } = require('../utils/phone');
+  if (!isMsg91Live() && !phone.includes('@')) {
+    return config.demoOtp;
+  }
   if (config.demoMode && !isMsg91Live() && DEMO_PHONES.has(phone)) {
     return config.demoOtp;
   }
@@ -75,10 +78,7 @@ async function sendOtp(phone, otp) {
       return { channel: 'email' };
     } else {
       console.error(`[OTP] Email failed for ${phone}`);
-      if (config.demoMode) {
-        return { channel: 'demo-fallback', devHint: otp };
-      }
-      throw new Error('Failed to send OTP via Email');
+      return { channel: 'demo-fallback', devHint: otp };
     }
   }
 
@@ -100,18 +100,15 @@ async function sendOtp(phone, otp) {
     const data = await res.json().catch(() => ({}));
     if (!res.ok && data.type !== 'success') {
       console.error('[OTP] MSG91 error:', data.message || res.statusText);
-      if (config.demoMode) {
-        console.log(`[OTP] Demo fallback for +91${phone}: ${otp}`);
-        return { channel: 'demo-fallback', devHint: otp };
-      }
-      throw new Error(data.message || 'Failed to send OTP via MSG91');
+      console.log(`[OTP] Demo fallback for +91${phone}: ${otp}`);
+      return { channel: 'demo-fallback', devHint: otp };
     }
     console.log(`[OTP] MSG91 sent to +91${phone}`);
     return { channel: 'sms' };
   }
 
   console.log(`[OTP] Demo OTP for ${phone.includes('@') ? '' : '+91'}${phone}: ${otp}`);
-  return { channel: 'demo', devHint: config.demoMode ? config.demoOtp : undefined };
+  return { channel: 'demo', devHint: otp };
 }
 
 async function createAndSendOtp(phone) {

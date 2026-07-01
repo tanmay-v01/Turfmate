@@ -15,7 +15,7 @@ const DEMO_PROFILES = {
     role: 'PLAYER',
     profile: {
       fullName: 'Rahul Mehta',
-      username: '@rahul_cricket',
+      username: '@rahul_mehta',
       avatarUrl: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Rahul',
       locationLabel: 'Virar',
       locationLat: 19.456,
@@ -44,11 +44,8 @@ const DEMO_PROFILES = {
 router.post('/send-otp', async (req, res) => {
   try {
     const phone = normalizePhone(req.body.phone);
-    if (!phone.includes('@')) {
-      return res.status(400).json({ error: 'Only email login is supported currently' });
-    }
     if (!isValidPhone(phone)) {
-      return res.status(400).json({ error: 'Enter a valid email address' });
+      return res.status(400).json({ error: 'Enter a valid phone number or email address' });
     }
     const sendResult = await otpService.createAndSendOtp(phone);
     res.json({
@@ -68,11 +65,8 @@ router.post('/verify-otp', async (req, res) => {
     const phone = normalizePhone(req.body.phone);
     const otp = String(req.body.otp || '').trim();
 
-    if (!phone.includes('@')) {
-      return res.status(400).json({ error: 'Only email login is supported currently' });
-    }
     if (!isValidPhone(phone)) {
-      return res.status(400).json({ error: 'Invalid email address' });
+      return res.status(400).json({ error: 'Invalid phone number or email address' });
     }
     const ok = await otpService.verifyOtpAsync(phone, otp);
     if (!ok) {

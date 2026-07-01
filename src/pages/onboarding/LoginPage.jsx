@@ -88,10 +88,10 @@ export default function LoginPage() {
 
           <div className="mt-5 sm:mt-8 space-y-4 sm:space-y-6">
             <div>
-              <label className="tm-label text-[10px] sm:text-xs">mobile or email</label>
-              <div className="flex gap-2 sm:gap-3">
+              <label className="tm-label text-[10px] sm:text-xs tracking-wider uppercase opacity-80">mobile or email</label>
+              <div className="flex gap-2 sm:gap-3 mt-1.5">
                 {!app.phoneNumber.includes('@') && !/[a-zA-Z]/.test(app.phoneNumber) && (
-                  <div className="shrink-0 flex items-center gap-1 sm:gap-2 px-2.5 sm:px-4 py-2.5 sm:py-3.5 rounded-2xl sm:rounded-[20px] bg-slate-100 border border-slate-200 text-xs sm:text-sm font-bold text-slate-700 shadow-sm">
+                  <div className="shrink-0 flex items-center gap-1 sm:gap-2 px-3 sm:px-4 py-2.5 sm:py-3.5 rounded-2xl bg-white border border-slate-100 text-xs sm:text-sm font-bold text-slate-800 shadow-sm transition">
                     🇮🇳 +91
                   </div>
                 )}
@@ -104,8 +104,8 @@ export default function LoginPage() {
                     app.setPhoneNumber(val);
                     app.updateOnboardingData({ phoneNumber: val });
                   }}
-                  placeholder="10 digits or email"
-                  className="tm-input flex-1 py-2.5 sm:py-3.5 text-base sm:text-sm min-w-0"
+                  placeholder="Enter 10 digits or email"
+                  className="tm-input flex-1 py-2.5 sm:py-3.5 px-4 text-base sm:text-sm min-w-0 bg-white border border-slate-100 focus:border-brand-primary rounded-2xl shadow-sm focus:ring-4 focus:ring-brand-primary/10 transition-all duration-300"
                 />
               </div>
             </div>
@@ -113,30 +113,26 @@ export default function LoginPage() {
             <Button
               size="md"
               variant="grass"
-              className="w-full sm:!px-8 sm:!py-4 sm:!text-base flex items-center justify-center gap-2"
+              className="w-full sm:!px-8 sm:!py-4 sm:!text-base flex items-center justify-center gap-2 rounded-2xl shadow-premium hover:shadow-premium-hover transition-all duration-300 transform active:scale-98"
               disabled={!app.phoneNumber || (app.phoneNumber.length < 10 && !app.phoneNumber.includes('@'))}
               onClick={() => app.handleSendOTP(false)}
             >
-              send code <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+              Send OTP Code <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
             </Button>
 
             {env.demoMode && (
               <>
-                <div className="relative flex items-center gap-3 py-0.5">
-                  <div className="flex-1 h-px bg-slate-200" />
+                <div className="relative flex items-center gap-3 py-1">
+                  <div className="flex-1 h-px bg-slate-100" />
                   <span className="text-[9px] sm:text-[10px] font-black text-slate-400 uppercase tracking-widest">or login with</span>
-                  <div className="flex-1 h-px bg-slate-200" />
+                  <div className="flex-1 h-px bg-slate-100" />
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                <div className="grid grid-cols-2 gap-3">
                   <button
                     type="button"
-                    onClick={() => {
-                      app.updateOnboardingData({ name: 'Google User', phoneNumber: '9876543210' });
-                      app.setPhoneNumber('9876543210');
-                      app.handleSendOTP(false);
-                    }}
-                    className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-black text-slate-700 flex items-center justify-center gap-2 active:scale-[0.98] transition shadow-sm hover:bg-slate-50"
+                    onClick={() => app.handleSocialLogin('Google')}
+                    className="bg-white border border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 rounded-2xl px-3 py-3 text-xs sm:text-sm font-bold text-slate-700 flex items-center justify-center gap-2 active:scale-[0.98] transition-all duration-200 shadow-sm"
                   >
                     <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                       <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -149,12 +145,8 @@ export default function LoginPage() {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      app.updateOnboardingData({ name: 'Apple User', phoneNumber: '9876543210' });
-                      app.setPhoneNumber('9876543210');
-                      app.handleSendOTP(false);
-                    }}
-                    className="bg-white border border-slate-200 hover:border-slate-300 rounded-2xl px-3 py-3 text-xs sm:text-sm font-black text-slate-700 flex items-center justify-center gap-2 active:scale-[0.98] transition shadow-sm hover:bg-slate-50"
+                    onClick={() => app.handleSocialLogin('Apple')}
+                    className="bg-white border border-slate-100 hover:border-slate-200 hover:bg-slate-50/50 rounded-2xl px-3 py-3 text-xs sm:text-sm font-bold text-slate-700 flex items-center justify-center gap-2 active:scale-[0.98] transition-all duration-200 shadow-sm"
                   >
                     <svg className="w-4 h-4 fill-current text-slate-800" viewBox="0 0 24 24">
                       <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C4.18 16.57 3.38 10.9 6.84 7.63c1.55-1.47 3.26-1.42 4.26-.9 1.18.6 1.94.57 3.12 0 1.5-.74 3.04-.6 4.14.47-3.2 3.73-2.4 9.5 1.05 10.97-1.05 2.22-2.3 2.16-2.36 2.11zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.26 2.5-2.12 4.54-3.74 4.25z" />
@@ -163,16 +155,16 @@ export default function LoginPage() {
                   </button>
                 </div>
 
-                <details className="lg:hidden rounded-[20px] border border-slate-200/80 bg-slate-50 overflow-hidden shadow-sm">
-                  <summary className="px-4 py-3 text-xs font-black text-brand-forest cursor-pointer select-none flex justify-between items-center">
-                    <span>🚀 quick login credentials</span>
+                <details className="lg:hidden rounded-2xl border border-slate-100 bg-white overflow-hidden shadow-sm transition-all duration-300">
+                  <summary className="px-4 py-3 text-xs font-black text-brand-forest cursor-pointer select-none flex justify-between items-center bg-slate-50/50 hover:bg-slate-50">
+                    <span>🚀 Quick Demo Credentials</span>
                   </summary>
-                  <ul className="px-4 pb-4 text-xs text-slate-600 space-y-2 font-mono border-t border-slate-100 pt-3">
-                    <li className="flex justify-between border-b border-slate-100 pb-1.5">
+                  <ul className="px-4 pb-4 text-xs text-slate-600 space-y-2 font-mono border-t border-slate-100 pt-3 bg-white">
+                    <li className="flex justify-between border-b border-slate-50 pb-1.5">
                       <span>Player:</span>
                       <span className="font-bold text-brand-grassDeep">9876543210</span>
                     </li>
-                    <li className="flex justify-between border-b border-slate-100 pb-1.5">
+                    <li className="flex justify-between border-b border-slate-50 pb-1.5">
                       <span>Owner:</span>
                       <span className="font-bold text-brand-grassDeep">1111111111</span>
                     </li>

@@ -112,22 +112,22 @@ export default function OtpVerifyPage() {
                     }
                   }
                 }}
-                className="w-12 h-14 sm:w-14 sm:h-16 bg-white border-2 border-brand-border rounded-2xl sm:rounded-[22px] text-center text-xl sm:text-2xl font-display font-extrabold text-brand-forest focus:outline-none focus:border-brand-grassFresh focus:ring-2 focus:ring-brand-grassFresh/20 transition-all"
+                className="w-12 h-14 sm:w-14 sm:h-16 bg-white border border-slate-100 rounded-2xl text-center text-xl sm:text-2xl font-display font-extrabold text-brand-forest focus:outline-none focus:border-brand-primary focus:ring-4 focus:ring-brand-primary/10 transition-all shadow-sm"
               />
             ))}
           </div>
 
           {env.demoMode && (
-            <details className="mt-4 sm:mt-6 rounded-[20px] border border-slate-200/80 bg-slate-50 overflow-hidden shadow-sm lg:hidden">
-              <summary className="px-4 py-3 text-xs font-black text-brand-forest cursor-pointer select-none flex justify-between items-center">
-                <span>🚀 quick credentials (OTP: 1234)</span>
+            <details className="mt-4 sm:mt-6 rounded-2xl border border-slate-100 bg-white overflow-hidden shadow-sm transition-all duration-300 lg:hidden">
+              <summary className="px-4 py-3 text-xs font-black text-brand-forest cursor-pointer select-none flex justify-between items-center bg-slate-50/50 hover:bg-slate-50">
+                <span>🚀 Quick Demo Credentials (OTP: 1234)</span>
               </summary>
-              <ul className="px-4 pb-4 text-xs text-slate-600 space-y-2 font-mono border-t border-slate-100 pt-3">
-                <li className="flex justify-between border-b border-slate-100 pb-1.5">
+              <ul className="px-4 pb-4 text-xs text-slate-600 space-y-2 font-mono border-t border-slate-100 pt-3 bg-white">
+                <li className="flex justify-between border-b border-slate-50 pb-1.5">
                   <span>Player:</span>
                   <span className="font-bold text-brand-grassDeep">9876543210</span>
                 </li>
-                <li className="flex justify-between border-b border-slate-100 pb-1.5">
+                <li className="flex justify-between border-b border-slate-50 pb-1.5">
                   <span>Owner:</span>
                   <span className="font-bold text-brand-grassDeep">1111111111</span>
                 </li>
@@ -140,8 +140,8 @@ export default function OtpVerifyPage() {
           )}
 
           {env.demoMode && (
-            <div className="hidden lg:block mt-6 p-5 rounded-[24px] bg-brand-grassPale/50 border border-brand-border/60 text-xs text-brand-grassInk shadow-sm leading-relaxed">
-              <strong>demo instructions:</strong> type <strong>1234</strong> to verify and login instantly.
+            <div className="hidden lg:block mt-6 p-5 rounded-2xl bg-brand-grassPale/30 border border-brand-border/40 text-xs text-brand-grassInk shadow-sm leading-relaxed">
+              <strong>demo instructions:</strong> Type <strong>1234</strong> to verify and login instantly.
             </div>
           )}
 
@@ -152,7 +152,7 @@ export default function OtpVerifyPage() {
             ) : (
               <div className="flex gap-2">
                 <button onClick={() => app.handleSendOTP(false)} className="font-bold text-brand-grassDeep hover:underline pb-0.5 border-b border-dashed border-brand-grassDeep">
-                  resend sms
+                  resend SMS
                 </button>
                 <button onClick={() => app.handleSendOTP(true)} className="px-3 py-1 rounded-full bg-[#25D366] text-white text-[10px] sm:text-xs font-black shadow-sm hover:scale-102 active:scale-98 transition">
                   whatsapp
@@ -177,11 +177,11 @@ export default function OtpVerifyPage() {
           <Button
             size="md"
             variant="grass"
-            className="w-full mt-6 sm:mt-8 sm:!px-8 sm:!py-4 sm:!text-base flex items-center justify-center gap-2"
+            className="w-full mt-6 sm:mt-8 sm:!px-8 sm:!py-4 sm:!text-base flex items-center justify-center gap-2 rounded-2xl shadow-premium hover:shadow-premium-hover transition-all duration-300 transform active:scale-98"
             disabled={app.otpCode.length !== 4}
             onClick={app.handleVerifyOTP}
           >
-            verify & go <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+            Verify & Go <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
           </Button>
         </div>
       </div>

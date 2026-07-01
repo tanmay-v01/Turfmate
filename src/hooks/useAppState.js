@@ -1095,17 +1095,36 @@ export function useAppState() {
     setOtpSent(true);
     setLoginTimer(30);
 
+    let devHintOtp = null;
     try {
-      await authApi.sendOtp(phoneNumber);
+      const res = await authApi.sendOtp(phoneNumber);
+      if (res && res.devHint) {
+        devHintOtp = res.devHint;
+      }
     } catch (err) {
       console.warn('[auth] send-otp failed, demo fallback available:', err.message);
     }
 
-    if (viaWhatsApp && env.demoMode) {
-      setWhatsappNotification("TurfMate OTP: 1234 is your verification code.");
-      setTimeout(() => setWhatsappNotification(null), 6000);
+    if (env.demoMode) {
+      const activeOtp = devHintOtp || '1234';
+      setWhatsappNotification(`[DEMO MODE] Verification code for ${phoneNumber}: ${activeOtp}`);
+      setTimeout(() => setWhatsappNotification(null), 12000);
     }
     navigateTo('otp_verify');
+  };
+
+  const handleSocialLogin = async (provider) => {
+    if (env.demoMode) {
+      try {
+        const data = await authApi.verifyOtp('9876543210', '1234');
+        routeAfterAuth(data.profile);
+        showToast(`Successfully logged in with ${provider}!`, 'success');
+      } catch (err) {
+        showToast('Demo social login failed', 'error');
+      }
+    } else {
+      showToast(`${provider} login is currently in sandbox. Please use your email/mobile.`, 'info');
+    }
   };
 
   const routeAfterAuth = (profile) => {
@@ -2346,7 +2365,7 @@ export function useAppState() {
     adminBlockedSlots, setAdminBlockedSlots, adminSlotPrices, setAdminSlotPrices,
     newAnnouncementText, setNewAnnouncementText, newAnnouncementSport, setNewAnnouncementSport,
     newAnnouncementTurf, setNewAnnouncementTurf,
-    navigateTo, updateOnboardingData, handleSendOTP, handleVerifyOTP,
+    navigateTo, updateOnboardingData, handleSendOTP, handleVerifyOTP, handleSocialLogin,
     handleUsernameChange, selectSuggestion, handleProfileSubmit, triggerConfetti,
     grantLocation, selectManualLocation, updatePlayerLocation, createLockerPost,
     processBookingPayment, processTournamentPayment, joinSplitGame,
