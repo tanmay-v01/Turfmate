@@ -4,7 +4,7 @@ import { twMerge } from 'tailwind-merge';
 export function Skeleton({ className, ...props }) {
   return (
     <div
-      className={twMerge('animate-pulse rounded-md bg-slate-200/80', className)}
+      className={twMerge('tm-shimmer rounded-md', className)}
       {...props}
     />
   );

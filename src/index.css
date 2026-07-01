@@ -89,6 +89,34 @@
   100% { background-position: 200% 0; }
 }
 
+.tm-shimmer {
+  background: #f1f5f9;
+  background-image: linear-gradient(90deg, #f1f5f9 0px, #f8fafc 40px, #f1f5f9 80px);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite ease-out;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+.tm-pulse-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--grass-fresh);
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-slow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+.animate-pulse-slow {
+  animation: pulse-slow 8s ease-in-out infinite;
+}
+
 .confetti-particle {
   position: absolute;
   top: -20px;
@@ -473,16 +501,16 @@
 }
 
 .tm-btn-primary {
-  background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+  background: linear-gradient(135deg, var(--grass) 0%, var(--grass-light) 100%);
   color: #FFFFFF;
   border: none;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
   transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, box-shadow;
 }
 .tm-btn-primary:hover {
-  background: linear-gradient(135deg, #059669 0%, #10B981 100%);
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, var(--grass-deep) 0%, var(--grass) 100%);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.12);
   transform: translateY(-2px);
 }
 .tm-btn-primary:active {

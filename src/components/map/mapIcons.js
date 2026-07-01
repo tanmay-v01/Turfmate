@@ -8,9 +8,10 @@ export function createUserIcon() {
   return L.divIcon({
     className: 'tm-map-icon',
     html: `
-      <div style="display:flex;flex-direction:column;align-items:center;pointer-events:none">
-        <div style="width:22px;height:22px;background:#3b82f6;border-radius:50%;border:3px solid ${WHITE};box-shadow:0 2px 10px rgba(0,0,0,0.35)"></div>
-        <span style="margin-top:3px;font-size:9px;font-weight:800;background:${FOREST};color:${WHITE};padding:2px 6px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.2)">You</span>
+      <div style="display:flex;flex-direction:column;align-items:center;pointer-events:none;position:relative;">
+        <div class="tm-pulse-ring"></div>
+        <div style="width:22px;height:22px;background:var(--grass-deep);border-radius:50%;border:3px solid ${WHITE};box-shadow:0 2px 10px rgba(0,0,0,0.35);position:relative;z-index:2;"></div>
+        <span style="margin-top:3px;font-size:9px;font-weight:800;background:var(--grass-ink);color:${WHITE};padding:2px 6px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,0.2)">You</span>
       </div>
     `,
     iconSize: [36, 44],
@@ -39,7 +40,10 @@ export function createPlayerIcon(avatarUrl) {
   return L.divIcon({
     className: 'tm-map-icon',
     html: `
-      <img src="${avatarUrl}" alt="" style="width:32px;height:32px;border-radius:50%;border:2px solid ${FRESH};object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer" />
+      <div style="position:relative;width:32px;height:32px;">
+        <div class="tm-pulse-ring"></div>
+        <img src="${avatarUrl}" alt="" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--grass-fresh);object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.2);cursor:pointer;position:relative;z-index:2;" />
+      </div>
     `,
     iconSize: [32, 32],
     iconAnchor: [16, 16],

@@ -88,10 +88,10 @@ export default function PageRouter() {
     <AnimatePresence mode="wait">
       <motion.div
         key={view}
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -15 }}
-        transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+        initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+        exit={{ opacity: 0, scale: 1.02, filter: 'blur(4px)' }}
+        transition={{ type: 'spring', stiffness: 350, damping: 25, mass: 0.8 }}
         className={FULL_WIDTH_VIEWS.has(view) ? '' : 'tm-page pb-24 lg:pb-10'}
       >
         {content}

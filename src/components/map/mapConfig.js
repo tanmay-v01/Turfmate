@@ -1,7 +1,6 @@
-/** OpenStreetMap tiles — free, no API key required */
 export const MAP_TILES = {
-  url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
 };
 
 export const DEFAULT_CENTER = [19.456, 72.812];
