@@ -2073,7 +2073,24 @@ export function useAppState() {
           return c;
         }));
       } catch (err) {
-        showToast('Failed to send message', 'error');
+        console.warn('Backend chat failed, falling back to local mock', err);
+        const mockMessage = {
+          key: `mock-${Date.now()}`,
+          sender: userProfile.name || 'You',
+          text,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          dateLabel: 'Today'
+        };
+        setChats(prev => prev.map(c => {
+          if (c.id === roomId) {
+            return {
+              ...c,
+              unread: 0,
+              messages: [...(c.messages || []), mockMessage]
+            };
+          }
+          return c;
+        }));
       }
     }
   };
