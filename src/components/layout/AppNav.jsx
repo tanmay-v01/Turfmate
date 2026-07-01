@@ -146,7 +146,7 @@ export default function AppNav() {
         {app.userProfile?.isLoggedIn && (
           <button
             type="button"
-            onClick={app.logout}
+            onClick={app.resetApp}
             className="mt-1 w-full text-left px-2 py-1.5 text-[11px] text-slate-400 hover:text-brand-forest transition font-bold"
           >
             Sign out

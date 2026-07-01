@@ -40,7 +40,7 @@ export default function AvatarPickerModal() {
           <button 
             onClick={() => {
               app.setShowAvatarPicker(false);
-              app.logout();
+              app.resetApp();
             }}
             className="w-full py-3 rounded-xl border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition"
           >
