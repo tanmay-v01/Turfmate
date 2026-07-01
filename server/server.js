@@ -127,10 +127,51 @@ async function bootstrapPhase1() {
     }
     logger.info('database_ready', { driver: dbStore.driver });
   } catch (err) {
+    global.migrationError = err.stack || err.message;
     logger.error('bootstrap_failed', { error: err.message });
   }
 }
 bootstrapPhase1();
+
+app.get('/api/debug-db', async (req, res) => {
+  try {
+    let tables = [];
+    if (dbStore.driver === 'postgres') {
+      const rows = await dbStore.getAll(`
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public'
+      `);
+      tables = rows.map(r => r.table_name);
+    } else {
+      const rows = await dbStore.getAll(`
+        SELECT name FROM sqlite_master WHERE type='table'
+      `);
+      tables = rows.map(r => r.name);
+    }
+
+    res.json({
+      driver: dbStore.driver,
+      databaseUrlConfigured: !!config.databaseUrl,
+      migrationError: global.migrationError || null,
+      tables,
+      env: {
+        NODE_ENV: config.nodeEnv,
+        PORT: config.port,
+        HAS_SMTP_HOST: !!config.smtpHost,
+        HAS_SMTP_USER: !!config.smtpUser,
+      }
+    });
+  } catch (err) {
+    res.status(500).json({
+      error: err.message,
+      stack: err.stack,
+      driver: dbStore.driver,
+      databaseUrlConfigured: !!config.databaseUrl,
+      migrationError: global.migrationError || null,
+    });
+  }
+});
 
 setInterval(() => {
   bookingsRepo.cleanupExpiredLocks().catch(() => {});
