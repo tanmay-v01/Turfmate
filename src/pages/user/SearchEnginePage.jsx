@@ -45,7 +45,7 @@ export default function SearchEnginePage() {
             />
             <button
               onClick={() => app.setShowFilterSheet(true)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 tm-icon-btn !w-8 !h-8 !rounded-xl text-brand-grassDeep"
+              className="absolute right-2 top-1/2 -translate-y-1/2 tm-icon-btn !w-8 !h-8 !rounded-xl text-lime-400"
               aria-label="Filters"
             >
               <SlidersHorizontal className="w-4 h-4" />
@@ -79,7 +79,7 @@ export default function SearchEnginePage() {
                 app.setFilterPitchSize('all');
                 app.setSearchQuery('');
               }}
-              className="my-10 border border-slate-100"
+              className="my-10 border border-white/10"
             />
           ) : (
             <AnimatePresence>
@@ -101,7 +101,7 @@ export default function SearchEnginePage() {
                     <TurfImage turf={turf} className="w-28 h-24 self-stretch object-cover group-hover:scale-105 transition-transform duration-500 rounded-l-2xl" />
                     <div className="p-3 text-left flex-grow">
                       <span className="tm-pill text-[8px] py-0.5 px-2">{turf.city}</span>
-                      <h4 className="font-extrabold text-sm text-brand-forest dark:text-brand-grassLight mt-1.5 truncate">{turf.name}</h4>
+                      <h4 className="font-extrabold text-sm text-white dark:text-brand-grassLight mt-1.5 truncate">{turf.name}</h4>
                       <div className="flex items-center gap-1.5 mt-1.5 text-[9px] text-slate-400 dark:text-slate-500 font-bold">
                         <span>⭐ {turf.rating}</span>
                         <span>•</span>
@@ -109,7 +109,7 @@ export default function SearchEnginePage() {
                       </div>
                       <div className="flex justify-between items-center mt-3 pt-2 border-t border-slate-50 dark:border-slate-700/50">
                         <span className="text-[8px] text-slate-400 dark:text-slate-500 font-semibold">Hourly Booking</span>
-                        <span className="text-xs font-extrabold text-brand-forest dark:text-brand-grassLight">₹{turf.pricePerHour}</span>
+                        <span className="text-xs font-extrabold text-white dark:text-brand-grassLight">₹{turf.pricePerHour}</span>
                       </div>
                     </div>
                   </motion.div>
@@ -136,14 +136,14 @@ export default function SearchEnginePage() {
           </TurfMapBase>
 
           {app.selectedTurfForPreview && (
-            <div className="absolute bottom-4 left-4 right-4 lg:left-auto lg:w-80 bg-white/95 backdrop-blur-xs p-3 rounded-2xl border border-slate-100 shadow-xl flex items-center gap-3 z-[500] animate-fade-in text-brand-text">
+            <div className="absolute bottom-4 left-4 right-4 lg:left-auto lg:w-80 bg-white/95 backdrop-blur-xs p-3 rounded-2xl border border-white/10 shadow-xl flex items-center gap-3 z-[500] animate-fade-in text-brand-text">
               <TurfImage turf={app.selectedTurfForPreview} className="w-16 h-16 rounded-xl object-cover" />
               <div className="flex-grow text-left min-w-0">
-                <h4 className="font-extrabold text-xs text-brand-forest truncate">{app.selectedTurfForPreview.name}</h4>
+                <h4 className="font-extrabold text-xs text-white truncate">{app.selectedTurfForPreview.name}</h4>
                 <p className="text-[10px] text-slate-500 font-semibold mt-0.5">
                   ⭐ {app.selectedTurfForPreview.rating} • {app.getDistance(lat1, lng1, app.selectedTurfForPreview.lat, app.selectedTurfForPreview.lng).toFixed(1)} km away
                 </p>
-                <span className="text-[10px] font-bold text-brand-grassDeep leading-none mt-1 block">
+                <span className="text-[10px] font-bold text-lime-400 leading-none mt-1 block">
                   Starting ₹{app.selectedTurfForPreview.pricePerHour}/hr
                 </span>
               </div>
@@ -176,9 +176,9 @@ export default function SearchEnginePage() {
 
       {app.showFilterSheet && (
         <div className="absolute inset-0 bg-black/60 z-40 animate-fade-in flex items-end justify-center">
-          <div className="w-full bg-white rounded-t-[32px] p-5 space-y-4 animate-slide-in shadow-2xl border-t border-slate-100 max-h-[80%] overflow-y-auto">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
-              <h3 className="font-extrabold text-sm text-brand-forest font-display uppercase tracking-wider">Search Filters</h3>
+          <div className="w-full bg-white/5 rounded-t-[32px] p-5 space-y-4 animate-slide-in shadow-2xl border-t border-white/10 max-h-[80%] overflow-y-auto">
+            <div className="flex justify-between items-center border-b border-white/10 pb-3">
+              <h3 className="font-extrabold text-sm text-white font-display uppercase tracking-wider">Search Filters</h3>
               <button onClick={() => app.setShowFilterSheet(false)} className="text-slate-400 hover:text-slate-600 cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
@@ -219,7 +219,7 @@ export default function SearchEnginePage() {
             <div className="space-y-1.5">
               <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
                 <span>Preferred Time Lobbies</span>
-                <span className="text-brand-forest font-bold">{app.filterTimeRange[0]}:00 - {app.filterTimeRange[1]}:00</span>
+                <span className="text-white font-bold">{app.filterTimeRange[0]}:00 - {app.filterTimeRange[1]}:00</span>
               </div>
               <input
                 type="range"
@@ -250,7 +250,7 @@ export default function SearchEnginePage() {
             <div className="space-y-1.5">
               <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
                 <span>Geofence radius</span>
-                <span className="text-brand-forest font-bold">{app.filterRadius} km</span>
+                <span className="text-white font-bold">{app.filterRadius} km</span>
               </div>
               <input
                 type="range"

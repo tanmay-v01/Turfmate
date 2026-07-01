@@ -40,7 +40,7 @@ export default function MasterCalendar() {
       case 'BOOKED_ONLINE': return 'bg-green-100 border-green-200 text-green-800 hover:bg-green-200 cursor-pointer';
       case 'SPLIT_PENDING': return 'bg-amber-100 border-amber-200 text-amber-800 hover:bg-amber-200 cursor-pointer';
       case 'BOOKED_OFFLINE': return 'bg-blue-100 border-blue-200 text-blue-800 hover:bg-blue-200 cursor-pointer border-l-4 border-l-blue-500';
-      default: return 'bg-white border-slate-100 hover:bg-slate-50 cursor-crosshair';
+      default: return 'bg-white/5 border-white/10 hover:bg-slate-50 cursor-crosshair';
     }
   };
 
@@ -93,19 +93,19 @@ export default function MasterCalendar() {
       {/* Header & Controls */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 shrink-0">
         <div>
-          <h2 className="text-2xl font-display font-extrabold text-brand-forest">Master Calendar</h2>
+          <h2 className="text-2xl font-display font-extrabold text-white">Master Calendar</h2>
           <p className="text-sm font-bold text-slate-500">Manage real-time inventory for {activeTurf.name}</p>
         </div>
         
         <div className="flex gap-3">
-          <div className="flex items-center bg-white border border-slate-200 rounded-xl p-1 shadow-sm">
+          <div className="flex items-center bg-white/5 border border-slate-200 rounded-xl p-1 shadow-sm">
             <button 
               onClick={() => app.setAdminSelectedDate(app.adminSelectedDate === 'Tomorrow' ? 'Today' : 'Yesterday')}
               className="p-2 hover:bg-slate-50 rounded-lg transition"
             >
               <ChevronLeft className="w-4 h-4 text-slate-500" />
             </button>
-            <span className="px-4 text-sm font-bold text-brand-forest min-w-[80px] text-center">{app.adminSelectedDate}</span>
+            <span className="px-4 text-sm font-bold text-white min-w-[80px] text-center">{app.adminSelectedDate}</span>
             <button 
               onClick={() => app.setAdminSelectedDate(app.adminSelectedDate === 'Yesterday' ? 'Today' : 'Tomorrow')}
               className="p-2 hover:bg-slate-50 rounded-lg transition"
@@ -113,7 +113,7 @@ export default function MasterCalendar() {
               <ChevronRight className="w-4 h-4 text-slate-500" />
             </button>
           </div>
-          <button className="px-4 py-2 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-bold shadow-sm hover:bg-slate-50 flex items-center gap-2 transition">
+          <button className="px-4 py-2 bg-white/5 border border-slate-200 text-slate-600 rounded-xl text-sm font-bold shadow-sm hover:bg-slate-50 flex items-center gap-2 transition">
             <Filter className="w-4 h-4" /> Filter
           </button>
         </div>
@@ -127,12 +127,12 @@ export default function MasterCalendar() {
       </div>
 
       {/* The Grid */}
-      <div className="flex-1 bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
+      <div className="flex-1 bg-white/5 border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col">
         {/* X-Axis: Pitches */}
         <div className="grid grid-cols-[100px_1fr_1fr_1fr] bg-slate-50 border-b border-slate-200 shrink-0">
           <div className="p-4 border-r border-slate-200"></div>
           {pitches.map((p, i) => (
-            <div key={i} className="p-4 border-r border-slate-200 text-center font-bold text-sm text-brand-forest truncate">
+            <div key={i} className="p-4 border-r border-slate-200 text-center font-bold text-sm text-white truncate">
               {p}
             </div>
           ))}
@@ -141,7 +141,7 @@ export default function MasterCalendar() {
         {/* Grid Body */}
         <div className="flex-1 overflow-y-auto">
           {activeTurf.slots.map((slot) => (
-            <div key={slot.id} className="grid grid-cols-[100px_1fr_1fr_1fr] border-b border-slate-100 min-h-[80px]">
+            <div key={slot.id} className="grid grid-cols-[100px_1fr_1fr_1fr] border-b border-white/10 min-h-[80px]">
               {/* Y-Axis: Time */}
               <div className="p-4 border-r border-slate-200 flex flex-col items-center justify-center bg-slate-50/50">
                 <span className="text-[10px] font-black text-slate-500 text-center uppercase tracking-tighter leading-tight">
@@ -159,7 +159,7 @@ export default function MasterCalendar() {
                   <div 
                     key={pIdx} 
                     onClick={() => handleSlotClick(slot, pIdx, status)}
-                    className={`border-r border-slate-100 p-2 flex items-center justify-center transition-all duration-200 ${getSlotStyle(status)}`}
+                    className={`border-r border-white/10 p-2 flex items-center justify-center transition-all duration-200 ${getSlotStyle(status)}`}
                   >
                     <span className="text-xs font-black text-center uppercase tracking-wider">
                       {getSlotLabel(status, slot, pIdx)}
@@ -175,12 +175,12 @@ export default function MasterCalendar() {
       {/* Walk-in Booking Modal */}
       {showWalkInModal && selectedSlot && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-2xl animate-slide-up">
-            <h3 className="font-display font-extrabold text-brand-forest text-xl mb-1">Log Walk-In Booking</h3>
+          <div className="bg-white/5 w-full max-w-md rounded-3xl p-6 shadow-2xl animate-slide-up">
+            <h3 className="font-display font-extrabold text-white text-xl mb-1">Log Walk-In Booking</h3>
             <p className="text-xs font-bold text-slate-500 mb-6">Instantly block this slot from the public app.</p>
 
-            <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
-              <div className="flex items-center gap-2 text-brand-forest font-bold mb-1">
+            <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-white/10">
+              <div className="flex items-center gap-2 text-white font-bold mb-1">
                 <MapPin className="w-4 h-4 text-brand-primary" /> {selectedSlot.pitch}
               </div>
               <p className="text-xs text-slate-500 font-bold ml-6">{selectedSlot.time} (1 Hour) • ₹{activeTurf.pricePerHour}</p>
@@ -189,17 +189,17 @@ export default function MasterCalendar() {
             <div className="space-y-4">
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Customer Name</label>
-                <input type="text" placeholder="e.g. John Doe" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary transition" />
+                <input type="text" placeholder="e.g. John Doe" className="w-full px-4 py-3 bg-white/5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary transition" />
               </div>
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Phone Number</label>
-                <input type="tel" placeholder="+91 99999 99999" className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary transition" />
+                <input type="tel" placeholder="+91 99999 99999" className="w-full px-4 py-3 bg-white/5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-primary transition" />
               </div>
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1.5">Payment Method</label>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-2.5 bg-brand-primary/10 border border-brand-primary text-brand-forest font-bold text-xs rounded-xl">Cash</button>
-                  <button className="flex-1 py-2.5 bg-white border border-slate-200 text-slate-500 hover:bg-slate-50 font-bold text-xs rounded-xl transition">UPI / QR</button>
+                  <button className="flex-1 py-2.5 bg-lime-400/10 border border-brand-primary text-white font-bold text-xs rounded-xl">Cash</button>
+                  <button className="flex-1 py-2.5 bg-white/5 border border-slate-200 text-slate-500 hover:bg-slate-50 font-bold text-xs rounded-xl transition">UPI / QR</button>
                 </div>
               </div>
             </div>

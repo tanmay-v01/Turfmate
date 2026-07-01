@@ -27,7 +27,7 @@ export default function PlayerRadarPage() {
     const t = (tier || 'Bronze').toLowerCase();
     if (t === 'pro') return 'bg-purple-100 text-purple-800 border-purple-200 font-black';
     if (t === 'gold') return 'bg-amber-100 text-amber-800 border-amber-200 font-extrabold';
-    if (t === 'silver') return 'bg-slate-100 text-slate-800 border-slate-200 font-bold';
+    if (t === 'silver') return 'bg-slate-100 text-slate-200 border-slate-200 font-bold';
     return 'bg-orange-100 text-orange-800 border-orange-200 font-medium';
   };
 
@@ -88,7 +88,7 @@ export default function PlayerRadarPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by position or name..."
-              className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-grassFresh"
+              className="w-full pl-9 pr-4 py-2 bg-white/5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-grassFresh"
             />
           </div>
           <button className="p-2.5 tm-btn-primary rounded-xl shadow-md !p-2.5">
@@ -165,11 +165,11 @@ export default function PlayerRadarPage() {
                   onClick={() => setSelectedPlayer(player)}
                   className={`glass-card p-3 flex items-center gap-3 cursor-pointer transition hover:shadow-md ${isUnreliable ? 'ring-1 ring-red-100' : ''}`}
                 >
-                  <img src={player.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${player.username}`} alt="" className="w-12 h-12 rounded-full border-2 border-slate-100 bg-slate-50 shrink-0" />
+                  <img src={player.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${player.username}`} alt="" className="w-12 h-12 rounded-full border-2 border-white/10 bg-slate-50 shrink-0" />
                   
                   <div className="flex-grow min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <h4 className="font-extrabold text-sm text-slate-800 truncate">{player.username}</h4>
+                      <h4 className="font-extrabold text-sm text-slate-200 truncate">{player.username}</h4>
                       {isUnreliable && <ShieldAlert className="w-3.5 h-3.5 text-red-500" />}
                       <span className={`px-2 py-0.5 rounded-full border text-[8px] uppercase tracking-wider ${getTierBadge(player.skillTier)}`}>
                         {getTierIcon(player.skillTier)} {player.skillTier || 'Bronze'}
@@ -181,7 +181,7 @@ export default function PlayerRadarPage() {
                   </div>
 
                   <div className="text-right">
-                    <div className="flex items-center justify-end gap-1 text-brand-forest">
+                    <div className="flex items-center justify-end gap-1 text-white">
                       <span className="text-[10px] font-bold">★</span>
                       <span className="text-sm font-black">{player.reliability_score?.toFixed(1)}</span>
                     </div>
@@ -197,7 +197,7 @@ export default function PlayerRadarPage() {
       {/* Profile Modal */}
       {selectedPlayer && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center p-4">
-          <div className="bg-white w-full max-w-sm rounded-3xl p-5 relative animate-slide-up shadow-2xl">
+          <div className="bg-white/5 w-full max-w-sm rounded-3xl p-5 relative animate-slide-up shadow-2xl">
             <button 
               onClick={() => setSelectedPlayer(null)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
@@ -207,7 +207,7 @@ export default function PlayerRadarPage() {
 
             <div className="text-center mt-2">
               <img src={selectedPlayer.avatar_url || `https://api.dicebear.com/7.x/adventurer/svg?seed=${selectedPlayer.username}`} alt="" className="w-20 h-20 rounded-full mx-auto border-4 border-slate-50 shadow-sm" />
-              <h2 className="text-xl font-black text-brand-forest mt-3 font-display">{selectedPlayer.username}</h2>
+              <h2 className="text-xl font-black text-white mt-3 font-display">{selectedPlayer.username}</h2>
               <p className="text-xs text-slate-500 font-bold">{selectedPlayer.full_name}</p>
               <div className="mt-2 flex justify-center">
                 <span className={`px-3 py-1 rounded-full border text-[9px] uppercase font-black tracking-wider flex items-center gap-1 ${getTierBadge(selectedPlayer.skillTier)}`}>
@@ -224,30 +224,30 @@ export default function PlayerRadarPage() {
             )}
 
             <div className="grid grid-cols-2 gap-3 mt-4">
-              <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-3 text-center border border-white/10">
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Turf Rating</span>
                 <span className={`text-2xl font-black ${selectedPlayer.reliability_score >= 4.0 ? 'text-green-600' : selectedPlayer.reliability_score >= 3.0 ? 'text-amber-500' : 'text-red-500'}`}>
                   {selectedPlayer.reliability_score?.toFixed(1)}
                 </span>
               </div>
-              <div className="bg-slate-50 rounded-xl p-3 text-center border border-slate-100">
+              <div className="bg-slate-50 rounded-xl p-3 text-center border border-white/10">
                 <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Games Played</span>
-                <span className="text-2xl font-black text-slate-800">{selectedPlayer.total_games_played}</span>
+                <span className="text-2xl font-black text-slate-200">{selectedPlayer.total_games_played}</span>
               </div>
             </div>
 
-            <div className="mt-4 border-t border-slate-100 pt-4">
+            <div className="mt-4 border-t border-white/10 pt-4">
               <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Sports DNA</h4>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(parseJson(selectedPlayer.skill_tags, {})).map(([sport, skill]) => (
-                  <span key={sport} className="px-3 py-1 bg-brand-primary/20 text-brand-forest text-[10px] font-bold rounded-lg capitalize border border-brand-primary/30">
+                  <span key={sport} className="px-3 py-1 bg-lime-400/15 text-white text-[10px] font-bold rounded-lg capitalize border border-brand-primary/30">
                     {sport}: {skill}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="mt-4 border-t border-slate-100 pt-4">
+            <div className="mt-4 border-t border-white/10 pt-4">
                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Badges</h4>
                <div className="flex gap-2">
                  {parseJson(selectedPlayer.badges, []).length === 0 ? (
@@ -264,12 +264,12 @@ export default function PlayerRadarPage() {
             </div>
 
             {/* Endorsements Section */}
-            <div className="mt-4 border-t border-slate-100 pt-4">
+            <div className="mt-4 border-t border-white/10 pt-4">
                <div className="flex justify-between items-center mb-2">
                  <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Endorsements</h4>
                  <button 
                    onClick={() => setShowReviewInput(!showReviewInput)}
-                   className="text-[9px] font-bold text-brand-grassDeep border border-brand-grassFresh px-2 py-0.5 rounded hover:bg-brand-grassPale transition"
+                   className="text-[9px] font-bold text-lime-400 border border-brand-grassFresh px-2 py-0.5 rounded hover:bg-lime-400/10 transition"
                  >
                    {showReviewInput ? 'Cancel' : 'Write Endorsement'}
                  </button>
@@ -288,7 +288,7 @@ export default function PlayerRadarPage() {
                      value={reviewText}
                      onChange={(e) => setReviewText(e.target.value)}
                      placeholder="e.g., Great defender, always on time..."
-                     className="w-full bg-white border border-slate-200 rounded-lg p-2 text-xs focus:outline-none focus:border-brand-grassFresh mb-2"
+                     className="w-full bg-white/5 border border-slate-200 rounded-lg p-2 text-xs focus:outline-none focus:border-brand-grassFresh mb-2"
                    />
                    <button 
                      onClick={submitReview}
@@ -301,16 +301,16 @@ export default function PlayerRadarPage() {
                )}
 
                <div className="space-y-2 text-left">
-                 <div className="bg-slate-50 rounded-lg p-2 border border-slate-100">
+                 <div className="bg-slate-50 rounded-lg p-2 border border-white/10">
                    <div className="flex items-center justify-between mb-1">
-                     <span className="font-bold text-[10px] text-brand-forest">Suraj K.</span>
+                     <span className="font-bold text-[10px] text-white">Suraj K.</span>
                      <span className="flex text-amber-400"><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5 fill-amber-400" /></span>
                    </div>
                    <p className="text-[9px] text-slate-600">Always on time and plays as a solid defender.</p>
                  </div>
-                 <div className="bg-slate-50 rounded-lg p-2 border border-slate-100">
+                 <div className="bg-slate-50 rounded-lg p-2 border border-white/10">
                    <div className="flex items-center justify-between mb-1">
-                     <span className="font-bold text-[10px] text-brand-forest">Anon</span>
+                     <span className="font-bold text-[10px] text-white">Anon</span>
                      <span className="flex text-amber-400"><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5 fill-amber-400" /><Star className="w-2.5 h-2.5" /><Star className="w-2.5 h-2.5" /></span>
                    </div>
                    <p className="text-[9px] text-slate-600">Good skills, but canceled last minute once.</p>
@@ -318,7 +318,7 @@ export default function PlayerRadarPage() {
                </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3 mt-6 pt-4 border-t border-slate-100">
+            <div className="grid grid-cols-2 gap-3 mt-6 pt-4 border-t border-white/10">
               <button
                 onClick={() => {
                   app.openDmWithUser({

@@ -72,8 +72,8 @@ export default function LeaderboardPage() {
             onClick={() => setScope('squad')}
             className={`flex-1 py-2 text-center text-xs font-black uppercase rounded-xl transition-all ${
               scope === 'squad'
-                ? 'bg-white text-brand-forest shadow-sm'
-                : 'text-slate-500 hover:text-brand-forest'
+                ? 'bg-white/5 text-white shadow-sm'
+                : 'text-slate-500 hover:text-white'
             }`}
           >
             👥 My Squad
@@ -82,8 +82,8 @@ export default function LeaderboardPage() {
             onClick={() => setScope('virar')}
             className={`flex-1 py-2 text-center text-xs font-black uppercase rounded-xl transition-all ${
               scope === 'virar'
-                ? 'bg-white text-brand-forest shadow-sm'
-                : 'text-slate-500 hover:text-brand-forest'
+                ? 'bg-white/5 text-white shadow-sm'
+                : 'text-slate-500 hover:text-white'
             }`}
           >
             📍 {app.userProfile.location || 'Virar'} ({app.filterRadius}km)
@@ -111,7 +111,7 @@ export default function LeaderboardPage() {
             </div>
             <div className="flex-1">
               <p className="text-[10px] font-bold text-slate-400 uppercase">your rank</p>
-              <p className="text-2xl font-display font-extrabold text-brand-forest">
+              <p className="text-2xl font-display font-extrabold text-white">
                 #{myRank || '—'} <span className="text-base font-bold text-slate-400">of {ranked.length}</span>
               </p>
               <p className="text-sm text-slate-500">
@@ -138,8 +138,8 @@ export default function LeaderboardPage() {
                 <div key={p.id} className={`${heights[podiumIdx]} flex flex-col justify-end`}>
                   <div className="text-center mb-2">
                     <img src={p.avatar} alt="" className="w-10 h-10 rounded-2xl mx-auto border-2 border-white shadow-md object-cover" />
-                    <p className="text-xs font-bold text-brand-forest mt-1 truncate px-1">{p.isMe ? 'you' : p.name.split(' ')[0]}</p>
-                    <p className="text-lg font-display font-extrabold text-brand-forest">{p.value}</p>
+                    <p className="text-xs font-bold text-white mt-1 truncate px-1">{p.isMe ? 'you' : p.name.split(' ')[0]}</p>
+                    <p className="text-lg font-display font-extrabold text-white">{p.value}</p>
                   </div>
                   <div className={`rounded-t-2xl flex items-center justify-center font-black text-sm border ${RANK_STYLES[podiumIdx]}`}>
                     #{rankIdx + 1}
@@ -154,7 +154,7 @@ export default function LeaderboardPage() {
         <div className="glass-card divide-y divide-slate-100 overflow-hidden !p-0">
           <div className="px-4 py-3 flex items-center justify-between bg-slate-50/80">
             <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider">all friends</span>
-            <span className="text-[10px] font-bold text-brand-grassDeep flex items-center gap-1">
+            <span className="text-[10px] font-bold text-lime-400 flex items-center gap-1">
               <TrendingUp className="w-3 h-3" /> by {metric.primary.label}
             </span>
           </div>
@@ -164,12 +164,12 @@ export default function LeaderboardPage() {
               key={p.id}
               className={`px-4 py-3.5 flex items-center gap-3 ${p.isMe ? 'tm-row-me' : ''}`}
             >
-              <span className={`w-7 text-center font-black text-sm ${i < 3 ? 'text-brand-grassDeep' : 'text-slate-300'}`}>
+              <span className={`w-7 text-center font-black text-sm ${i < 3 ? 'text-lime-400' : 'text-slate-300'}`}>
                 {i < 3 ? <Medal className="w-5 h-5 mx-auto" /> : i + 1}
               </span>
-              <img src={p.avatar} alt="" className="w-10 h-10 rounded-2xl border border-slate-100 object-cover" />
+              <img src={p.avatar} alt="" className="w-10 h-10 rounded-2xl border border-white/10 object-cover" />
               <div className="flex-1 min-w-0">
-                <p className="font-bold text-sm text-brand-forest truncate">
+                <p className="font-bold text-sm text-white truncate">
                   {p.isMe ? `${p.name} (you)` : p.name}
                 </p>
                 <div className="flex gap-3 mt-0.5">
@@ -181,7 +181,7 @@ export default function LeaderboardPage() {
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-xl font-display font-extrabold text-brand-forest">{p.value}</p>
+                <p className="text-xl font-display font-extrabold text-white">{p.value}</p>
                 <p className="text-[10px] font-bold text-slate-400 uppercase">{metric.primary.label}</p>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function LeaderboardPage() {
         {myEntry && (
           <div className="fixed bottom-[140px] left-4 right-4 z-30 lg:left-[264px] lg:bottom-4 lg:right-4 bg-brand-forest text-white rounded-2xl p-3.5 shadow-premium flex items-center justify-between animate-slide-up border border-brand-grassFresh/20">
             <div className="flex items-center gap-3">
-              <span className="w-6 h-6 rounded-full bg-brand-primary text-brand-forest font-black text-xs flex items-center justify-center">
+              <span className="w-6 h-6 rounded-full bg-lime-400 text-white font-black text-xs flex items-center justify-center">
                 #{myRank || '—'}
               </span>
               <img src={myEntry.avatar} alt="" className="w-8 h-8 rounded-xl object-cover ring-2 ring-white/20" />
@@ -215,7 +215,7 @@ export default function LeaderboardPage() {
             </div>
             <button
               onClick={() => app.setView('score_calculator')}
-              className="px-3.5 py-1.5 bg-brand-primary text-brand-forest rounded-full text-[10px] font-black uppercase hover:scale-105 active:scale-95 transition"
+              className="px-3.5 py-1.5 bg-lime-400 text-white rounded-full text-[10px] font-black uppercase hover:scale-105 active:scale-95 transition"
             >
               log game
             </button>

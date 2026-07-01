@@ -34,13 +34,13 @@ export default function MySquadPage() {
     <div className="pb-4">
       <PageHeader title="my squad" subtitle="friends, groups & rankings" onBack={() => app.setView('home')} badge="roster" icon={Tag} />
 
-      <div className="flex bg-slate-100/80 p-1 rounded-xl mb-5 border border-slate-100">
+      <div className="flex bg-slate-100/80 p-1 rounded-xl mb-5 border border-white/10">
         {['friends', 'squads', 'rankings'].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={`flex-1 py-2 text-xs font-bold rounded-lg transition capitalize flex items-center justify-center gap-1 ${
-              activeTab === tab ? 'bg-white text-brand-forest shadow-sm' : 'text-slate-500'
+              activeTab === tab ? 'bg-white/5 text-white shadow-sm' : 'text-slate-500'
             }`}
           >
             {tab === 'rankings' && <Trophy className="w-3 h-3" />}
@@ -58,30 +58,30 @@ export default function MySquadPage() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search friends..."
-              className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-grassFresh"
+              className="w-full pl-9 pr-4 py-2.5 bg-white/5 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-brand-grassFresh"
             />
           </div>
           <div className="glass-card divide-y divide-slate-100 overflow-hidden !p-0">
             {filteredFriends.map((friend) => (
               <div key={friend.id} className="p-3 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <img src={friend.avatar} alt="" className="w-11 h-11 rounded-2xl border border-slate-100 object-cover" />
+                  <img src={friend.avatar} alt="" className="w-11 h-11 rounded-2xl border border-white/10 object-cover" />
                   <div className="min-w-0">
-                    <h4 className="font-bold text-sm text-brand-forest truncate">{friend.name}</h4>
+                    <h4 className="font-bold text-sm text-white truncate">{friend.name}</h4>
                     <p className="text-[10px] text-slate-400 font-medium">{friend.skillLevel} · {friend.distance}</p>
                   </div>
                 </div>
                 <div className="flex gap-1 shrink-0">
                   <button
                     onClick={() => app.setView('leaderboard')}
-                    className="p-2 text-slate-400 hover:text-brand-forest hover:bg-slate-50 rounded-lg"
+                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-50 rounded-lg"
                     title="Rankings"
                   >
                     <Tag className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => { app.setActiveChatId('chat-friend-1'); app.setView('chat'); }}
-                    className="p-2 text-slate-400 hover:text-brand-forest hover:bg-slate-50 rounded-lg"
+                    className="p-2 text-slate-400 hover:text-white hover:bg-slate-50 rounded-lg"
                   >
                     <MessageCircle className="w-4 h-4" />
                   </button>
@@ -109,7 +109,7 @@ export default function MySquadPage() {
               <img src={squad.image || `https://api.dicebear.com/7.x/shapes/svg?seed=${squad.id}`} alt="" className="w-24 object-cover shrink-0" />
               <div className="p-4 flex items-center justify-between flex-1 min-w-0">
                 <div>
-                  <h4 className="font-extrabold text-sm text-brand-forest">{squad.name}</h4>
+                  <h4 className="font-extrabold text-sm text-white">{squad.name}</h4>
                   <p className="text-[10px] text-slate-500 font-bold uppercase mt-0.5">
                     {(squad.members?.length ?? squad.memberCount)} members
                   </p>
@@ -141,8 +141,8 @@ export default function MySquadPage() {
               <div key={p.id} className={`px-4 py-3 flex items-center gap-3 ${p.isMe ? 'tm-row-me' : ''}`}>
                 <span className="w-6 font-black text-sm text-slate-400 text-center">{i + 1}</span>
                 <img src={p.avatar} alt="" className="w-9 h-9 rounded-xl object-cover" />
-                <p className="flex-1 font-bold text-sm text-brand-forest truncate">{p.isMe ? 'you' : p.name.split(' ')[0]}</p>
-                <p className="font-display font-extrabold text-brand-forest">{p.value}</p>
+                <p className="flex-1 font-bold text-sm text-white truncate">{p.isMe ? 'you' : p.name.split(' ')[0]}</p>
+                <p className="font-display font-extrabold text-white">{p.value}</p>
               </div>
             ))}
           </div>

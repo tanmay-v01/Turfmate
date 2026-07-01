@@ -21,13 +21,13 @@ export default function NotificationsDrawer() {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="absolute top-0 right-0 w-full max-w-md h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-premium flex flex-col border-l border-brand-border dark:border-slate-800"
+            className="absolute top-0 right-0 w-full max-w-md h-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl shadow-premium flex flex-col border-l border-white/10 dark:border-slate-800"
           >
-            <div className="flex items-center justify-between p-6 border-b border-brand-border dark:border-slate-800">
-              <h3 className="font-display font-extrabold text-lg text-brand-forest dark:text-brand-grassLight flex items-center gap-2 lowercase">
-                <Bell className="w-5 h-5 text-brand-grassFresh" /> pings
+            <div className="flex items-center justify-between p-6 border-b border-white/10 dark:border-slate-800">
+              <h3 className="font-display font-extrabold text-lg text-white dark:text-brand-grassLight flex items-center gap-2 lowercase">
+                <Bell className="w-5 h-5 text-lime-400" /> pings
               </h3>
-              <button onClick={() => app.setShowNotifications(false)} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-brand-muted dark:text-slate-400 transition">
+              <button onClick={() => app.setShowNotifications(false)} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 dark:text-slate-400 transition">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -35,7 +35,7 @@ export default function NotificationsDrawer() {
               {app.notifications.length === 0 ? (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16 px-4">
                   <p className="text-4xl mb-2">🔔</p>
-                  <p className="font-bold text-brand-forest dark:text-slate-200">All caught up</p>
+                  <p className="font-bold text-white dark:text-slate-200">All caught up</p>
                   <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Bookings and squad updates will appear here.</p>
                 </motion.div>
               ) : app.notifications.map((n, i) => (
@@ -47,12 +47,12 @@ export default function NotificationsDrawer() {
                   onClick={() => app.setNotifications((prev) => prev.map((item) => (item.id === n.id ? { ...item, read: true } : item)))}
                   className={`w-full text-left p-4 rounded-[20px] border transition-all duration-300 ${
                     n.read 
-                      ? 'bg-white/50 dark:bg-slate-800/30 border-brand-border dark:border-slate-700/50' 
-                      : 'bg-brand-grassPale dark:bg-brand-forest/20 border-brand-grassFresh/40 dark:border-brand-grassDeep/40 shadow-soft'
+                      ? 'bg-white/50 dark:bg-slate-800/30 border-white/10 dark:border-slate-700/50' 
+                      : 'bg-lime-400/10 dark:bg-brand-forest/20 border-brand-grassFresh/40 dark:border-brand-grassDeep/40 shadow-soft'
                   }`}
                 >
-                  <p className={`text-sm font-medium ${n.read ? 'text-brand-muted dark:text-slate-400' : 'text-brand-forest dark:text-brand-grassLight'}`}>{n.text}</p>
-                  <span className="text-xs text-brand-muted dark:text-slate-500 mt-2 block">{n.time}</span>
+                  <p className={`text-sm font-medium ${n.read ? 'text-slate-500 dark:text-slate-400' : 'text-white dark:text-brand-grassLight'}`}>{n.text}</p>
+                  <span className="text-xs text-slate-500 dark:text-slate-500 mt-2 block">{n.time}</span>
                 </motion.button>
               ))}
             </div>

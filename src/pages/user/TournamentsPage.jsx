@@ -101,11 +101,11 @@ export default function TournamentsPage() {
       />
 
       {/* Tabs */}
-      <div className="flex bg-white p-1 rounded-2xl border border-slate-100 gap-1 mb-6 shadow-sm">
+      <div className="flex bg-white/5 p-1 rounded-2xl border border-white/10 gap-1 mb-6 shadow-sm">
         <button
           onClick={() => { setActiveTab('explore'); setSelectedTournament(null); }}
           className={`flex-1 py-3 text-xs font-black rounded-xl transition ${
-            activeTab === 'explore' ? 'tm-chip-green' : 'text-slate-500 hover:text-brand-forest'
+            activeTab === 'explore' ? 'tm-chip-green' : 'text-slate-500 hover:text-white'
           }`}
         >
           Explore Championships
@@ -113,12 +113,12 @@ export default function TournamentsPage() {
         <button
           onClick={() => { setActiveTab('my-registrations'); setSelectedTournament(null); }}
           className={`flex-1 py-3 text-xs font-black rounded-xl transition relative ${
-            activeTab === 'my-registrations' ? 'tm-chip-green' : 'text-slate-500 hover:text-brand-forest'
+            activeTab === 'my-registrations' ? 'tm-chip-green' : 'text-slate-500 hover:text-white'
           }`}
         >
           My Registrations
           {myRegistrations.length > 0 && (
-            <span className="absolute top-2 right-4 w-4 h-4 bg-brand-primary text-brand-forest text-[9px] font-black rounded-full flex items-center justify-center">
+            <span className="absolute top-2 right-4 w-4 h-4 bg-lime-400 text-white text-[9px] font-black rounded-full flex items-center justify-center">
               {myRegistrations.length}
             </span>
           )}
@@ -130,7 +130,7 @@ export default function TournamentsPage() {
           {filteredTournaments.map(t => {
             const registered = isAlreadyRegistered(t.id);
             return (
-              <div key={t.id} className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition duration-200">
+              <div key={t.id} className="bg-white/5 rounded-3xl overflow-hidden border border-white/10 shadow-sm hover:shadow-md transition duration-200">
                 <div className="h-40 relative">
                   <img src={t.banner} alt={t.name} className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-between p-4">
@@ -155,7 +155,7 @@ export default function TournamentsPage() {
                   <div className="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-2xl text-center">
                     <div>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Prize Pool</p>
-                      <p className="text-sm font-black text-brand-forest">₹{t.prizePool.toLocaleString()}</p>
+                      <p className="text-sm font-black text-white">₹{t.prizePool.toLocaleString()}</p>
                     </div>
                     <div>
                       <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Entry Fee</p>
@@ -169,17 +169,17 @@ export default function TournamentsPage() {
 
                   <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{t.description}</p>
 
-                  <div className="flex gap-2 pt-2 border-t border-slate-100">
+                  <div className="flex gap-2 pt-2 border-t border-white/10">
                     <button
                       onClick={() => setSelectedTournament(t)}
-                      className="flex-1 py-3 border border-slate-200 hover:border-brand-forest text-slate-700 hover:text-brand-forest text-xs font-black rounded-xl transition flex items-center justify-center gap-1.5"
+                      className="flex-1 py-3 border border-slate-200 hover:border-brand-forest text-slate-700 hover:text-white text-xs font-black rounded-xl transition flex items-center justify-center gap-1.5"
                     >
                       <Award className="w-4 h-4" /> View Details
                     </button>
 
                     {registered ? (
-                      <span className="flex-1 bg-brand-primary/20 text-brand-forest text-xs font-black py-3 rounded-xl flex items-center justify-center gap-1">
-                        <CheckCircle2 className="w-4 h-4 text-brand-forest" /> Registered
+                      <span className="flex-1 bg-lime-400/15 text-white text-xs font-black py-3 rounded-xl flex items-center justify-center gap-1">
+                        <CheckCircle2 className="w-4 h-4 text-white" /> Registered
                       </span>
                     ) : t.status === 'open' ? (
                       <button
@@ -207,16 +207,16 @@ export default function TournamentsPage() {
       {/* Selected Tournament Details & Brackets */}
       {selectedTournament && (
         <div className="space-y-6">
-          <div className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm p-5 space-y-4">
+          <div className="bg-white/5 rounded-3xl overflow-hidden border border-white/10 shadow-sm p-5 space-y-4">
             <div className="flex justify-between items-start">
               <div>
                 <button
                   onClick={() => setSelectedTournament(null)}
-                  className="text-xs font-bold text-slate-400 hover:text-brand-forest flex items-center gap-1 mb-2"
+                  className="text-xs font-bold text-slate-400 hover:text-white flex items-center gap-1 mb-2"
                 >
                   &larr; Back to championships
                 </button>
-                <h2 className="text-xl font-black text-brand-forest">{selectedTournament.name}</h2>
+                <h2 className="text-xl font-black text-white">{selectedTournament.name}</h2>
                 <p className="text-xs text-slate-400 font-bold capitalize mt-0.5">{selectedTournament.sport} Tournament</p>
               </div>
               <span className="text-2xl p-2.5 bg-slate-50 rounded-2xl">{selectedTournament.icon}</span>
@@ -224,7 +224,7 @@ export default function TournamentsPage() {
 
             <p className="text-xs text-slate-500 leading-relaxed">{selectedTournament.description}</p>
 
-            <div className="space-y-2 border-t border-b border-slate-100 py-4">
+            <div className="space-y-2 border-t border-b border-white/10 py-4">
               <div className="flex items-center gap-2.5 text-xs text-slate-600">
                 <Calendar className="w-4 h-4 text-slate-400" />
                 <span><strong>Date:</strong> {selectedTournament.date}</span>
@@ -242,7 +242,7 @@ export default function TournamentsPage() {
             {/* Bracket Visualizer Section */}
             <div className="space-y-4 pt-2">
               <div className="flex justify-between items-center">
-                <h3 className="text-sm font-black text-brand-forest flex items-center gap-1.5">
+                <h3 className="text-sm font-black text-white flex items-center gap-1.5">
                   <Trophy className="w-4 h-4 text-amber-500" /> Live Match Brackets
                 </h3>
                 <span className="text-[10px] text-slate-400 font-black tracking-wider uppercase bg-slate-100 px-2 py-0.5 rounded-full">
@@ -258,7 +258,7 @@ export default function TournamentsPage() {
                   <div className="flex-1 space-y-3">
                     <p className="text-[9px] text-slate-400 font-black uppercase tracking-wider text-center border-b border-slate-200/80 pb-1">Quarter Finals</p>
                     {selectedTournament.brackets.quarter.map((q) => (
-                      <div key={q.id} className="bg-white border border-slate-100 rounded-xl p-2 text-[10px] shadow-sm space-y-1">
+                      <div key={q.id} className="bg-white/5 border border-white/10 rounded-xl p-2 text-[10px] shadow-sm space-y-1">
                         <div className="flex justify-between items-center">
                           <span className={`font-bold ${q.winner === q.teamA ? 'text-emerald-600 font-extrabold' : 'text-slate-600'}`}>{q.teamA}</span>
                           <span className="font-mono text-slate-400 font-black">{q.scoreA}</span>
@@ -275,7 +275,7 @@ export default function TournamentsPage() {
                   <div className="flex-1 space-y-6">
                     <p className="text-[9px] text-slate-400 font-black uppercase tracking-wider text-center border-b border-slate-200/80 pb-1">Semi Finals</p>
                     {selectedTournament.brackets.semi.map((s) => (
-                      <div key={s.id} className="bg-white border border-slate-100 rounded-xl p-2 text-[10px] shadow-sm space-y-1">
+                      <div key={s.id} className="bg-white/5 border border-white/10 rounded-xl p-2 text-[10px] shadow-sm space-y-1">
                         <div className="flex justify-between items-center">
                           <span className={`font-bold ${s.winner === s.teamA ? 'text-emerald-600 font-extrabold' : 'text-slate-600'}`}>{s.teamA}</span>
                           <span className="font-mono text-slate-400 font-black">{s.scoreA ?? '-'}</span>
@@ -310,7 +310,7 @@ export default function TournamentsPage() {
             </div>
 
             {/* Actions inside details */}
-            <div className="pt-4 border-t border-slate-100 flex gap-2">
+            <div className="pt-4 border-t border-white/10 flex gap-2">
               <button
                 onClick={() => setSelectedTournament(null)}
                 className="py-3 px-4 border border-slate-200 text-slate-500 font-bold rounded-xl text-xs hover:bg-slate-50 transition"
@@ -318,8 +318,8 @@ export default function TournamentsPage() {
                 Close Details
               </button>
               {isAlreadyRegistered(selectedTournament.id) ? (
-                <span className="flex-1 bg-brand-primary/20 text-brand-forest text-xs font-black py-3 rounded-xl flex items-center justify-center gap-1">
-                  <CheckCircle2 className="w-4 h-4 text-brand-forest" /> You are registered for this league
+                <span className="flex-1 bg-lime-400/15 text-white text-xs font-black py-3 rounded-xl flex items-center justify-center gap-1">
+                  <CheckCircle2 className="w-4 h-4 text-white" /> You are registered for this league
                 </span>
               ) : selectedTournament.status === 'open' ? (
                 <button
@@ -351,23 +351,23 @@ export default function TournamentsPage() {
             />
           ) : (
             myRegistrations.map((reg, idx) => (
-              <div key={idx} className="bg-white rounded-3xl overflow-hidden border border-slate-100 p-4 shadow-sm flex gap-4">
+              <div key={idx} className="bg-white/5 rounded-3xl overflow-hidden border border-white/10 p-4 shadow-sm flex gap-4">
                 <img src={reg.banner} alt="" className="w-20 h-20 rounded-2xl object-cover shrink-0" />
                 <div className="min-w-0 flex-1 flex flex-col justify-between">
                   <div>
                     <span className="text-[9px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full capitalize">
                       {reg.sport}
                     </span>
-                    <h4 className="font-black text-brand-forest text-sm truncate mt-1">{reg.tournamentName}</h4>
-                    <p className="text-[10px] text-slate-400 font-bold">Team: <span className="text-brand-forest font-black">{reg.teamName}</span></p>
+                    <h4 className="font-black text-white text-sm truncate mt-1">{reg.tournamentName}</h4>
+                    <p className="text-[10px] text-slate-400 font-bold">Team: <span className="text-white font-black">{reg.teamName}</span></p>
                   </div>
                   <p className="text-[9px] text-slate-400 font-bold flex items-center gap-0.5">
                     <Calendar className="w-3 h-3 text-slate-300" /> {reg.date}
                   </p>
                 </div>
                 <div className="flex flex-col items-end justify-between shrink-0">
-                  <span className="w-8 h-8 rounded-full bg-brand-primary/20 flex items-center justify-center">
-                    <CheckCircle2 className="w-4 h-4 text-brand-forest" />
+                  <span className="w-8 h-8 rounded-full bg-lime-400/15 flex items-center justify-center">
+                    <CheckCircle2 className="w-4 h-4 text-white" />
                   </span>
                   <span className="text-[9px] text-slate-300 font-bold">Registered {reg.registeredAt}</span>
                 </div>
@@ -380,12 +380,12 @@ export default function TournamentsPage() {
       {/* REGISTRATION MODAL */}
       {isRegistering && selectedTournament && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 z-50 animate-fade-in">
-          <div className="bg-white w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
+          <div className="bg-white/5 w-full max-w-md rounded-t-3xl sm:rounded-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
             
             {/* Modal Header */}
-            <div className="p-4 border-b border-slate-100 flex justify-between items-center shrink-0">
+            <div className="p-4 border-b border-white/10 flex justify-between items-center shrink-0">
               <div>
-                <h3 className="font-black text-brand-forest text-sm">Register Team Squad</h3>
+                <h3 className="font-black text-white text-sm">Register Team Squad</h3>
                 <p className="text-[10px] text-slate-400 font-bold">{selectedTournament.name}</p>
               </div>
               <button
@@ -431,7 +431,7 @@ export default function TournamentsPage() {
                     />
                   </div>
                   <div className="bg-slate-50 p-3 rounded-2xl flex gap-2.5 items-start">
-                    <ShieldCheck className="w-5 h-5 text-brand-forest shrink-0 mt-0.5" />
+                    <ShieldCheck className="w-5 h-5 text-white shrink-0 mt-0.5" />
                     <p className="text-[10px] text-slate-500 font-bold leading-relaxed uppercase tracking-wide">
                       As team captain, you will host the squad booking. Team players will be notified to join your tournament roster.
                     </p>
@@ -456,7 +456,7 @@ export default function TournamentsPage() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <label className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Select Squad (Min 3)</label>
-                    <span className="text-xs text-brand-forest font-bold">{selectedSquad.length} selected</span>
+                    <span className="text-xs text-white font-bold">{selectedSquad.length} selected</span>
                   </div>
                   
                   <div className="space-y-2 max-h-56 overflow-y-auto pr-1">
@@ -502,7 +502,7 @@ export default function TournamentsPage() {
               {/* STEP 3: MOCK UPI PAYMENT */}
               {registrationStep === 3 && (
                 <div className="space-y-4">
-                  <div className="bg-slate-50 p-4 rounded-2xl space-y-2 border border-slate-100">
+                  <div className="bg-slate-50 p-4 rounded-2xl space-y-2 border border-white/10">
                     <div className="flex justify-between items-center text-xs">
                       <span className="text-slate-400 font-bold">Tournament:</span>
                       <span className="text-slate-700 font-black">{selectedTournament.name}</span>
@@ -517,17 +517,17 @@ export default function TournamentsPage() {
                     </div>
                     <div className="flex justify-between items-center text-xs pt-2 border-t border-slate-200/80">
                       <span className="text-slate-400 font-bold">Entry Fee Amount:</span>
-                      <span className="text-sm font-black text-brand-forest">₹{selectedTournament.entryFee}</span>
+                      <span className="text-sm font-black text-white">₹{selectedTournament.entryFee}</span>
                     </div>
                   </div>
 
                   <div className="space-y-2.5">
                     <p className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Select Payment Method</p>
-                    <div className="border border-brand-primary bg-brand-primary/5 rounded-xl p-3.5 flex justify-between items-center">
+                    <div className="border border-brand-primary bg-lime-400/5 rounded-xl p-3.5 flex justify-between items-center">
                       <div className="flex items-center gap-2.5">
-                        <span className="p-1.5 bg-brand-primary/20 rounded-lg text-brand-forest font-black text-xs">UPI</span>
+                        <span className="p-1.5 bg-lime-400/15 rounded-lg text-white font-black text-xs">UPI</span>
                         <div className="text-left">
-                          <p className="text-xs font-bold text-slate-800">PhonePe / Google Pay / BHIM</p>
+                          <p className="text-xs font-bold text-slate-200">PhonePe / Google Pay / BHIM</p>
                           <p className="text-[10px] text-slate-400 font-medium">Pay securely from any UPI app</p>
                         </div>
                       </div>
@@ -566,15 +566,15 @@ export default function TournamentsPage() {
               {/* STEP 4: SUCCESS */}
               {registrationStep === 4 && (
                 <div className="text-center py-6 space-y-4">
-                  <div className="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto text-brand-forest border-4 border-white shadow-md">
+                  <div className="w-16 h-16 bg-lime-400/15 rounded-full flex items-center justify-center mx-auto text-white border-4 border-white shadow-md">
                     <Trophy className="w-8 h-8" />
                   </div>
                   <div>
-                    <h4 className="text-base font-black text-brand-forest">Registration Confirmed!</h4>
+                    <h4 className="text-base font-black text-white">Registration Confirmed!</h4>
                     <p className="text-xs text-slate-400 mt-1">Your team <strong>{teamName}</strong> is registered for the <strong>{selectedTournament.name}</strong>.</p>
                   </div>
 
-                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-left space-y-1.5">
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-white/10 text-left space-y-1.5">
                     <p className="text-xs font-bold text-slate-700 flex items-center justify-between">
                       <span>Venue:</span>
                       <span className="text-slate-500 font-medium">{selectedTournament.location}</span>

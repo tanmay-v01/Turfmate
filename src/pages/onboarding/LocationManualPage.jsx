@@ -31,10 +31,10 @@ export default function LocationManualPage() {
 
   const shell = isLoggedIn ? (
     <div className="min-h-screen bg-slate-50 px-4 py-8 max-w-lg mx-auto">
-      <button onClick={() => app.setView('home')} className="text-sm font-bold text-slate-500 mb-6 hover:text-brand-forest">
+      <button onClick={() => app.setView('home')} className="text-sm font-bold text-slate-500 mb-6 hover:text-white">
         ← back
       </button>
-      <h1 className="text-2xl font-display font-extrabold text-brand-forest lowercase mb-1">change location</h1>
+      <h1 className="text-2xl font-display font-extrabold text-white lowercase mb-1">change location</h1>
       <p className="text-sm text-slate-500 mb-6">pick where you usually play — affects turf & player discovery.</p>
       {renderContent()}
     </div>
@@ -80,22 +80,22 @@ export default function LocationManualPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="search area..."
-            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 bg-white text-sm focus:outline-none focus:border-brand-grassFresh"
+            className="w-full pl-11 pr-4 py-3 rounded-2xl border border-slate-200 bg-white/5 text-sm focus:outline-none focus:border-brand-grassFresh"
           />
         </div>
 
-        <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden divide-y divide-slate-50 shadow-sm">
+        <div className="bg-white/5 rounded-2xl border border-white/10 overflow-hidden divide-y divide-slate-50 shadow-sm">
           {filtered.map((loc) => (
             <button
               key={loc.name}
               type="button"
               onClick={() => pick(loc)}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-brand-grassPale/30 transition group"
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-lime-400/10/30 transition group"
             >
-              <span className="flex items-center gap-3 font-bold text-sm text-brand-forest">
+              <span className="flex items-center gap-3 font-bold text-sm text-white">
                 <span className="text-lg">📍</span> {loc.name}
               </span>
-              <span className="text-[10px] font-black uppercase text-brand-grassDeep opacity-0 group-hover:opacity-100 transition">
+              <span className="text-[10px] font-black uppercase text-lime-400 opacity-0 group-hover:opacity-100 transition">
                 select →
               </span>
             </button>

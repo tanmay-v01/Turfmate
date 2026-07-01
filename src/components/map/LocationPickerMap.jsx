@@ -40,7 +40,7 @@ export default function LocationPickerMap({ position, onChange, height = 'h-56' 
   const center = position ? [position.lat, position.lng] : DEFAULT_CENTER;
 
   return (
-    <div className={`relative rounded-[24px] overflow-hidden border-2 border-brand-border ${height}`}>
+    <div className={`relative rounded-[24px] overflow-hidden border-2 border-white/10 ${height}`}>
       <TurfMapBase center={center} zoom={14} scrollWheelZoom={false}>
         <MapClickHandler
           onClick={({ lat, lng }) =>
@@ -62,7 +62,7 @@ export default function LocationPickerMap({ position, onChange, height = 'h-56' 
           }
         />
       </TurfMapBase>
-      <span className="absolute bottom-3 left-3 z-[500] text-[10px] font-bold text-brand-forest bg-white/90 px-2 py-1 rounded-lg shadow-sm pointer-events-none">
+      <span className="absolute bottom-3 left-3 z-[500] text-[10px] font-bold text-white bg-white/90 px-2 py-1 rounded-lg shadow-sm pointer-events-none">
         tap or drag pin to entrance
       </span>
     </div>

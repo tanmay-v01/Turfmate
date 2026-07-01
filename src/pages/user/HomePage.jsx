@@ -206,7 +206,7 @@ export default function HomePage() {
                     onClick={() => app.setView('play_radius')}
                     className="inline-flex items-center gap-2 px-4 py-2.5 tm-btn-secondary rounded-full text-sm font-bold transition hover:scale-[1.02] max-w-full min-w-0"
                   >
-                    <MapPin className="w-4 h-4 text-brand-grassDeep shrink-0" />
+                    <MapPin className="w-4 h-4 text-lime-400 shrink-0" />
                     <span className="truncate">{app.userProfile.location || 'Set location'}</span>
                   </button>
                   <button
@@ -225,7 +225,7 @@ export default function HomePage() {
               <button
                 type="button"
                 onClick={() => { if (featured) { app.setActiveTurfId(featured.id); app.setView('turf_details'); } }}
-                className="relative hidden md:block min-h-[200px] bg-brand-grassPale"
+                className="relative hidden md:block min-h-[200px] bg-lime-400/10"
               >
                 <TurfImage
                   turf={featured}
@@ -342,13 +342,13 @@ export default function HomePage() {
               <Timer className="w-7 h-7" strokeWidth={2} />
             </div>
             <div>
-              <p className="font-display font-extrabold text-brand-forest lowercase">live score</p>
+              <p className="font-display font-extrabold text-white lowercase">live score</p>
               <p className="text-sm text-slate-400">cricket + football calculator</p>
               {app.liveGame && (
                 <span className="inline-flex mt-1 px-2 py-0.5 rounded-full bg-red-100 text-red-600 text-[10px] font-bold uppercase">match in progress</span>
               )}
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-brand-grassDeep transition" />
+            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-lime-400 transition" />
           </button>
           <button
             onClick={() => app.setView('leaderboard')}
@@ -358,10 +358,10 @@ export default function HomePage() {
               <Trophy className="w-7 h-7" strokeWidth={2} />
             </div>
             <div>
-              <p className="font-display font-extrabold text-brand-forest lowercase">friend leaderboard</p>
+              <p className="font-display font-extrabold text-white lowercase">friend leaderboard</p>
               <p className="text-sm text-slate-400">goals, runs, wickets & more</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-brand-grassDeep transition" />
+            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-lime-400 transition" />
           </button>
           <button
             onClick={() => app.setView('tournaments')}
@@ -371,10 +371,10 @@ export default function HomePage() {
               <Medal className="w-7 h-7" strokeWidth={2} />
             </div>
             <div>
-              <p className="font-display font-extrabold text-brand-forest lowercase">tournaments</p>
+              <p className="font-display font-extrabold text-white lowercase">tournaments</p>
               <p className="text-sm text-slate-400">compete & win prizes</p>
             </div>
-            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-brand-grassDeep transition" />
+            <ArrowRight className="w-4 h-4 text-slate-300 ml-auto group-hover:text-lime-400 transition" />
           </button>
         </div>
 
@@ -386,7 +386,7 @@ export default function HomePage() {
                 <button
                   key={turf.id}
                   onClick={() => { app.setActiveTurfId(turf.id); app.setView('turf_details'); }}
-                  className="relative shrink-0 w-36 h-48 rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition group"
+                  className="relative shrink-0 w-36 h-48 rounded-2xl overflow-hidden border border-white/10 shadow-sm hover:shadow-md transition group"
                 >
                   <TurfImage turf={turf} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
@@ -437,7 +437,7 @@ export default function HomePage() {
         <div className="grid lg:grid-cols-2 gap-4">
           {nextBooking ? (
             <div className="glass-card p-5 flex gap-4">
-              <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-slate-100">
+              <div className="w-20 h-20 rounded-2xl overflow-hidden shrink-0 border border-white/10">
                 <TurfImage
                   turf={availableTurfs.find((t) => t.id === nextBooking.turfId) || featured}
                   src={nextBooking.image}
@@ -445,12 +445,12 @@ export default function HomePage() {
                 />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[10px] font-black uppercase text-brand-grassDeep tracking-wide">up next</span>
-                <h3 className="font-display font-extrabold text-brand-forest text-lg lowercase truncate">{nextBooking.turfName}</h3>
+                <span className="text-[10px] font-black uppercase text-lime-400 tracking-wide">up next</span>
+                <h3 className="font-display font-extrabold text-white text-lg lowercase truncate">{nextBooking.turfName}</h3>
                 <p className="text-sm text-slate-500 mt-0.5">{nextBooking.date} · {nextBooking.slotTime}</p>
-                <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100">
-                  <button onClick={() => app.setView('split_hub')} className="text-[10px] font-bold text-brand-grassDeep uppercase hover:underline">split hub</button>
-                  <span className="font-bold text-brand-forest">₹{nextBooking.paidAmount}</span>
+                <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
+                  <button onClick={() => app.setView('split_hub')} className="text-[10px] font-bold text-lime-400 uppercase hover:underline">split hub</button>
+                  <span className="font-bold text-white">₹{nextBooking.paidAmount}</span>
                 </div>
               </div>
             </div>
@@ -501,10 +501,10 @@ export default function HomePage() {
                 <item.icon className="w-5 h-5" strokeWidth={2} />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="font-display font-extrabold text-brand-forest lowercase text-sm">{item.label}</p>
+                <p className="font-display font-extrabold text-white lowercase text-sm">{item.label}</p>
                 <p className="text-xs text-slate-400">{item.sub}</p>
               </div>
-              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-brand-grassDeep group-hover:translate-x-0.5 transition" />
+              <ArrowRight className="w-4 h-4 text-slate-300 group-hover:text-lime-400 group-hover:translate-x-0.5 transition" />
             </button>
           ))}
         </div>
@@ -574,8 +574,8 @@ export default function HomePage() {
         {/* Players nearby */}
         <section>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-display font-extrabold text-brand-forest lowercase">players near you</h2>
-            <button onClick={() => app.setView('play_radius')} className="text-sm font-bold text-brand-grassDeep hover:underline">
+            <h2 className="text-lg font-display font-extrabold text-white lowercase">players near you</h2>
+            <button onClick={() => app.setView('play_radius')} className="text-sm font-bold text-lime-400 hover:underline">
               open map →
             </button>
           </div>
@@ -593,7 +593,7 @@ export default function HomePage() {
             ) : nearbyPlayers.map((p) => (
               <div key={p.id} className="glass-card shrink-0 w-32 lg:w-full p-3 text-center hover:shadow-md transition !rounded-2xl">
                 <img src={p.avatar} alt={p.name} className="w-12 h-12 rounded-xl mx-auto border border-white/80 object-cover ring-1 ring-brand-grassFresh/20 shadow-sm" />
-                <p className="font-bold text-sm text-brand-forest mt-2 truncate">{p.name.split(' ')[0]}</p>
+                <p className="font-bold text-sm text-white mt-2 truncate">{p.name.split(' ')[0]}</p>
                 <p className="text-[11px] text-slate-400">{p.skillLevel}</p>
               </div>
             ))}
@@ -602,8 +602,8 @@ export default function HomePage() {
         {openSplits.length > 0 && (
           <section>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-display font-extrabold text-brand-forest lowercase">open split games</h2>
-              <button onClick={() => app.setView('locker_room')} className="text-sm font-bold text-brand-grassDeep hover:underline">
+              <h2 className="text-lg font-display font-extrabold text-white lowercase">open split games</h2>
+              <button onClick={() => app.setView('locker_room')} className="text-sm font-bold text-lime-400 hover:underline">
                 locker room →
               </button>
             </div>
@@ -612,7 +612,7 @@ export default function HomePage() {
                 const turf = availableTurfs.find(t => t.id === ann.turfId);
                 return (
                   <div key={ann.id} className="glass-card p-4 flex items-center gap-3 hover:shadow-md transition !rounded-2xl">
-                    <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-slate-100">
+                    <div className="w-14 h-14 rounded-2xl overflow-hidden shrink-0 border border-white/10">
                       {turf ? (
                         <TurfImage turf={turf} className="w-full h-full object-cover" />
                       ) : (
@@ -620,9 +620,9 @@ export default function HomePage() {
                       )}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-display font-extrabold text-brand-forest truncate lowercase text-sm">{ann.sportLabel}</p>
+                      <p className="font-display font-extrabold text-white truncate lowercase text-sm">{ann.sportLabel}</p>
                       <p className="text-xs text-slate-400 truncate">{ann.turfName}</p>
-                      <p className="text-[11px] font-bold text-brand-grassDeep mt-0.5">{ann.playersNeeded} spots · ₹{ann.costPerHead}/head</p>
+                      <p className="text-[11px] font-bold text-lime-400 mt-0.5">{ann.playersNeeded} spots · ₹{ann.costPerHead}/head</p>
                     </div>
                     <button
                       onClick={() => app.joinSplitGame(ann.id)}

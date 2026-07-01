@@ -41,10 +41,10 @@ export default function FootballScorer({ game, setGame, onHistoryPush, roster = 
         onClose={() => setPicker(null)}
       />
 
-      <div className="bg-white rounded-[24px] border border-slate-100 p-5 shadow-sm">
+      <div className="bg-white/5 rounded-[24px] border border-white/10 p-5 shadow-sm">
         <div className="flex items-center justify-between mb-4">
-          <span className="text-[10px] font-black uppercase tracking-wider text-brand-grassDeep">{periodLabel}</span>
-          <span className="text-2xl font-mono font-bold text-brand-forest">{formatTimer(game.timerSeconds)}</span>
+          <span className="text-[10px] font-black uppercase tracking-wider text-lime-400">{periodLabel}</span>
+          <span className="text-2xl font-mono font-bold text-white">{formatTimer(game.timerSeconds)}</span>
         </div>
 
         <div className="flex items-center justify-center gap-6 py-6">
@@ -80,20 +80,20 @@ export default function FootballScorer({ game, setGame, onHistoryPush, roster = 
       <div className="grid grid-cols-2 gap-3">
         <button
           onClick={() => requestGoal('A')}
-          className="py-5 rounded-2xl bg-brand-grassPale border border-brand-grassFresh/40 font-display font-extrabold text-brand-forest hover:bg-brand-grassFresh/20 transition"
+          className="py-5 rounded-2xl bg-lime-400/10 border border-brand-grassFresh/40 font-display font-extrabold text-white hover:bg-brand-grassFresh/20 transition"
         >
           ⚽ {game.teamA.name} scores
         </button>
         <button
           onClick={() => requestGoal('B')}
-          className="py-5 rounded-2xl bg-brand-grassPale border border-brand-grassFresh/40 font-display font-extrabold text-brand-forest hover:bg-brand-grassFresh/20 transition"
+          className="py-5 rounded-2xl bg-lime-400/10 border border-brand-grassFresh/40 font-display font-extrabold text-white hover:bg-brand-grassFresh/20 transition"
         >
           ⚽ {game.teamB.name} scores
         </button>
       </div>
 
       {game.events.length > 0 && (
-        <div className="bg-white rounded-2xl border border-slate-100 p-4 max-h-36 overflow-y-auto">
+        <div className="bg-white/5 rounded-2xl border border-white/10 p-4 max-h-36 overflow-y-auto">
           <p className="text-[10px] font-bold text-slate-400 uppercase mb-2">goal log</p>
           {game.events.slice(0, 10).map((e) => (
             <p key={e.id} className="text-xs text-slate-600 font-medium py-0.5">
@@ -111,7 +111,7 @@ function TeamScore({ team, onGoal, onUndo, align }) {
   return (
     <div className={`flex flex-col items-center gap-2 ${align === 'right' ? 'items-end' : ''}`}>
       <p className="text-xs font-bold text-slate-500 truncate max-w-[100px]">{team.name}</p>
-      <p className="text-5xl font-display font-extrabold text-brand-forest">{team.goals}</p>
+      <p className="text-5xl font-display font-extrabold text-white">{team.goals}</p>
       <div className="flex gap-1">
         <button onClick={onGoal} className="w-10 h-10 rounded-full tm-btn-primary flex items-center justify-center"><Plus className="w-5 h-5" /></button>
         <button onClick={onUndo} className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600"><Minus className="w-5 h-5" /></button>

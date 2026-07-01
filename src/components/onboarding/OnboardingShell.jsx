@@ -25,7 +25,7 @@ export default function OnboardingShell({
         {onBack && (
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-sm font-bold text-brand-muted hover:text-brand-forest mb-6 transition self-start"
+            className="flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-white mb-6 transition self-start"
           >
             <ArrowLeft className="w-4 h-4" /> back
           </button>
@@ -38,12 +38,12 @@ export default function OnboardingShell({
         <div className={`animate-fade-up ${centered ? 'flex-1 flex flex-col justify-center' : ''}`}>
           {pill && <span className="tm-pill w-fit mb-4">{pill}</span>}
           {title && (
-            <h1 className="text-3xl font-display font-extrabold text-brand-forest lowercase leading-tight">
+            <h1 className="text-3xl font-display font-extrabold text-white lowercase leading-tight">
               {title}
             </h1>
           )}
           {subtitle && (
-            <p className="mt-2 text-brand-muted text-sm leading-relaxed">{subtitle}</p>
+            <p className="mt-2 text-slate-500 text-sm leading-relaxed">{subtitle}</p>
           )}
           <div className={title || subtitle ? 'mt-8' : ''}>{children}</div>
         </div>

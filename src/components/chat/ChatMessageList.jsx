@@ -45,7 +45,7 @@ export default function ChatMessageList({ chat, userProfile, messagesEndRef, onL
         <div className="flex justify-center my-2">
           <button 
             onClick={onLoadMore} 
-            className="text-xs text-brand-forest font-bold bg-brand-forest/10 px-3 py-1.5 rounded-full hover:bg-brand-forest/20 transition-colors"
+            className="text-xs text-white font-bold bg-brand-forest/10 px-3 py-1.5 rounded-full hover:bg-brand-forest/20 transition-colors"
           >
             Load older messages
           </button>

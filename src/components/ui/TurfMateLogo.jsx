@@ -11,7 +11,7 @@ export default function TurfMateLogo({ size = 'md', className = '' }) {
       className={`${sizes[size]} bg-grass-btn flex items-center justify-center shadow-glow relative overflow-hidden animate-pop ${className}`}
     >
       <div className="absolute inset-0 bg-grass-shine animate-shimmer bg-[length:200%_100%] opacity-50" />
-      <span className="relative font-display font-black text-brand-forestSoft drop-shadow-sm">T</span>
+      <span className="relative font-display font-black text-whiteSoft drop-shadow-sm">T</span>
     </div>
   );
 }

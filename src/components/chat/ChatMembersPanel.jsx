@@ -12,7 +12,7 @@ export default function ChatMembersPanel({ chat, onClose, currentUserName }) {
     <div className="tm-chat-members-overlay" onClick={onClose} role="presentation">
       <div className="tm-chat-members-sheet" onClick={(e) => e.stopPropagation()}>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-display font-extrabold text-brand-forest lowercase">
+          <h3 className="font-display font-extrabold text-white lowercase">
             {chat.type === 'lobby' ? 'lobby members' : 'game roster'}
           </h3>
           <button type="button" onClick={onClose} className="tm-icon-btn !w-8 !h-8 text-slate-500">
@@ -25,10 +25,10 @@ export default function ChatMembersPanel({ chat, onClose, currentUserName }) {
               <img
                 src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`}
                 alt=""
-                className="w-9 h-9 rounded-xl object-cover border border-slate-100"
+                className="w-9 h-9 rounded-xl object-cover border border-white/10"
               />
               <div>
-                <p className="text-sm font-bold text-brand-forest">
+                <p className="text-sm font-bold text-white">
                   {name === currentUserName ? `${name} (you)` : name}
                 </p>
                 <p className="text-[10px] text-slate-400 font-semibold">

@@ -30,8 +30,8 @@ function BookingCard({ booking, turfs, onOpenTurf }) {
       </div>
       <div className="flex-1 min-w-0 text-left">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-bold text-sm text-brand-forest truncate">{booking.turfName || turf?.name || 'Turf booking'}</h3>
-          <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-brand-grassPale text-brand-grassDeep shrink-0">
+          <h3 className="font-bold text-sm text-white truncate">{booking.turfName || turf?.name || 'Turf booking'}</h3>
+          <span className="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full bg-lime-400/10 text-lime-400 shrink-0">
             {booking.type === 'split' ? 'Split' : 'Private'}
           </span>
         </div>
@@ -44,7 +44,7 @@ function BookingCard({ booking, turfs, onOpenTurf }) {
           {turf?.city || 'Virar'}
         </p>
         <div className="flex items-center justify-between mt-2">
-          <span className="text-xs font-bold text-brand-forest">₹{booking.paidAmount || booking.totalAmount || 0}</span>
+          <span className="text-xs font-bold text-white">₹{booking.paidAmount || booking.totalAmount || 0}</span>
           <span className="text-[10px] font-semibold text-slate-500">{booking.status}</span>
         </div>
         {booking.qrCode && (
@@ -58,7 +58,7 @@ function BookingCard({ booking, turfs, onOpenTurf }) {
         <button
           type="button"
           onClick={() => onOpenTurf(turf.id)}
-          className="self-center p-2 rounded-xl text-slate-400 hover:text-brand-forest hover:bg-brand-grassPale/50"
+          className="self-center p-2 rounded-xl text-slate-400 hover:text-white hover:bg-lime-400/10/50"
           aria-label="View turf"
         >
           <ChevronRight className="w-5 h-5" />
@@ -102,7 +102,7 @@ export default function MyBookingsPage() {
         subtitle={loading ? 'Syncing…' : `${current.length} upcoming · ${previous.length} past`}
       />
 
-      <div className="flex gap-2 p-1 bg-white/80 border border-slate-100 rounded-2xl mb-5">
+      <div className="flex gap-2 p-1 bg-white/80 border border-white/10 rounded-2xl mb-5">
         {[
           { id: 'current', label: 'Current', count: current.length },
           { id: 'previous', label: 'Previous', count: previous.length },

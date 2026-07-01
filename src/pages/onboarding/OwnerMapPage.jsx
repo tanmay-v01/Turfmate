@@ -36,7 +36,7 @@ export default function OwnerMapPage() {
     >
       <div className="space-y-4">
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
           <input
             type="text"
             placeholder="search address or landmark..."
@@ -58,9 +58,9 @@ export default function OwnerMapPage() {
         <div className="tm-card p-4 flex gap-3">
           <span className="text-xl">📍</span>
           <div>
-            <p className="text-[10px] font-black uppercase text-brand-muted tracking-wider">pinned location</p>
-            <p className="text-sm font-bold text-brand-forest mt-0.5">{loc.address}</p>
-            <p className="text-[10px] font-mono text-brand-muted mt-1">{loc.lat}, {loc.lng}</p>
+            <p className="text-[10px] font-black uppercase text-slate-500 tracking-wider">pinned location</p>
+            <p className="text-sm font-bold text-white mt-0.5">{loc.address}</p>
+            <p className="text-[10px] font-mono text-slate-500 mt-1">{loc.lat}, {loc.lng}</p>
           </div>
         </div>
       </div>

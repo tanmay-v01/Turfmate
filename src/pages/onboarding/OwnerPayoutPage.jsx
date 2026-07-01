@@ -30,7 +30,7 @@ export default function OwnerPayoutPage() {
           <Button size="lg" variant="grass" className="w-full" disabled={!canSubmit} onClick={() => canSubmit && app.submitOwnerApplication()}>
             submit for review <Check className="w-5 h-5" />
           </Button>
-          <p className="text-[10px] text-center text-brand-muted font-bold">by joining you agree to 10% TurfMate commission on app bookings</p>
+          <p className="text-[10px] text-center text-slate-500 font-bold">by joining you agree to 10% TurfMate commission on app bookings</p>
         </div>
       }
     >
@@ -76,7 +76,7 @@ export default function OwnerPayoutPage() {
           <input type="text" value={app.onboardingData.accountHolder} onChange={(e) => app.updateOnboardingData({ accountHolder: e.target.value })} placeholder="as per bank records" className="tm-input" />
         </div>
         <div className="tm-card p-4 bg-gradient-to-r from-brand-grassPale to-brand-accent/30">
-          <p className="text-xs font-bold text-brand-grassInk leading-relaxed">
+          <p className="text-xs font-bold text-lime-400 leading-relaxed">
             💸 settlements hit your bank T+2 · track every booking in your partner dashboard
           </p>
         </div>

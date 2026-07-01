@@ -6,11 +6,11 @@ export default function Button({
   ...props
 }) {
   const variants = {
-    grass: 'tm-btn-grass text-brand-forestSoft dark:text-brand-forest',
-    soft: 'bg-brand-grassPale text-brand-grassInk border border-brand-border hover:bg-brand-grassLight hover:border-brand-grassFresh shadow-soft dark:bg-brand-darkSurface dark:text-brand-grassPale dark:border-brand-darkBorder dark:hover:border-brand-grass',
-    ghost: 'bg-transparent text-brand-forest hover:bg-brand-grassPale/80 dark:text-brand-grassLight dark:hover:bg-brand-darkSurface/80',
-    glass: 'glass-grass text-brand-forest hover:bg-white/90 dark:text-brand-grassLight dark:bg-brand-darkSurface/50 dark:hover:bg-brand-darkSurface',
-    dark: 'bg-brand-forest text-white hover:bg-brand-grassInk shadow-card dark:bg-brand-grass dark:text-brand-darkBase dark:hover:bg-brand-grassLight',
+    grass: 'bg-lime-400 text-slate-900 shadow-lg shadow-lime-400/25 hover:bg-lime-300 active:scale-[0.97]',
+    soft: 'bg-white/5 text-slate-300 border border-white/10 hover:border-lime-400/30 hover:text-lime-400',
+    ghost: 'bg-transparent text-slate-300 hover:bg-white/5 hover:text-lime-400',
+    glass: 'bg-white/5 backdrop-blur-lg border border-white/10 text-slate-200 hover:bg-white/10',
+    dark: 'bg-lime-400 text-slate-900 hover:bg-lime-300 shadow-lg shadow-lime-400/25',
   };
 
   const sizes = {

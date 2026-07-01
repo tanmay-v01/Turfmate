@@ -72,12 +72,12 @@ export default function OwnerKycPage() {
         <div>
           <label className="tm-label">business proof *</label>
           {!app.onboardingData.kycDoc && !app.uploadingFile ? (
-            <div className="tm-card border-dashed border-2 border-brand-border p-6 text-center">
-              <Plus className="w-8 h-8 text-brand-muted mx-auto mb-2" />
-              <p className="text-sm font-bold text-brand-forest">upload document</p>
+            <div className="tm-card border-dashed border-2 border-white/10 p-6 text-center">
+              <Plus className="w-8 h-8 text-slate-500 mx-auto mb-2" />
+              <p className="text-sm font-bold text-white">upload document</p>
               <div className="flex gap-2 justify-center mt-4">
-                <button type="button" onClick={() => simulateUpload('shop_act_license.pdf (1.2MB)', 20)} className="px-4 py-2 bg-brand-grassPale rounded-full text-xs font-bold text-brand-grassDeep hover:bg-brand-grassLight transition">PDF</button>
-                <button type="button" onClick={() => simulateUpload('pan_card_scan.jpg (800KB)', 25)} className="px-4 py-2 bg-brand-grassPale rounded-full text-xs font-bold text-brand-grassDeep hover:bg-brand-grassLight transition">JPG</button>
+                <button type="button" onClick={() => simulateUpload('shop_act_license.pdf (1.2MB)', 20)} className="px-4 py-2 bg-lime-400/10 rounded-full text-xs font-bold text-lime-400 hover:bg-brand-grassLight transition">PDF</button>
+                <button type="button" onClick={() => simulateUpload('pan_card_scan.jpg (800KB)', 25)} className="px-4 py-2 bg-lime-400/10 rounded-full text-xs font-bold text-lime-400 hover:bg-brand-grassLight transition">JPG</button>
               </div>
             </div>
           ) : app.uploadingFile ? (
@@ -85,17 +85,17 @@ export default function OwnerKycPage() {
               <div className="flex justify-between text-xs font-bold mb-2">
                 <span>uploading...</span><span>{app.uploadProgress}%</span>
               </div>
-              <div className="h-2 bg-brand-grassPale rounded-full overflow-hidden">
+              <div className="h-2 bg-lime-400/10 rounded-full overflow-hidden">
                 <div className="h-full bg-brand-grassFresh transition-all" style={{ width: `${app.uploadProgress}%` }} />
               </div>
             </div>
           ) : (
-            <div className="tm-card p-4 flex justify-between items-center bg-brand-grassPale/40">
+            <div className="tm-card p-4 flex justify-between items-center bg-lime-400/10/40">
               <div className="flex items-center gap-3">
                 <span className="text-2xl">📄</span>
                 <div>
-                  <p className="font-bold text-sm text-brand-forest truncate max-w-[200px]">{app.onboardingData.kycDoc}</p>
-                  <p className="text-[10px] font-bold text-brand-grassDeep">✓ uploaded</p>
+                  <p className="font-bold text-sm text-white truncate max-w-[200px]">{app.onboardingData.kycDoc}</p>
+                  <p className="text-[10px] font-bold text-lime-400">✓ uploaded</p>
                 </div>
               </div>
               <button type="button" onClick={() => app.updateOnboardingData({ kycDoc: null })} className="p-2 rounded-xl bg-red-50 text-red-500 hover:bg-red-100"><X className="w-4 h-4" /></button>

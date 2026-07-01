@@ -37,7 +37,7 @@ export default function ProfileSetupPage() {
               alt="avatar"
               className="w-24 h-24 rounded-[28px] border-4 border-brand-grassFresh/50 tm-icon-accent-green shadow-soft object-cover"
             />
-            <p className="text-[10px] font-bold text-brand-muted uppercase tracking-wider">your avatar</p>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">your avatar</p>
           </div>
           <AvatarPicker
             value={app.onboardingData.avatar}
@@ -88,7 +88,7 @@ export default function ProfileSetupPage() {
             </div>
           )}
           {!app.usernameError && app.onboardingData.username.length > 1 && (
-            <p className="text-xs font-bold text-brand-grassDeep mt-2">✓ username available</p>
+            <p className="text-xs font-bold text-lime-400 mt-2">✓ username available</p>
           )}
         </div>
       </form>

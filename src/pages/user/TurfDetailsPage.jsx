@@ -118,7 +118,7 @@ export default function TurfDetailsPage() {
                                 <span 
                                   key={idx} 
                                   className={`w-1.5 h-1.5 rounded-full transition-all duration-350 ${
-                                    app.galleryImageIndex === idx ? 'bg-brand-primary w-3.5' : 'bg-white/60'
+                                    app.galleryImageIndex === idx ? 'bg-lime-400 w-3.5' : 'bg-white/60'
                                   }`}
                                 />
                               ))}
@@ -137,7 +137,7 @@ export default function TurfDetailsPage() {
                             
                             {/* Title & Info overlay */}
                             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent pt-12 p-4">
-                              <span className="text-[9px] bg-brand-primary text-brand-forest font-extrabold uppercase px-2 py-0.5 rounded">
+                              <span className="text-[9px] bg-lime-400 text-white font-extrabold uppercase px-2 py-0.5 rounded">
                                 {app.activeTurf.city}
                               </span>
                               <h2 className="text-xl font-bold font-display text-white mt-1 leading-tight">{app.activeTurf.name}</h2>
@@ -154,22 +154,22 @@ export default function TurfDetailsPage() {
                       })()}
     
                       {/* Directions and Actions row */}
-                      <div className="flex gap-2 p-3 glass-grass border-b border-brand-border/50 justify-around">
+                      <div className="flex gap-2 p-3 glass-grass border-b border-white/10/50 justify-around">
                         <button 
                           onClick={() => window.open(`https://www.google.com/maps/dir/?api=1&destination=${app.activeTurf.lat},${app.activeTurf.lng}`, '_blank')}
                           className="flex items-center gap-1.5 px-4 py-2.5 tm-tint-green border text-[10px] font-bold rounded-full transition"
                         >
-                          <MapPin className="w-3.5 h-3.5 text-brand-grassFresh" /> directions
+                          <MapPin className="w-3.5 h-3.5 text-lime-400" /> directions
                         </button>
                         <button 
                           onClick={() => navigator.clipboard?.writeText?.(window.location.href)}
-                          className="flex items-center gap-1.5 px-4 py-2.5 bg-white/80 border border-brand-border text-[10px] font-bold text-brand-muted rounded-full hover:bg-brand-grassPale transition"
+                          className="flex items-center gap-1.5 px-4 py-2.5 bg-white/80 border border-white/10 text-[10px] font-bold text-slate-500 rounded-full hover:bg-lime-400/10 transition"
                         >
                           <Share2 className="w-3.5 h-3.5" /> share
                         </button>
                         <button 
                           onClick={() => app.showToast('Venue manager will call you within 15 mins.', 'success', 'Contact requested')}
-                          className="flex items-center gap-1.5 px-4 py-2.5 bg-white/80 border border-brand-border text-[10px] font-bold text-brand-muted rounded-full hover:bg-brand-grassPale transition"
+                          className="flex items-center gap-1.5 px-4 py-2.5 bg-white/80 border border-white/10 text-[10px] font-bold text-slate-500 rounded-full hover:bg-lime-400/10 transition"
                         >
                           <Clock className="w-3.5 h-3.5" /> contact
                         </button>
@@ -179,7 +179,7 @@ export default function TurfDetailsPage() {
                       <div className="p-4 space-y-4">
                         
                         {/* Amenities circular cards icon grid */}
-                        <div className="space-y-2 p-3.5 bg-white rounded-2xl border border-slate-100 shadow-sm text-left">
+                        <div className="space-y-2 p-3.5 bg-white/5 rounded-2xl border border-white/10 shadow-sm text-left">
                           <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Venue Amenities</h4>
                           <div className="grid grid-cols-3 gap-2">
                             {app.activeTurf.amenities.map((a, i) => {
@@ -196,7 +196,7 @@ export default function TurfDetailsPage() {
                               else if (a.toLowerCase().includes('first aid')) icon = '🏥';
     
                               return (
-                                <div key={i} className="flex flex-col items-center justify-center p-2.5 bg-slate-50 border border-slate-100/60 rounded-2xl hover:bg-brand-primary/10 transition">
+                                <div key={i} className="flex flex-col items-center justify-center p-2.5 bg-slate-50 border border-white/10/60 rounded-2xl hover:bg-lime-400/10 transition">
                                   <span className="text-xl mb-0.5">{icon}</span>
                                   <span className="text-[9px] font-extrabold text-slate-600 text-center truncate w-full">{a}</span>
                                 </div>
@@ -239,12 +239,12 @@ export default function TurfDetailsPage() {
                                       }}
                                       className={`px-4 py-2 rounded-xl border flex flex-col items-center min-w-[72px] transition-all duration-200 ${
                                         isSelected 
-                                          ? 'border-brand-grassFresh bg-brand-grassDeep/10 text-brand-forest shadow-sm' 
-                                          : 'border-slate-200 bg-white text-slate-500 hover:border-slate-300'
+                                          ? 'border-brand-grassFresh bg-brand-grassDeep/10 text-white shadow-sm' 
+                                          : 'border-slate-200 bg-white/5 text-slate-500 hover:border-slate-300'
                                       }`}
                                     >
                                       <span className="text-[10px] font-extrabold uppercase">{d.label}</span>
-                                      <span className={`text-[9px] font-bold ${isSelected ? 'text-brand-grassDeep' : 'text-slate-400'}`}>{d.dateStr}</span>
+                                      <span className={`text-[9px] font-bold ${isSelected ? 'text-lime-400' : 'text-slate-400'}`}>{d.dateStr}</span>
                                     </motion.button>
                                   );
                                 })}
@@ -258,7 +258,7 @@ export default function TurfDetailsPage() {
                           const currentSlots = app.activeTurf.slots || [];
                           if (currentSlots.length === 0) {
                             return (
-                              <div className="p-4 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col items-center justify-center text-center">
+                              <div className="p-4 bg-slate-50 border border-white/10 rounded-2xl flex flex-col items-center justify-center text-center">
                                 <AlertTriangle className="w-6 h-6 text-slate-400 mb-2" />
                                 <p className="text-sm font-bold text-slate-600">No Slots Available</p>
                                 <p className="text-[10px] text-slate-400">Try selecting a different date.</p>
@@ -269,7 +269,7 @@ export default function TurfDetailsPage() {
                             <div className="space-y-2 mt-4">
                               <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex justify-between">
                                 <span>Select Time Slot</span>
-                                <span className="text-brand-grassDeep">₹{app.activeTurf.pricePerHour}/hr</span>
+                                <span className="text-lime-400">₹{app.activeTurf.pricePerHour}/hr</span>
                               </h4>
                               <div className="grid grid-cols-2 gap-2">
                                 {currentSlots.map(slot => {
@@ -293,19 +293,19 @@ export default function TurfDetailsPage() {
                                       }}
                                       className={`p-3 rounded-2xl border text-left transition-all duration-200 relative overflow-hidden flex flex-col justify-center min-h-[64px] ${
                                         isLocked
-                                          ? 'border-slate-100 bg-slate-50 opacity-60 cursor-not-allowed'
+                                          ? 'border-white/10 bg-slate-50 opacity-60 cursor-not-allowed'
                                           : isSelected
                                             ? 'border-brand-grassFresh tm-tint-green shadow-sm scale-[1.02]'
                                             : isSplit
                                               ? 'border-amber-200 bg-amber-50/50 hover:border-amber-300'
-                                              : 'border-slate-200 bg-white hover:border-slate-300'
+                                              : 'border-slate-200 bg-white/5 hover:border-slate-300'
                                       }`}
                                     >
                                       {isLocked && <Lock className="absolute right-2 top-2 w-3.5 h-3.5 text-slate-300" />}
-                                      {isSelected && <Check className="absolute right-2 top-2 w-3.5 h-3.5 text-brand-grassDeep" />}
+                                      {isSelected && <Check className="absolute right-2 top-2 w-3.5 h-3.5 text-lime-400" />}
                                       
                                       <div className="flex items-center justify-between mb-1">
-                                        <span className={`text-[11px] font-black ${isSelected ? 'text-brand-forest' : isLocked ? 'text-slate-400' : 'text-slate-700'}`}>
+                                        <span className={`text-[11px] font-black ${isSelected ? 'text-white' : isLocked ? 'text-slate-400' : 'text-slate-700'}`}>
                                           {slot.time.split(' - ')[0]}
                                         </span>
                                         <span className={`text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
@@ -335,14 +335,14 @@ export default function TurfDetailsPage() {
                                     (a) => a.turfId === app.activeTurf.id && a.slotId === slot.id && a.status === 'open',
                                   );
 
-                                const barClass = 'mt-3 glass-grass border border-brand-border rounded-[24px] p-4 flex items-center justify-between shadow-premium animate-fade-in';
+                                const barClass = 'mt-3 glass-grass border border-white/10 rounded-[24px] p-4 flex items-center justify-between shadow-premium animate-fade-in';
 
                                 if (matchedSplit) {
                                   return (
                                     <div className={barClass}>
                                       <div className="text-left min-w-0 flex-1">
                                         <span className="text-[9px] text-amber-600 block font-black uppercase tracking-wider">👥 Join Split Lobby</span>
-                                        <span className="font-extrabold text-[12px] text-slate-800 block truncate">
+                                        <span className="font-extrabold text-[12px] text-slate-200 block truncate">
                                           {app.bookingDate}, {slot.time.split(' - ')[0]}
                                         </span>
                                         <span className="text-[9.5px] text-slate-400 block font-semibold">
@@ -364,7 +364,7 @@ export default function TurfDetailsPage() {
                                   <div className={barClass}>
                                     <div className="text-left min-w-0 flex-1">
                                       <span className="text-[9px] text-slate-400 block font-semibold uppercase tracking-wider">Selected timeline</span>
-                                      <span className="font-extrabold text-[12px] text-brand-forest block">
+                                      <span className="font-extrabold text-[12px] text-white block">
                                         {app.bookingDate}, {slot.time.split(' - ')[0]}
                                       </span>
                                       <span className="text-[10px] text-slate-400 block font-medium">
@@ -386,9 +386,9 @@ export default function TurfDetailsPage() {
                         })()}
     
                         {/* Venue Guidelines */}
-                        <div className="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-slate-100/60 text-left">
+                        <div className="space-y-1.5 bg-slate-50 p-3 rounded-2xl border border-white/10/60 text-left">
                           <h4 className="text-[10px] font-bold text-slate-500 uppercase flex items-center gap-1">
-                            <Shield className="w-3.5 h-3.5 text-brand-forest" /> Arena Booking Guidelines
+                            <Shield className="w-3.5 h-3.5 text-white" /> Arena Booking Guidelines
                           </h4>
                           <ul className="list-disc pl-4 text-[9.5px] text-slate-500 space-y-1">
                             {app.activeTurf.rules.map((r, i) => (
@@ -398,14 +398,14 @@ export default function TurfDetailsPage() {
                         </div>
 
                         {/* Reviews Section */}
-                        <div className="space-y-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm text-left mt-4">
+                        <div className="space-y-3 bg-white/5 p-4 rounded-2xl border border-white/10 shadow-sm text-left mt-4">
                           <div className="flex justify-between items-center">
                             <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1">
-                              <MessageSquare className="w-3.5 h-3.5 text-brand-forest" /> Turf Reviews
+                              <MessageSquare className="w-3.5 h-3.5 text-white" /> Turf Reviews
                             </h4>
                             <button 
                               onClick={() => setShowReviewModal(true)}
-                              className="text-[9px] font-bold text-brand-grassDeep border border-brand-grassFresh px-2 py-1 rounded hover:bg-brand-grassPale transition"
+                              className="text-[9px] font-bold text-lime-400 border border-brand-grassFresh px-2 py-1 rounded hover:bg-lime-400/10 transition"
                             >
                               Write Review
                             </button>
@@ -418,9 +418,9 @@ export default function TurfDetailsPage() {
                               <p className="text-xs text-slate-400 text-center py-4 italic">No reviews yet. Be the first!</p>
                             ) : (
                               reviews.map(r => (
-                                <div key={r.id} className="border-b border-slate-100 pb-2">
+                                <div key={r.id} className="border-b border-white/10 pb-2">
                                   <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-bold text-xs text-brand-forest">{r.userName}</span>
+                                    <span className="font-bold text-xs text-white">{r.userName}</span>
                                     <span className="flex text-amber-400">
                                       {Array(5).fill(0).map((_, i) => (
                                         <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'fill-amber-400' : 'text-slate-200'}`} />
@@ -439,7 +439,7 @@ export default function TurfDetailsPage() {
                       {/* Review Modal */}
                       {showReviewModal && (
                         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                          <div className="bg-white w-full max-w-sm rounded-3xl p-5 relative shadow-2xl animate-fade-in">
+                          <div className="bg-white/5 w-full max-w-sm rounded-3xl p-5 relative shadow-2xl animate-fade-in">
                             <button 
                               onClick={() => setShowReviewModal(false)}
                               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
@@ -447,7 +447,7 @@ export default function TurfDetailsPage() {
                               <X className="w-5 h-5" />
                             </button>
 
-                            <h3 className="font-extrabold text-lg text-brand-forest mb-4">Rate {app.activeTurf.name}</h3>
+                            <h3 className="font-extrabold text-lg text-white mb-4">Rate {app.activeTurf.name}</h3>
                             
                             <div className="flex gap-2 justify-center mb-4">
                               {[1, 2, 3, 4, 5].map((star) => (

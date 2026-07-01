@@ -91,7 +91,7 @@ export default function ChatRoomHeader({
                   key={name}
                   src={`https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`}
                   alt=""
-                  className="w-7 h-7 rounded-full border-2 border-brand-forest object-cover bg-white"
+                  className="w-7 h-7 rounded-full border-2 border-brand-forest object-cover bg-white/5"
                   title={name}
                 />
               ))}

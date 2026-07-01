@@ -56,7 +56,7 @@ export default function SportsDnaPage() {
                 }}
                 className={`p-4 rounded-[20px] border text-left transition-all flex items-center gap-3 font-bold text-sm ${
                   isFav
-                    ? 'tm-tint-green border-brand-grassFresh text-brand-forest shadow-sm scale-[1.02]'
+                    ? 'tm-tint-green border-brand-grassFresh text-white shadow-sm scale-[1.02]'
                     : 'glass-card border-slate-200 text-slate-500 hover:border-brand-grassFresh'
                 }`}
               >
@@ -68,7 +68,7 @@ export default function SportsDnaPage() {
         </div>
 
         {app.onboardingData.favoriteSports.length > 0 && (
-          <div className="space-y-3 pt-2 border-t border-brand-border/50">
+          <div className="space-y-3 pt-2 border-t border-white/10/50">
             <p className="tm-label">fine-tune your game</p>
             {app.onboardingData.favoriteSports.map(sportId => {
               const sport = SPORTS.find(s => s.id === sportId);
@@ -77,12 +77,12 @@ export default function SportsDnaPage() {
 
               return (
                 <div key={sportId} className="glass-card p-4 space-y-3 animate-fade-in">
-                  <p className="font-extrabold text-brand-forest text-sm flex items-center gap-2">
+                  <p className="font-extrabold text-white text-sm flex items-center gap-2">
                     <span>{sport.icon}</span> {sport.name}
                   </p>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-[10px] font-bold text-brand-muted uppercase">skill</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">skill</label>
                       <select
                         value={dna.skillLevel || ''}
                         onChange={(e) => {
@@ -100,7 +100,7 @@ export default function SportsDnaPage() {
                       </select>
                     </div>
                     <div>
-                      <label className="text-[10px] font-bold text-brand-muted uppercase">position</label>
+                      <label className="text-[10px] font-bold text-slate-500 uppercase">position</label>
                       <select
                         value={dna.position}
                         onChange={(e) => {

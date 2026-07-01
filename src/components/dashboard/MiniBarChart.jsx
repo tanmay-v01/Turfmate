@@ -7,7 +7,7 @@ export default function MiniBarChart({ data = [], label, dark = false }) {
   return (
     <div className={`dash-chart ${dark ? 'dash-chart-dark' : 'dark:bg-slate-800/80'}`}>
       {label && (
-        <p className={`text-xs font-bold mb-4 ${dark ? 'text-slate-400' : 'text-brand-muted dark:text-slate-400'}`}>{label}</p>
+        <p className={`text-xs font-bold mb-4 ${dark ? 'text-slate-400' : 'text-slate-500 dark:text-slate-400'}`}>{label}</p>
       )}
       <div className="flex items-end gap-2 h-28">
         {data.map((d, i) => (
@@ -22,7 +22,7 @@ export default function MiniBarChart({ data = [], label, dark = false }) {
                 title={`${d.label}: ${d.value}`}
               />
             </div>
-            <span className={`text-[9px] font-bold truncate w-full text-center ${dark ? 'text-slate-500' : 'text-brand-muted dark:text-slate-500'}`}>
+            <span className={`text-[9px] font-bold truncate w-full text-center ${dark ? 'text-slate-500' : 'text-slate-500 dark:text-slate-500'}`}>
               {d.label}
             </span>
           </div>

@@ -27,15 +27,15 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
         <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <span className="dash-pill-live mb-3">Partner Admin · Live</span>
-            <h2 className="text-2xl lg:text-3xl font-display font-extrabold text-brand-forest">
+            <h2 className="text-2xl lg:text-3xl font-display font-extrabold text-white">
               {selectedTurf?.name}
             </h2>
-            <p className="text-sm font-bold text-brand-muted mt-1">
+            <p className="text-sm font-bold text-slate-500 mt-1">
               {ownedTurfs.length} venue{ownedTurfs.length !== 1 ? 's' : ''} · You keep 90% on every app booking
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
-            <button onClick={() => onTabChange('slots')} className="px-4 py-2.5 bg-white/80 border border-brand-border rounded-xl text-xs font-bold text-brand-forest hover:shadow-soft transition flex items-center gap-1.5">
+            <button onClick={() => onTabChange('slots')} className="px-4 py-2.5 bg-white/80 border border-white/10 rounded-xl text-xs font-bold text-white hover:shadow-soft transition flex items-center gap-1.5">
               <Lock className="w-3.5 h-3.5" /> Manage Slots
             </button>
             <button onClick={() => onTabChange('broadcast')} className="tm-btn-grass px-4 py-2.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5">
@@ -54,29 +54,29 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
 
       <div className="grid lg:grid-cols-5 gap-6">
         <div className="lg:col-span-3 dash-card overflow-hidden">
-          <div className="p-5 border-b border-brand-border/50 flex justify-between items-center">
-            <h3 className="font-extrabold text-brand-forest flex items-center gap-2">
-              <Clock className="w-4 h-4 text-brand-grassFresh" /> Live Schedule
+          <div className="p-5 border-b border-white/10/50 flex justify-between items-center">
+            <h3 className="font-extrabold text-white flex items-center gap-2">
+              <Clock className="w-4 h-4 text-lime-400" /> Live Schedule
             </h3>
-            <span className="text-xs font-bold text-brand-grassDeep">{turfBookings.length} today</span>
+            <span className="text-xs font-bold text-lime-400">{turfBookings.length} today</span>
           </div>
           <div className="divide-y divide-brand-border/30 max-h-[340px] overflow-y-auto">
             {turfBookings.length === 0 ? (
               <div className="p-10 text-center">
                 <div className="text-4xl mb-3">🏟️</div>
-                <p className="text-brand-muted font-bold text-sm">No bookings yet</p>
-                <p className="text-xs text-brand-muted/80 mt-1">Share your TurfMate listing to get players booking!</p>
+                <p className="text-slate-500 font-bold text-sm">No bookings yet</p>
+                <p className="text-xs text-slate-500/80 mt-1">Share your TurfMate listing to get players booking!</p>
               </div>
             ) : turfBookings.slice(0, 6).map(b => (
               <div key={b.id} className="dash-activity-item mx-2 my-1">
                 <div className="dash-activity-dot bg-brand-grassFresh" />
                 <div className="flex-1 min-w-0">
-                  <p className="font-bold text-brand-forest text-sm truncate">
+                  <p className="font-bold text-white text-sm truncate">
                     {b.roster?.[0]} · {b.type === 'split' ? 'Split Game' : 'Private'}
                   </p>
-                  <p className="text-xs text-brand-muted font-bold">{b.slotTime} · {b.date}</p>
+                  <p className="text-xs text-slate-500 font-bold">{b.slotTime} · {b.date}</p>
                   <div className="flex gap-2 mt-2 flex-wrap">
-                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-brand-grassPale text-brand-grassDeep">
+                    <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-lime-400/10 text-lime-400">
                       You get ₹{b.ownerPayout || 0}
                     </span>
                     {b.type === 'split' && b.paidAmount < b.totalAmount && (
@@ -91,12 +91,12 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
 
         <div className="lg:col-span-2 dash-card p-5">
           <MiniBarChart data={weekData} label="Bookings this week" />
-          <div className="mt-4 pt-4 border-t border-brand-border/40">
+          <div className="mt-4 pt-4 border-t border-white/10/40">
             <div className="flex justify-between text-xs font-bold mb-2">
-              <span className="text-brand-muted">Pitch utilization</span>
-              <span className="text-brand-grassDeep">{utilization}%</span>
+              <span className="text-slate-500">Pitch utilization</span>
+              <span className="text-lime-400">{utilization}%</span>
             </div>
-            <div className="h-2.5 bg-brand-grassPale rounded-full overflow-hidden">
+            <div className="h-2.5 bg-lime-400/10 rounded-full overflow-hidden">
               <div className="h-full bg-gradient-to-r from-brand-grass to-brand-grassFresh rounded-full transition-all duration-700" style={{ width: `${utilization}%` }} />
             </div>
           </div>
@@ -111,11 +111,11 @@ function OwnerOverview({ selectedTurf, metrics, turfBookings, ownedTurfs, onTabC
         ].map(item => (
           <div key={item.label} className="dash-card p-4 flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl tm-icon-accent-green flex items-center justify-center shrink-0">
-              <item.icon className="w-5 h-5 text-brand-grassDeep" />
+              <item.icon className="w-5 h-5 text-lime-400" />
             </div>
             <div>
-              <p className="font-bold text-brand-forest text-sm">{item.label}</p>
-              <p className="text-[10px] font-bold text-brand-muted">{item.desc}</p>
+              <p className="font-bold text-white text-sm">{item.label}</p>
+              <p className="text-[10px] font-bold text-slate-500">{item.desc}</p>
             </div>
           </div>
         ))}
@@ -148,7 +148,7 @@ export default function OwnerDashboardPage() {
     if (!selectedTurf && activeTab !== 'overview') {
       return (
         <div className="p-12 text-center">
-          <p className="text-brand-muted font-bold">Add a turf to get started.</p>
+          <p className="text-slate-500 font-bold">Add a turf to get started.</p>
           <button onClick={() => { const n = prompt('Venue name:'); if (n) app.addOwnerTurf(n); }} className="mt-4 tm-btn-grass px-6 py-2.5 rounded-xl text-sm font-bold">
             + Register Turf
           </button>
@@ -176,12 +176,12 @@ export default function OwnerDashboardPage() {
         </div>
       )}
       {/* Mobile top bar */}
-      <div className="md:hidden glass-grass sticky top-0 z-50 p-4 flex items-center justify-between border-b border-brand-border/50">
+      <div className="md:hidden glass-grass sticky top-0 z-50 p-4 flex items-center justify-between border-b border-white/10/50">
         <div>
-          <p className="font-display font-extrabold text-lg text-brand-forest">TurfMate<span className="text-brand-grassFresh">.</span></p>
-          <p className="text-[10px] font-bold text-brand-muted uppercase">Partner Admin</p>
+          <p className="font-display font-extrabold text-lg text-white">TurfMate<span className="text-lime-400">.</span></p>
+          <p className="text-[10px] font-bold text-slate-500 uppercase">Partner Admin</p>
         </div>
-        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-xl tm-icon-accent-green text-brand-forest">
+        <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 rounded-xl tm-icon-accent-green text-white">
           {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
@@ -189,8 +189,8 @@ export default function OwnerDashboardPage() {
       {/* Sidebar */}
       <aside className={`dash-sidebar fixed md:sticky top-0 h-screen w-64 flex flex-col z-40 transition-transform duration-300 md:translate-x-0 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 hidden md:block">
-          <p className="font-display font-extrabold text-2xl text-brand-forest">TurfMate<span className="text-brand-grassFresh">.</span></p>
-          <p className="text-[10px] font-bold text-brand-muted uppercase tracking-widest mt-1">Partner Admin Panel</p>
+          <p className="font-display font-extrabold text-2xl text-white">TurfMate<span className="text-lime-400">.</span></p>
+          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Partner Admin Panel</p>
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
@@ -206,11 +206,11 @@ export default function OwnerDashboardPage() {
           ))}
         </nav>
 
-        <div className="p-3 border-t border-brand-border/50 space-y-1">
+        <div className="p-3 border-t border-white/10/50 space-y-1">
           <button className="dash-nav-item w-full">
             <Settings className="w-4 h-4" /> Settings
           </button>
-          <button onClick={() => app.setView('home')} className="dash-nav-item w-full text-brand-muted">
+          <button onClick={() => app.setView('home')} className="dash-nav-item w-full text-slate-500">
             <MapPin className="w-4 h-4" /> View Player App
           </button>
           <button onClick={() => app.setView('login')} className="dash-nav-item w-full !text-red-500 hover:!bg-red-50">
@@ -222,35 +222,35 @@ export default function OwnerDashboardPage() {
       {isSidebarOpen && <div className="fixed inset-0 bg-black/30 z-30 md:hidden" onClick={() => setIsSidebarOpen(false)} />}
 
       <main className="flex-1 flex flex-col min-w-0 min-h-screen pb-20 md:pb-0">
-        <header className="hidden md:flex glass-grass border-b border-brand-border/50 px-6 lg:px-8 py-4 items-center justify-between shrink-0 sticky top-0 z-20">
+        <header className="hidden md:flex glass-grass border-b border-white/10/50 px-6 lg:px-8 py-4 items-center justify-between shrink-0 sticky top-0 z-20">
           <div className="flex items-center gap-4">
-            <h1 className="text-lg font-extrabold text-brand-forest">{TABS.find(t => t.id === activeTab)?.label}</h1>
+            <h1 className="text-lg font-extrabold text-white">{TABS.find(t => t.id === activeTab)?.label}</h1>
             <div className="relative">
               <button
                 onClick={() => setShowTurfDropdown(!showTurfDropdown)}
-                className="flex items-center gap-2 text-sm font-bold text-brand-forest bg-white/70 border border-brand-border px-4 py-2 rounded-xl hover:shadow-soft transition"
+                className="flex items-center gap-2 text-sm font-bold text-white bg-white/70 border border-white/10 px-4 py-2 rounded-xl hover:shadow-soft transition"
               >
-                <MapPin className="w-4 h-4 text-brand-grassFresh" />
+                <MapPin className="w-4 h-4 text-lime-400" />
                 {selectedTurf?.name || 'Select turf'}
-                <ChevronDown className="w-4 h-4 text-brand-muted" />
+                <ChevronDown className="w-4 h-4 text-slate-500" />
               </button>
               {showTurfDropdown && (
                 <div className="absolute top-full left-0 mt-2 w-60 dash-card overflow-hidden z-50 shadow-premium">
-                  <div className="p-3 bg-brand-grassPale/50 text-[10px] font-bold text-brand-muted uppercase">Your venues</div>
+                  <div className="p-3 bg-lime-400/10/50 text-[10px] font-bold text-slate-500 uppercase">Your venues</div>
                   {ownedTurfs.map(turf => (
                     <button
                       key={turf.id}
                       onClick={() => { app.setOwnerActiveTurfId(turf.id); setShowTurfDropdown(false); }}
-                      className={`w-full text-left px-4 py-3 text-sm font-bold flex items-center justify-between hover:bg-brand-grassPale/40 ${selectedTurf?.id === turf.id ? 'text-brand-grassDeep bg-brand-grassPale/60' : 'text-brand-forest'}`}
+                      className={`w-full text-left px-4 py-3 text-sm font-bold flex items-center justify-between hover:bg-lime-400/10/40 ${selectedTurf?.id === turf.id ? 'text-lime-400 bg-lime-400/10/60' : 'text-white'}`}
                     >
                       {turf.name}
                       {selectedTurf?.id === turf.id && <Check className="w-4 h-4" />}
                     </button>
                   ))}
-                  <div className="border-t border-brand-border/40 p-2">
+                  <div className="border-t border-white/10/40 p-2">
                     <button
                       onClick={() => { const n = prompt('New venue name:'); if (n) app.addOwnerTurf(n); setShowTurfDropdown(false); }}
-                      className="w-full py-2 text-xs font-bold text-brand-grassDeep hover:bg-brand-grassPale rounded-xl flex items-center justify-center gap-1"
+                      className="w-full py-2 text-xs font-bold text-lime-400 hover:bg-lime-400/10 rounded-xl flex items-center justify-center gap-1"
                     >
                       <Plus className="w-3.5 h-3.5" /> Add Turf
                     </button>
@@ -260,16 +260,16 @@ export default function OwnerDashboardPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <button className="relative p-2.5 rounded-xl hover:bg-brand-grassPale/50 text-brand-muted">
+            <button className="relative p-2.5 rounded-xl hover:bg-lime-400/10/50 text-slate-500">
               <Bell className="w-5 h-5" />
               {metrics.pendingSplits > 0 && <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-amber-500 rounded-full" />}
             </button>
-            <div className="flex items-center gap-3 pl-3 border-l border-brand-border/50">
+            <div className="flex items-center gap-3 pl-3 border-l border-white/10/50">
               <div className="text-right">
-                <p className="text-sm font-bold text-brand-forest">{app.userProfile.name || ownerRecord?.name}</p>
-                <p className="text-[10px] font-bold text-brand-muted">{ownedTurfs.length} turf{ownedTurfs.length !== 1 ? 's' : ''}</p>
+                <p className="text-sm font-bold text-white">{app.userProfile.name || ownerRecord?.name}</p>
+                <p className="text-[10px] font-bold text-slate-500">{ownedTurfs.length} turf{ownedTurfs.length !== 1 ? 's' : ''}</p>
               </div>
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-grassPale to-brand-grassFresh/40 border-2 border-brand-grassFresh flex items-center justify-center text-brand-forest font-black">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-grassPale to-brand-grassFresh/40 border-2 border-brand-grassFresh flex items-center justify-center text-white font-black">
                 {(app.userProfile.name || 'O').charAt(0)}
               </div>
             </div>
