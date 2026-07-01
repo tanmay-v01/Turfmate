@@ -1,7 +1,7 @@
 -- TurfMate Phase 1: Identity, turfs, bookings core
 -- Uses lat/lng columns (PostGIS optional in Phase 1b)
 
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+-- CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 CREATE TABLE IF NOT EXISTS users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

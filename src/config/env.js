@@ -6,7 +6,7 @@ const socketBase = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3001';
 export const env = {
   apiUrl: apiBase.replace(/\/$/, ''),
   socketUrl: socketBase.replace(/\/$/, ''),
-  demoMode: import.meta.env.VITE_DEMO_MODE !== 'false',
+  demoMode: import.meta.env.VITE_DEMO_MODE === 'true',
   appUrl: import.meta.env.VITE_APP_URL || (typeof window !== 'undefined' ? window.location.origin : ''),
   razorpayKey: import.meta.env.VITE_RAZORPAY_KEY_ID || '',
   supportWhatsApp: import.meta.env.VITE_SUPPORT_WHATSAPP || '',

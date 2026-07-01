@@ -7,9 +7,11 @@ let pool;
 
 function getPool() {
   if (!pool) {
+    const isLocalhost = config.databaseUrl.includes('localhost') || config.databaseUrl.includes('127.0.0.1');
+    const ssl = !isLocalhost ? { rejectUnauthorized: false } : undefined;
     pool = new Pool({
       connectionString: config.databaseUrl,
-      ssl: config.nodeEnv === 'production' ? { rejectUnauthorized: false } : undefined,
+      ssl,
     });
   }
   return pool;

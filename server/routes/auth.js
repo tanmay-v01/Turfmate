@@ -53,7 +53,7 @@ router.post('/send-otp', async (req, res) => {
       phone,
       expiresIn: Math.floor(config.otpTtlMs / 1000),
       channel: sendResult.channel,
-      ...(sendResult.devHint && config.demoMode ? { devHint: sendResult.devHint } : {}),
+      ...(sendResult.devHint ? { devHint: sendResult.devHint } : {}),
     });
   } catch (err) {
     res.status(500).json({ error: err.message });

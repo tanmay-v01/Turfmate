@@ -1095,36 +1095,19 @@ export function useAppState() {
     setOtpSent(true);
     setLoginTimer(30);
 
-    let devHintOtp = null;
     try {
       const res = await authApi.sendOtp(phoneNumber);
       if (res && res.devHint) {
-        devHintOtp = res.devHint;
+        showToast(`Verification code: ${res.devHint} (Simulated)`, 'info', 'OTP Generated');
       }
     } catch (err) {
-      console.warn('[auth] send-otp failed, demo fallback available:', err.message);
-    }
-
-    if (env.demoMode) {
-      const activeOtp = devHintOtp || '1234';
-      setWhatsappNotification(`[DEMO MODE] Verification code for ${phoneNumber}: ${activeOtp}`);
-      setTimeout(() => setWhatsappNotification(null), 12000);
+      console.warn('[auth] send-otp failed:', err.message);
     }
     navigateTo('otp_verify');
   };
 
   const handleSocialLogin = async (provider) => {
-    if (env.demoMode) {
-      try {
-        const data = await authApi.verifyOtp('9876543210', '1234');
-        routeAfterAuth(data.profile);
-        showToast(`Successfully logged in with ${provider}!`, 'success');
-      } catch (err) {
-        showToast('Demo social login failed', 'error');
-      }
-    } else {
-      showToast(`${provider} login is currently in sandbox. Please use your email/mobile.`, 'info');
-    }
+    showToast(`${provider} login is currently in sandbox. Please use your email/mobile.`, 'info');
   };
 
   const routeAfterAuth = (profile) => {
@@ -1152,7 +1135,7 @@ export function useAppState() {
   const handleVerifyOTP = async () => {
     if (otpCode.length !== 4) {
       showToast(
-        env.demoMode ? 'Enter the 4-digit OTP (demo: 1234)' : 'Enter the 4-digit code from SMS',
+        'Enter the 4-digit code',
         'error',
         'Invalid OTP'
       );
@@ -1162,71 +1145,10 @@ export function useAppState() {
     try {
       const { profile } = await authApi.verifyOtp(phoneNumber, otpCode);
       routeAfterAuth(profile);
-      return;
     } catch (err) {
-      console.warn('[auth] verify-otp failed, trying local demo fallback:', err.message);
+      console.error('[auth] verify-otp failed:', err.message);
+      showToast(err.message || 'Invalid or expired code. Try resend.', 'error', 'Verification failed');
     }
-
-    if (!env.demoMode) {
-      showToast('Invalid or expired code. Try resend SMS.', 'error', 'Verification failed');
-      return;
-    }
-
-    if (phoneNumber === '9876543210') {
-        const profile = {
-          isLoggedIn: true,
-          role: 'PLAYER',
-          name: 'Rahul Mehta',
-          avatar: 'https://api.dicebear.com/7.x/adventurer/svg?seed=Rahul',
-          favoriteSports: ['football', 'cricket'],
-          position: 'Midfielder',
-          skillLevel: 'Intermediate',
-          location: 'Virar',
-          radius: 10,
-          lat: 19.456,
-          lng: 72.812,
-          phone: '9876543210',
-          username: '@rahul_cricket'
-        };
-        setUserProfile(profile);
-        localStorage.setItem('tm_profile', JSON.stringify(profile));
-        localStorage.removeItem('tm_onboarding_progress');
-        setIsAdminMode(false);
-        setView('home');
-      } else if (phoneNumber === '1111111111') {
-        const profile = {
-          isLoggedIn: true,
-          role: 'OWNER',
-          ownerId: 'owner-1',
-          name: 'Manager Singh',
-          businessName: 'Green Valley Sports Group',
-          avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=Admin',
-          phone: '1111111111',
-          approvalStatus: 'Approved',
-          turfIds: ['turf-1', 'turf-2'],
-        };
-        setUserProfile(profile);
-        localStorage.setItem('tm_profile', JSON.stringify(profile));
-        localStorage.removeItem('tm_onboarding_progress');
-        setIsAdminMode(false);
-        setOwnerActiveTurfId('turf-1');
-        setView('owner_dashboard');
-      } else if (phoneNumber === SUPER_ADMIN_PHONE) {
-        const profile = {
-          isLoggedIn: true,
-          role: 'SUPER_ADMIN',
-          name: 'Platform Admin',
-          avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=SuperAdmin',
-          phone: SUPER_ADMIN_PHONE,
-        };
-        setUserProfile(profile);
-        localStorage.setItem('tm_profile', JSON.stringify(profile));
-        localStorage.removeItem('tm_onboarding_progress');
-        setIsAdminMode(false);
-        setView('super_admin');
-      } else {
-        navigateTo('role_selection');
-      }
   };
 
   const handleUsernameChange = (val) => {
