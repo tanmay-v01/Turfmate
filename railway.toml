@@ -1,7 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "npm ci --prefix server"
-watchPatterns = ["server/**"]
+buildCommand = "npm install && npm run build && npm ci --prefix server"
 
 [deploy]
 startCommand = "npm start --prefix server"
