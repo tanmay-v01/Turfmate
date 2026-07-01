@@ -1100,10 +1100,11 @@ export function useAppState() {
       if (res && res.devHint) {
         showToast(`Verification code: ${res.devHint} (Simulated)`, 'info', 'OTP Generated');
       }
+      navigateTo('otp_verify');
     } catch (err) {
-      console.warn('[auth] send-otp failed:', err.message);
+      console.error('[auth] send-otp failed:', err.message);
+      showToast(err.message || 'Failed to send OTP code. Please try again.', 'error', 'Error');
     }
-    navigateTo('otp_verify');
   };
 
   const handleSocialLogin = async (provider) => {
