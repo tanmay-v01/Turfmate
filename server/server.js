@@ -37,13 +37,11 @@ const { securityHeaders } = require('./middleware/securityHeaders');
 const { notFoundHandler, globalErrorHandler } = require('./middleware/errorHandler');
 const { validateProductionConfig } = require('./lib/validateProduction');
 const healthRoutes = require('./routes/health');
-const matchEngine = require('./services/matchEngine');
 const reliabilityEngine = require('./services/reliabilityEngine');
 const logger = require('./lib/logger');
 
 validateProductionConfig(config);
 
-matchEngine.start();
 reliabilityEngine.start();
 
 const app = express();
