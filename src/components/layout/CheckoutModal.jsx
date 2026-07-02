@@ -178,7 +178,7 @@ export default function CheckoutModal() {
                 className="mt-1 accent-amber-600"
               />
               <label htmlFor="cashConfirm" className="text-[10px] font-bold text-amber-800 leading-tight">
-                I confirm that I will pay ₹{isSplit ? app.activeTurf.minSplitAdvance : totalPayable} at the venue before playing. Failure to pay may result in a ban from booking.
+                I confirm that I will pay ₹{isSplit ? Math.ceil(totalPayable / Math.max(2, app.splitPlayersCount)) : totalPayable} at the venue before playing. Failure to pay may result in a ban from booking.
               </label>
             </div>
           )}

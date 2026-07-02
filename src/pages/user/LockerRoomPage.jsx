@@ -224,8 +224,8 @@ export default function LockerRoomPage() {
                         {ann.roster?.length === 0 ? (
                           <span className="text-xs text-slate-400 italic">be the first!</span>
                         ) : (
-                          ann.roster.map((name) => (
-                            <span key={name} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200">
+                          ann.roster.map((name, idx) => (
+                            <span key={`${name}-${idx}`} className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200">
                               {name === app.userProfile.name ? 'you' : name.split(' ')[0]}
                             </span>
                           ))

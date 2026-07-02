@@ -127,7 +127,13 @@ export default function TournamentsPage() {
 
       {activeTab === 'explore' && !selectedTournament && (
         <div className="space-y-6">
-          {filteredTournaments.map(t => {
+          {filteredTournaments.length === 0 ? (
+            <EmptyState
+              emoji="🏆"
+              title="No tournaments available"
+              description="Check back later — upcoming championships and leagues will appear here."
+            />
+          ) : filteredTournaments.map(t => {
             const registered = isAlreadyRegistered(t.id);
             return (
               <div key={t.id} className="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition duration-200">

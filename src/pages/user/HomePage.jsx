@@ -74,9 +74,9 @@ export default function HomePage() {
     }
     
     // Smooth scroll if returning from turf details
-    if (app.returnScrollPos > 0) {
+    if (app.returnScrollPos && app.returnScrollPos > 0) {
       window.scrollTo(0, app.returnScrollPos);
-      app.setReturnScrollPos(0);
+      app.setReturnScrollPos?.(0);
     }
   }, [app]);
 

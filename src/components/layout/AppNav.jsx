@@ -18,14 +18,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV_ITEMS = [
   { id: 'home', label: 'Home', icon: Home },
-  { id: 'split', label: 'Split Hub', icon: Wallet, badge: 'new' },
+  { id: 'split_hub', label: 'Split Hub', icon: Wallet, badge: 'new' },
   { id: 'chat', label: 'Inbox', icon: MessageSquare, badge: '3' },
   { id: 'tournaments', label: 'Compete', icon: Trophy },
-  { id: 'profile', label: 'Profile', icon: User },
+  { id: 'locker_room', label: 'Locker', icon: User },
 ];
 
-export default function AppNav({ currentView }) {
+export default function AppNav() {
   const app = useApp();
+  const currentView = app.view;
 
   return (
     <>
@@ -125,7 +126,7 @@ export default function AppNav({ currentView }) {
         {/* User Profile Footer */}
         <div className="p-4 border-t border-slate-100 bg-slate-50/50">
           <button 
-            onClick={() => app.setView('profile')}
+            onClick={() => app.setShowAvatarPicker(true)}
             className="w-full flex items-center gap-3 p-3 rounded-2xl hover:bg-white hover:shadow-sm border border-transparent hover:border-slate-200 transition-all text-left group"
           >
             <img 

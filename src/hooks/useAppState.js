@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { SPORTS } from '../constants/sports';
+import { INITIAL_OWNERS } from '../data/ownersData';
 import { extractPlayerDeltas, applyStatDelta } from '../utils/scoreEngine';
 import { enrichBookingPayment, calcCommission } from '../constants/commission';
 import { bookingApi } from '../services/api';
